@@ -1,0 +1,24 @@
+/* Readable supporting text for the client walkthrough, including narrow screens. */
+.brand{font-family:"Segoe UI",system-ui,sans-serif;font-size:24px;letter-spacing:-.8px;line-height:1.2;font-weight:600}
+.brand small{margin-top:8px;font-size:8px;letter-spacing:1.4px;font-weight:400}
+.main-nav button{gap:9px;font-size:13px}.nav-heading{padding-left:10px;font-size:10px}.nav-heading span{margin-left:5px}
+.stage-heading{flex-wrap:wrap}.stage-heading>div:first-child{flex-wrap:wrap}
+.page-intro .intro-copy,.detail-panel p,.detail-panel ul,.source-question,.state-explainer,.tour-panel p{font-size:14px}
+.context-line,.section-heading p,.quality-list,.field-label,.field-select,.doc-list,.input-list li{font-size:13px}
+.stage-metrics span,.stage-metrics p,.stage-heading>div:first-child>span,.case-description span,.case-title div>span,.badge,.quiet-label,.rule-line,.eyebrow-sub,.doc-id,.linked-field,.evidence-button>span:nth-child(2),.results-stat span,.capability-row p,.next-panel p,.step-status{font-size:12px}
+.node-copy strong,.tree-tab strong,.capability-row h3,.step-name{font-size:13px}
+.node-copy small,.input-list .input-state,.tree-tab small,.page-footer,.breadcrumb,.version{font-size:11px}
+.stage-metrics{flex-wrap:wrap}.stage-metrics p{max-width:260px}.node-button{min-height:80px}
+@media(max-width:600px){
+  .topbar{height:auto;min-height:56px;padding-top:10px;padding-bottom:10px}
+  .breadcrumb{min-width:0;line-height:1.5;overflow-wrap:anywhere}
+  .section-heading{flex-direction:column;align-items:stretch;gap:8px}
+  .section-heading>.quiet-label{white-space:normal;margin-top:0}
+  .decision-strip{grid-template-columns:1fr;gap:14px}
+  .decision-item,.decision-item small{font-size:12px}
+  .decision-item small{margin-top:4px}
+  .stage-metrics p{max-width:none}.stage-heading>div:first-child{align-items:start}
+  .main-nav button{font-size:12px;min-width:30%;min-height:44px;flex:1}
+  .node-grid{grid-template-columns:1fr}.tree-tab{min-height:64px}
+  .page-footer{line-height:1.8}.page-intro .button,.tour-bottom .button{min-height:44px;font-size:12px}
+}

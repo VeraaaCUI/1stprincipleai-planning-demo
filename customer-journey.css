@@ -1,0 +1,28 @@
+/* Connected location → report → service journey. */
+#council-map-root .cm-heading h2{font-size:28px;line-height:1.3}
+#council-map-root .cm-journey-steps{list-style:none;padding:0;margin:22px 0;display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid #d3dbcc;border-bottom:1px solid #d3dbcc}
+#council-map-root .cm-journey-steps li{display:flex;align-items:center;gap:11px;padding:16px 10px;color:#52664e;font-size:13px}
+#council-map-root .cm-journey-steps li>span{display:grid;place-items:center;width:28px;height:28px;flex-shrink:0;border:1px solid #b8c5b0;border-radius:50%;font-family:Georgia,serif;color:#8c6247}
+#council-map-root .cm-sample{display:flex;align-items:center;justify-content:space-between;gap:20px;background:#e8ecdf;border:1px solid #d3dbc7;border-radius:7px;padding:16px 20px;margin-bottom:24px}
+#council-map-root .cm-sample strong{font-size:14px}#council-map-root .cm-sample p{font-size:12px;color:#6a775f;margin-top:4px}
+#council-map-root .cm-sample .cm-button{white-space:nowrap}
+#council-map-root .cm-map{height:490px}
+#council-map-root .leaflet-control-layers{font-size:12px;line-height:1.7;background:#fffefaed;color:#253d31;border:1px solid #bec9b7;box-shadow:0 2px 10px #223c3410}
+#council-map-root .leaflet-control-layers label{font-size:12px;margin:0;display:block;font-weight:400}
+#council-map-root .leaflet-control-layers input{min-height:0;width:auto;margin-right:5px}
+#council-map-root .cm-case-question-note{font-size:11px;color:#8a6b42;padding-left:9px;border-left:2px solid #d2ad7e;margin-top:10px}
+#council-map-root .cm-guidance{background:#fffefa;border:1px solid #d4dccc;border-radius:8px;padding:26px;margin-top:28px;box-shadow:0 8px 28px #243c3005}
+#council-map-root .cm-report-location{font-size:13px;color:#75816a;margin-top:15px}
+#council-map-root .cm-report-summary{font-size:17px;line-height:1.9;margin:18px 0;color:#314a3a;max-width:960px}
+#council-map-root .cm-report-next{display:flex;align-items:center;justify-content:space-between;gap:24px;background:#edf0e5;padding:20px;border-radius:6px;margin-top:25px}
+#council-map-root .cm-report-next h4{font-size:15px;margin:0 0 5px}#council-map-root .cm-report-next p{font-size:13px;color:#68775d;max-width:570px}
+#council-map-root .cm-report-next .cm-button{white-space:normal;min-width:210px;line-height:1.6}
+#council-map-root .cm-report-evidence{border-top:1px solid #e0e4d8;margin-top:23px;padding-top:17px}
+#council-map-root .cm-report-evidence>summary{font-size:13px;cursor:pointer;color:#5d7252;min-height:32px;line-height:1.6}
+#council-map-root .cm-risk-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:13px;margin-top:20px}
+#council-map-root .cm-risk-card{background:#f6f4ec;border:1px solid #e3e2d7;border-radius:5px;padding:17px}
+#council-map-root .cm-risk-card h4{font-size:14px;margin:0}#council-map-root .cm-risk-card p{font-size:12px;line-height:1.8;margin-top:9px;color:#69745f}
+#council-map-root .cm-risk-state{font-size:11px;color:#977444}#council-map-root .cm-risk-card small{font-size:10px;display:block;color:#8a917e;margin-top:10px}
+#council-map-root .cm-source-links small{display:block;font-size:11px;color:#88907d;margin-top:5px}
+@media(max-width:850px){#council-map-root .cm-report-next{display:block}#council-map-root .cm-report-next .cm-button{margin-top:17px}}
+@media(max-width:600px){#council-map-root .cm-heading h2{font-size:24px}#council-map-root .cm-journey-steps{gap:10px}#council-map-root .cm-journey-steps li{display:block;padding:14px 0;font-size:11px}#council-map-root .cm-journey-steps li>span{margin-bottom:9px}#council-map-root .cm-sample{display:block;padding:17px}#council-map-root .cm-sample .cm-button{margin-top:14px}#council-map-root .cm-map{height:410px}#council-map-root .cm-guidance{padding:20px 17px}#council-map-root .cm-report-summary{font-size:16px;line-height:1.85}#council-map-root .cm-risk-grid{grid-template-columns:1fr}#council-map-root .cm-report-next{padding:17px}#council-map-root .cm-report-next .cm-button{min-width:0;width:100%}}

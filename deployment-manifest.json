@@ -1,0 +1,84 @@
+{
+  "files": {
+    "index.html": {
+      "bytes": 137287,
+      "sha256": "f5c888b1773af30c090053d15a6695e2bd942042b032fb467286972f1dc89212"
+    },
+    "styles.css": {
+      "bytes": 26346,
+      "sha256": "441532f79f53b0d3fb0293de6c7bce51683c3dfdf719231ad94cb55ee358a79b"
+    },
+    "presentation.css": {
+      "bytes": 2076,
+      "sha256": "7665939192a7cd690e1e1ac7ad53725962c56a86f7fcc355c6708450653779d3"
+    },
+    "app.js": {
+      "bytes": 40312,
+      "sha256": "8fa190e18f47ccbf932c1c7b073f6876268d4ddc0cd56fb99bca18d228f3bdc3"
+    },
+    ".nojekyll": {
+      "bytes": 1,
+      "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+    },
+    "council-map.js": {
+      "bytes": 36911,
+      "sha256": "0ebc445a4c2064c6c8f547ac82968125b20020a320699868abbeab7099949a98"
+    },
+    "council-map.css": {
+      "bytes": 9898,
+      "sha256": "cdacb06c2004def7ef1c7b79acd3f2a33373f1208e696527abee2495b22ad15b"
+    },
+    "council-map-guidance.js": {
+      "bytes": 12200,
+      "sha256": "5a3cb71a01ec7024e0a846a88db8906cd526d306e62994d24c64d18e005eca4e"
+    },
+    "planning-report.js": {
+      "bytes": 8077,
+      "sha256": "e1012b008bd52ee3e47c28a3345d62786c7458f4eded8d6dc714c1833a9e2112"
+    },
+    "customer-journey.css": {
+      "bytes": 4018,
+      "sha256": "0c3f1a8805ff32b91f11824346732d5685fea858115550da2faf24a9a102c3a7"
+    },
+    "advanced-services.js": {
+      "bytes": 33084,
+      "sha256": "a0646e718d8fea2ba411572e72ea0dbff953825483b175d8cc345f9df0b817c0"
+    },
+    "advanced-services.css": {
+      "bytes": 14388,
+      "sha256": "4ab6f95d592665c74609139e2e42af70706823eb83e9367927c0362c59160fe9"
+    },
+    "vendor/leaflet.js": {
+      "bytes": 147552,
+      "sha256": "db49d009c841f5ca34a888c96511ae936fd9f5533e90d8b2c4d57596f4e5641a"
+    },
+    "vendor/leaflet.css": {
+      "bytes": 14806,
+      "sha256": "a7837102824184820dfa198d1ebcd109ff6d0ff9a2672a074b9a1b4d147d04c6"
+    },
+    "vendor/LEAFLET-LICENSE.txt": {
+      "bytes": 1395,
+      "sha256": "53e8dc25862014e4324741ca18fbe3611e11d42ef69f59f86ea8c5389647d4cb"
+    },
+    "data/nsw-councils.geojson": {
+      "bytes": 2319864,
+      "sha256": "d1fcadc3c51b520f6c35b97ebcc4f668655c84d98cd02212c383475e5784bc0e"
+    },
+    "data/places.json": {
+      "bytes": 1097157,
+      "sha256": "8838e160aa3af2bd6d74787ca4da748bc5dd7f4ec87bb385c9f8da607e422ba5"
+    },
+    "data/map-sources.json": {
+      "bytes": 2870,
+      "sha256": "f4a26fbffe7515ce56c193e73f28c9c07c0802c38ec4752e5372f7cc5441e09a"
+    }
+  },
+  "case_id": "CASE-0001",
+  "public_asset_count": 18,
+  "boundary_features": 132,
+  "places": 4607,
+  "case_snapshot_as_at": "2026-10-29",
+  "database_included": false,
+  "credentials_included": false,
+  "can_authorize_progression": false
+}

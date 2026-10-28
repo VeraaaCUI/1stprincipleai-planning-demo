@@ -1,0 +1,45 @@
+{
+  "schema_version": "nsw-map-sources-0.1",
+  "retrieved_on": "2026-10-29",
+  "publisher": "NSW Spatial Services (Department of Customer Service)",
+  "attribution": "© State of New South Wales (Spatial Services). Extracted 29 October 2026. Display geometry simplified and place-area candidates derived by 1stprincipleai.",
+  "aerial_imagery": "https://maps.six.nsw.gov.au/arcgis/rest/services/public/NSW_Imagery/MapServer",
+  "aerial_caution": "Capture dates vary. Imagery is not a surveyed lot boundary or planning-risk layer.",
+  "dataset_url": "https://data.nsw.gov.au/data/en/dataset/nsw-administrative-boundaries",
+  "licence": "Creative Commons Attribution 3.0 Australia (dataset metadata)",
+  "licence_url": "https://creativecommons.org/licenses/by/3.0/au/",
+  "copyright_url": "https://www.spatial.nsw.gov.au/copyright",
+  "government_endorsement": false,
+  "boundary_layer": "https://maps.six.nsw.gov.au/arcgis/rest/services/public/NSW_Administrative_Boundaries/MapServer/1",
+  "place_layer": "https://maps.six.nsw.gov.au/arcgis/rest/services/public/NSW_Administrative_Boundaries/MapServer/0",
+  "service_url": "https://maps.six.nsw.gov.au/arcgis/rest/services/public/NSW_Administrative_Boundaries/MapServer",
+  "coordinate_reference": "EPSG:4326; ESRI source rings converted to GeoJSON",
+  "raw_council_features": 132,
+  "council_count": 128,
+  "unincorporated_feature_count": 4,
+  "place_count": 4607,
+  "discarded_empty_place_cadids": [],
+  "display_simplification_degrees": 0.0004,
+  "lga_query_generalization_degrees": 0.0001,
+  "suburb_query_generalization_degrees": 0.0001,
+  "place_council_match": "Finer generalized LGA geometry intersected with generalized suburb polygons; negligible slivers below 0.01% excluded. Navigational candidates only.",
+  "postcode_limitation": "NSW suburb postal attribute, not Australia Post postcode boundaries or a unique council lookup.",
+  "address_search": {
+    "url": "https://mapsq.six.nsw.gov.au/services/public/Address_Location",
+    "documentation": "https://maps.six.nsw.gov.au/sws/AddressLocation.html",
+    "browser_cors_tested": true,
+    "api_key_required": false,
+    "required": "roadName and at least suburb or postCode",
+    "confidence_basis": "Inspect numRecs and searchMethod.methodDescriptions. A nearby house or ignored postcode/suburb is not an exact match.",
+    "council_point_query": "https://maps.six.nsw.gov.au/arcgis/rest/services/public/NSW_Administrative_Boundaries/MapServer/1/query",
+    "coordinate_caution": "Service example and live response can label GDA94/EPSG4283 even when EPSG4326 requested; not a surveyed parcel point."
+  },
+  "files": {
+    "nsw-councils.geojson": {
+      "sha256": "d1fcadc3c51b520f6c35b97ebcc4f668655c84d98cd02212c383475e5784bc0e"
+    },
+    "places.json": {
+      "sha256": "8838e160aa3af2bd6d74787ca4da748bc5dd7f4ec87bb385c9f8da607e422ba5"
+    }
+  }
+}
