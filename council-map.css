@@ -8,3 +8,73 @@
 @media(max-width:1100px){#council-map-root .cm-workspace{grid-template-columns:minmax(0,1.5fr) minmax(235px,1fr);gap:18px}#council-map-root .cm-side{padding:18px}#council-map-root .cm-map{height:470px}#council-map-root .cm-council-row{display:block}#council-map-root .cm-council-row label{margin-bottom:6px}#council-map-root .cm-council-row select{width:100%}}
 @media(max-width:700px){#council-map-root .cm-heading{margin-bottom:20px;gap:10px}#council-map-root .cm-tag{font-size:10px;padding:4px 6px}#council-map-root h2{font-size:27px}#council-map-root .cm-subtitle{font-size:12px}#council-map-root .cm-search-row{gap:7px}#council-map-root input{font-size:16px;padding:10px;min-height:46px}#council-map-root .cm-search-row .cm-button{padding:9px 11px;white-space:nowrap;font-size:12px}#council-map-root .cm-suggestions{grid-template-columns:1fr}#council-map-root .cm-suggestion{min-height:65px}#council-map-root .cm-workspace{display:block}#council-map-root .cm-map{height:385px}#council-map-root .cm-council-row{display:flex}#council-map-root .cm-council-row label{flex:1;margin:0}#council-map-root .cm-council-row select{flex:1.6;width:60%}#council-map-root .cm-side{margin-top:20px;padding:21px}#council-map-root .cm-question-form textarea{font-size:16px}#council-map-root .cm-selected-councils{font-size:13px}#council-map-root .cm-topics{gap:8px}#council-map-root .cm-topic{min-height:38px;padding:7px 11px}#council-map-root .cm-guidance-columns{grid-template-columns:1fr;gap:10px}#council-map-root .cm-guidance-title h3{font-size:20px}#council-map-root .cm-guidance-columns ol,#council-map-root .cm-guidance-columns ul{font-size:13px}#council-map-root .cm-guidance-reason,#council-map-root .cm-scope-note{font-size:12px}#council-map-root .leaflet-control-zoom a{width:35px;height:35px;line-height:35px}#council-map-root .cm-map-sources{font-size:11px}}
 @media(prefers-reduced-motion:reduce){#council-map-root *{scroll-behavior:auto!important}}
+
+/* A quiet, editorial map workspace; factual type colours stay in the map. */
+body[data-view=map] .page-intro h1{font-family:Georgia,'Times New Roman',serif;font-size:clamp(29px,3.1vw,42px);font-weight:400;line-height:1.2;letter-spacing:-.9px;max-width:650px}
+body[data-view=map] .page-intro .intro-copy{font-size:13px;line-height:1.8}
+#council-map-root .cm-explorer>.cm-heading,#council-map-root .cm-sample{display:none}
+#council-map-root .cm-workspace{grid-template-areas:'map side' 'docs side';row-gap:18px}
+#council-map-root .cm-map-column{grid-area:map}
+#council-map-root .cm-side{grid-area:side}
+#council-map-root .cm-kicker{text-transform:none;letter-spacing:.2px;font-size:11px;font-weight:500}
+#council-map-root .cm-heading{padding-bottom:22px;border-bottom:1px solid #d6dacf}
+#council-map-root .cm-heading h2{font-family:Georgia,'Times New Roman',serif;font-weight:400;font-size:clamp(29px,3.2vw,42px);letter-spacing:-1px;line-height:1.18;max-width:640px}
+#council-map-root .cm-subtitle{max-width:680px;line-height:1.8}
+#council-map-root .cm-tag{border:1px solid #c2cebc;border-radius:30px;background:transparent;padding:7px 12px;font-size:10px;letter-spacing:.8px;text-transform:uppercase}
+#council-map-root .cm-journey-steps{grid-template-columns:repeat(4,minmax(0,1fr));margin-top:0;border-top:0}
+#council-map-root .cm-journey-steps li{font-size:12px;padding:10px 6px;min-width:0}
+#council-map-root .cm-journey-steps li>span{border:0;background:#e6e9df;font-size:14px}
+#council-map-root .cm-journey-action{display:flex;align-items:center;gap:10px;border:0;background:transparent;text-align:left;color:#566d55;padding:5px 0;width:100%;font-size:12px;min-height:42px}
+#council-map-root .cm-journey-action .cm-journey-number{display:grid;place-items:center;flex-shrink:0;width:27px;height:27px;border-radius:50%;background:#e3e8dc;font-family:Georgia,serif;font-size:14px;color:#72816b}
+#council-map-root .cm-journey-action[aria-current=step] .cm-journey-number{background:#2d5040;color:#fffdf1}
+#council-map-root .cm-journey-steps li[data-complete=true] .cm-journey-number{box-shadow:inset 0 0 0 1px #9eb397;background:#e8eddf;color:#45683c}
+#council-map-root .cm-journey-action:disabled{cursor:default;opacity:.5}
+#council-map-root .cm-sample{background:#e6ebe1;border:0;border-left:3px solid #ad7654;border-radius:0 5px 5px 0;padding:15px 20px}
+#council-map-root .cm-coverage-banner{display:flex;align-items:baseline;justify-content:space-between;gap:14px;margin:0 0 24px;padding:13px 0;border-bottom:1px solid #d8ded1;font-size:11px;color:#77816e}
+#council-map-root .cm-coverage-banner strong{font-size:12px;color:#3e5d4c;font-weight:500}
+#council-map-root .cm-search-form{margin-bottom:14px}
+#council-map-root .cm-search-row{background:#fffefa;border:1px solid #b8c4b1;border-radius:7px;padding:5px;box-shadow:0 7px 22px #23392c08}
+#council-map-root .cm-search-row input{border:0;background:transparent;padding:12px 13px;min-height:46px}
+#council-map-root .cm-search-row .cm-button{border-radius:4px;padding:11px 19px}
+#council-map-root .cm-address-details{margin:0 0 27px;border-bottom:1px solid #d8ded1;padding-bottom:15px}
+#council-map-root summary{cursor:pointer}
+#council-map-root .cm-address-details>summary{font-size:12px;color:#687a5c;min-height:28px}
+#council-map-root .cm-address-form{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;padding:19px 0 5px}
+#council-map-root .cm-address-field{min-width:0}
+#council-map-root .cm-address-field input,#council-map-root .cm-address-field select{width:100%;font-size:13px;min-height:44px}
+#council-map-root .cm-address-field label{font-size:11px}
+#council-map-root .cm-address-form>.cm-button{align-self:start}
+#council-map-root .cm-address-note{grid-column:span 2;font-size:11px;color:#77816c;line-height:1.75}
+#council-map-root .cm-map-toolbar{font-size:11px;letter-spacing:.2px}
+#council-map-root .cm-view-buttons{display:flex;align-items:center;gap:15px}
+#council-map-root .cm-map{border-radius:7px;border:1px solid #bcc9b5}
+#council-map-root .cm-side{border-top:3px solid #355748;background:#fffefa;box-shadow:0 9px 32px #243e2e06}
+#council-map-root .cm-side h3{font-family:Georgia,'Times New Roman',serif;font-size:24px;letter-spacing:-.4px;font-weight:400}
+#council-map-root .cm-selection-panel>a{display:inline-block;margin-top:8px;font-size:11px;color:#687a5c}
+#council-map-root .cm-map-legend{border-bottom:1px solid #d8ded1;padding:15px 0 13px}
+#council-map-root .cm-map-legend>summary{font-size:11px;font-weight:600;color:#4c6656}
+#council-map-root .cm-legend-list{list-style:none;display:flex;flex-wrap:wrap;gap:8px 16px;margin:13px 0 10px;padding:0}
+#council-map-root .cm-legend-list li{display:flex;align-items:center;gap:7px;font-size:10px;color:#5d705c}
+#council-map-root .cm-legend-swatch{width:10px;height:10px;border-radius:2px;display:inline-block;flex-shrink:0}
+#council-map-root .cm-legend-note{font-size:10px;color:#7b8472;line-height:1.7;margin-top:5px}
+#council-map-root .cm-legend-content>a{font-size:10px;color:#65795a;display:inline-block;margin-top:7px}
+#council-map-root .cm-council-label{font-size:10px;border:0;box-shadow:none;background:#fffefaeb;border-radius:2px;padding:2px 5px;color:#3e5246;font-weight:500}
+#council-map-root .cm-document-panel{grid-area:docs;margin-top:0;padding:23px;background:#fffefa;border:1px solid #d7dece;border-radius:6px;min-width:0}
+#council-map-root .cm-document-panel h3{font-family:Georgia,'Times New Roman',serif;font-size:27px;line-height:1.3;letter-spacing:-.4px;font-weight:400}
+#council-map-root .cm-document-context{font-size:10px;display:inline-block;color:#667a5d;background:#edf0e6;border-radius:3px;padding:3px 7px;margin-top:12px}
+#council-map-root .cm-document-hint{font-size:12px;color:#6e7b62;line-height:1.8;margin-top:12px}
+#council-map-root .cm-document-type{font-size:10px;text-transform:uppercase;letter-spacing:.6px;color:#8a7458;margin-top:12px}
+#council-map-root .cm-document-list{list-style:none;margin:19px 0 0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+#council-map-root .cm-document-list li{display:flex;align-items:start;flex-direction:column;min-width:0;padding:15px 13px;border:1px solid #dde1d4;border-radius:4px;background:#f9f8f1}
+#council-map-root .cm-document-kind{font-size:9px;letter-spacing:1px;text-transform:uppercase;color:#91734e;margin-bottom:7px}
+#council-map-root .cm-document-list a{font-size:13px;color:#355b45;font-weight:600;text-decoration-thickness:1px;text-underline-offset:3px;overflow-wrap:anywhere;line-height:1.65}
+#council-map-root .cm-document-list small{font-size:10px;color:#8a7454;line-height:1.65;display:block;margin-top:10px}
+#council-map-root .cm-document-list p{font-size:10px;color:#78816e;line-height:1.75;margin-top:7px}
+#council-map-root .cm-document-caution{font-size:10px;color:#7c806e;line-height:1.8;margin-top:17px;padding-top:14px;border-top:1px solid #e2e6d9}
+#council-map-root .cm-document-panel details{font-size:11px;color:#65765c;margin-top:15px}
+#council-map-root .cm-document-panel details>ul:not(.cm-document-list){font-size:11px;line-height:1.9;padding-left:17px}
+#council-map-root .cm-map-sources{line-height:1.8;margin-top:16px}
+@media(min-width:1000px){#council-map-root .cm-side{position:sticky;top:20px}}
+@media(max-width:850px){#council-map-root .cm-coverage-banner{display:block}#council-map-root .cm-coverage-banner span{display:block;margin-top:6px}#council-map-root .cm-document-list{grid-template-columns:1fr}#council-map-root .cm-document-panel{padding:19px}}
+@media(max-width:700px){#council-map-root .cm-workspace{display:grid;grid-template-columns:minmax(0,1fr);grid-template-areas:'map' 'side' 'docs';gap:20px}#council-map-root .cm-side{margin-top:0}}
+@media(max-width:600px){#council-map-root .cm-heading h2{font-size:33px}#council-map-root .cm-heading{display:block}#council-map-root .cm-tag{display:inline-block;margin-top:17px}#council-map-root .cm-journey-steps{grid-template-columns:repeat(2,minmax(0,1fr));gap:0 14px}#council-map-root .cm-journey-steps li{display:flex;align-items:center;gap:9px;padding:8px 0;font-size:11px}#council-map-root .cm-journey-action{font-size:11px;gap:8px}#council-map-root .cm-journey-steps li>span{margin-bottom:0;width:25px;height:25px}#council-map-root .cm-address-form{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}#council-map-root .cm-address-form>.cm-button,#council-map-root .cm-address-note{grid-column:span 2}#council-map-root .cm-address-field input,#council-map-root .cm-address-field select{font-size:16px}#council-map-root .cm-map-toolbar{align-items:start;font-size:10px}#council-map-root .cm-view-buttons{gap:10px}#council-map-root .cm-view-buttons .cm-text-button{font-size:11px;padding-top:0}#council-map-root .cm-search-row .cm-button{font-size:11px;padding:9px 10px}#council-map-root .cm-search-row input{padding:9px 7px}#council-map-root .cm-map-legend>summary{font-size:12px}#council-map-root .cm-legend-list li{font-size:11px}#council-map-root .cm-document-panel h3{font-size:25px}#council-map-root .cm-document-list{grid-template-columns:1fr}#council-map-root .cm-document-list p,#council-map-root .cm-document-list small,#council-map-root .cm-document-caution{font-size:11px}#council-map-root .cm-document-list a{font-size:14px}}

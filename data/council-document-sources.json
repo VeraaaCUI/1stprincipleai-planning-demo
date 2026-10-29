@@ -1,0 +1,1721 @@
+{
+  "schema_version": "nsw-council-document-directory-0.1",
+  "checked_on": "2026-10-29",
+  "purpose": "Public official document references and navigation only; not a verified legal rule pack or property assessment.",
+  "council_count": 128,
+  "mapped_lep_references": 150,
+  "checked_dcp_landing_pages": 28,
+  "sources": [
+    {
+      "id": "olg",
+      "title": "NSW Office of Local Government council directory",
+      "url": "https://www.olg.nsw.gov.au/public/find-your-local-council",
+      "publisher": "NSW Office of Local Government",
+      "http_status": 200,
+      "checked_on": "2026-10-29",
+      "usage": "Official council name and website, matched across all 128 council records."
+    },
+    {
+      "id": "epi_dataset",
+      "title": "Environmental Planning Instrument - Land Application",
+      "url": "https://www.planningportal.nsw.gov.au/opendata/dataset/environmental-planning-instrument-land-application-lap",
+      "publisher": "NSW Department of Planning, Housing and Infrastructure",
+      "http_status": 200,
+      "checked_on": "2026-10-29",
+      "usage": "Official spatial catalogue, not independently verified current statutory text."
+    },
+    {
+      "id": "epi_query",
+      "title": "EPI Land Application layer - distinct LEP references",
+      "url": "https://mapprod3.environment.nsw.gov.au/arcgis/rest/services/Planning/EPI_Primary_Planning_Layers/MapServer/6",
+      "publisher": "NSW Department of Planning, Housing and Infrastructure",
+      "http_status": 200,
+      "checked_on": "2026-10-29",
+      "fields": [
+        "EPI_NAME",
+        "LGA_NAME",
+        "PCO_REF_KEY",
+        "EPI_TYPE"
+      ],
+      "query": "where EPI_TYPE = 'LEP'; returnDistinctValues=true; returnGeometry=false",
+      "usage": "151 rows returned; one unassigned SEPP-labelled row is excluded. 150 named LEP references match all 128 councils. Current legislation links use official PCO_REF_KEY values, never guessed plan names."
+    },
+    {
+      "id": "viewer",
+      "title": "NSW Planning Portal Spatial Viewer",
+      "url": "https://www.planningportal.nsw.gov.au/spatialviewer/",
+      "http_status": 200,
+      "checked_on": "2026-10-29"
+    },
+    {
+      "id": "housing_guidance",
+      "title": "NSW Planning - Secondary dwellings",
+      "url": "https://www.planning.nsw.gov.au/the-planning-system/housing/housing-sepp/secondary-dwellings",
+      "http_status": 200,
+      "checked_on": "2026-10-29",
+      "usage": "Official agency page links Housing SEPP 2021 (epi-2021-0714) and Codes SEPP 2008 (epi-2008-0572)."
+    },
+    {
+      "id": "ncc",
+      "title": "National Construction Code - ABCB",
+      "url": "https://ncc.abcb.gov.au/",
+      "http_status": 200,
+      "checked_on": "2026-10-29",
+      "usage": "Official code portal. Applicable edition, NSW variations and commencement dates must be checked."
+    }
+  ],
+  "verification_limits": [
+    "Native web search was unavailable (HTTP 404). Sources were accessed directly over official HTTPS endpoints.",
+    "The NSW legislation host returned HTTP 403 during the check. Full consolidated legislative text, commencement and amendments were not independently verified.",
+    "PCO reference links are supplied from official EPI data, not certified as applicable to every property within a council.",
+    "Some councils have multiple mapped LEPs, including former council areas or site-specific instruments. Confirm the exact address and land-application map.",
+    "DCP pages labelled page_checked were fetched successfully and contain DCP references; individual clauses, editions, attachments and amendments remain unverified.",
+    "Other DCP entries lead to the council website from the official OLG directory, explicitly marked find_current_controls.",
+    "Draft plans, news and exhibition pages are excluded as substitutes for current controls. This directory does not cover all SEPPs, hazards, title restrictions or building requirements."
+  ],
+  "registry_columns": [
+    "name",
+    "council_name",
+    "official_website",
+    "lep_references_title_and_pco_key",
+    "checked_dcp_page_or_null"
+  ],
+  "registry": {
+    "LGA-108012465": [
+      "Albury City",
+      "Albury City Council",
+      "https://www.alburycity.nsw.gov.au",
+      [
+        [
+          "Albury Local Environmental Plan 2010",
+          "2010-433"
+        ]
+      ],
+      "https://www.alburycity.nsw.gov.au/property/planning/planning-controls"
+    ],
+    "LGA-173919376": [
+      "Armidale Regional",
+      "Armidale Regional Council",
+      "https://www.armidale.nsw.gov.au",
+      [
+        [
+          "Armidale Regional Local Environmental Plan 2012",
+          "2012-589"
+        ]
+      ],
+      null
+    ],
+    "LGA-108012466": [
+      "Ballina",
+      "Ballina Shire Council",
+      "https://www.ballina.nsw.gov.au",
+      [
+        [
+          "Ballina Local Environmental Plan 2012",
+          "2013-20"
+        ]
+      ],
+      null
+    ],
+    "LGA-108012507": [
+      "Balranald",
+      "Balranald Shire Council",
+      "https://www.balranald.nsw.gov.au",
+      [
+        [
+          "Balranald Local Environmental Plan 2010",
+          "2010-363"
+        ]
+      ],
+      null
+    ],
+    "LGA-108012426": [
+      "Bathurst Regional",
+      "Bathurst Regional Council",
+      "https://www.bathurst.nsw.gov.au",
+      [
+        [
+          "Bathurst Regional Local Environmental Plan 2014",
+          "2014-729"
+        ]
+      ],
+      null
+    ],
+    "LGA-174469757": [
+      "Bayside",
+      "Bayside Council",
+      "https://www.bayside.nsw.gov.au",
+      [
+        [
+          "Bayside Local Environmental Plan 2021",
+          "2021-498"
+        ]
+      ],
+      null
+    ],
+    "LGA-108012508": [
+      "Bega Valley",
+      "Bega Valley Shire Council",
+      "https://www.begavalley.nsw.gov.au",
+      [
+        [
+          "Bega Valley Local Environmental Plan 2013",
+          "2013-408"
+        ]
+      ],
+      null
+    ],
+    "LGA-108012380": [
+      "Bellingen",
+      "Bellingen Shire Council",
+      "https://www.bellingen.nsw.gov.au",
+      [
+        [
+          "Bellingen Local Environmental Plan 2010",
+          "2010-418"
+        ]
+      ],
+      null
+    ],
+    "LGA-108012427": [
+      "Berrigan",
+      "Berrigan Shire Council",
+      "https://www.berriganshire.nsw.gov.au",
+      [
+        [
+          "Berrigan Local Environmental Plan 2013",
+          "2013-587"
+        ]
+      ],
+      null
+    ],
+    "LGA-108012468": [
+      "Blacktown",
+      "Blacktown City Council",
+      "https://www.blacktown.nsw.gov.au",
+      [
+        [
+          "Blacktown Local Environmental Plan 2015",
+          "2015-239"
+        ]
+      ],
+      null
+    ],
+    "LGA-108012509": [
+      "Bland",
+      "Bland Shire Council",
+      "https://www.blandshire.nsw.gov.au",
+      [
+        [
+          "Bland Local Environmental Plan 2011",
+          "2011-639"
+        ]
+      ],
+      null
+    ],
+    "LGA-108012381": [
+      "Blayney",
+      "Blayney Shire Council",
+      "https://www.blayney.nsw.gov.au",
+      [
+        [
+          "Blayney Local Environmental Plan 2012",
+          "2012-573"
+        ]
+      ],
+      "https://www.blayney.nsw.gov.au/development/compliance/development-control-plan"
+    ],
+    "LGA-108012428": [
+      "Blue Mountains",
+      "Blue Mountains City Council",
+      "https://www.bmcc.nsw.gov.au",
+      [
+        [
+          "Blue Mountains Local Environmental Plan 2015",
+          "2015-829"
+        ]
+      ],
+      null
+    ],
+    "LGA-108012469": [
+      "Bogan",
+      "Bogan Shire Council",
+      "https://www.bogan.nsw.gov.au",
+      [
+        [
+          "Bogan Local Environmental Plan 2011",
+          "2011-640"
+        ]
+      ],
+      null
+    ],
+    "LGA-108012511": [
+      "Bourke",
+      "Bourke Shire Council",
+      "https://www.bourke.nsw.gov.au",
+      [
+        [
+          "Bourke Local Environmental Plan 2012",
+          "2013-21"
+        ]
+      ],
+      "https://bourke.nsw.gov.au/wp-content/uploads/2018/09/Bourke-Development-Control-Plan-2012-April-2016.pdf"
+    ],
+    "LGA-108012384": [
+      "Brewarrina",
+      "Brewarrina Shire Council",
+      "https://www.brewarrina.nsw.gov.au",
+      [
+        [
+          "Brewarrina Local Environmental Plan 2012",
+          "2012-611"
+        ]
+      ],
+      null
+    ],
+    "LGA-108012430": [
+      "Broken Hill",
+      "Broken Hill City Council",
+      "https://www.brokenhill.nsw.gov.au",
+      [
+        [
+          "Broken Hill Local Environmental Plan 2013",
+          "2013-506"
+        ]
+      ],
+      null
+    ],
+    "LGA-108012471": [
+      "Burwood",
+      "Burwood Council",
+      "https://www.burwood.nsw.gov.au",
+      [
+        [
+          "Burwood Local Environmental Plan 2012",
+          "2012-550"
+        ]
+      ],
+      null
+    ],
+    "LGA-108012512": [
+      "Byron",
+      "Byron Shire Council",
+      "https://www.byron.nsw.gov.au",
+      [
+        [
+          "Byron Local Environmental Plan 2014",
+          "2014-297"
+        ]
+      ],
+      null
+    ],
+    "LGA-108012385": [
+      "Cabonne",
+      "Cabonne Shire Council",
+      "https://www.cabonne.nsw.gov.au",
+      [
+        [
+          "Cabonne Local Environmental Plan 2012",
+          "2013-2"
+        ]
+      ],
+      null
+    ],
+    "LGA-108012431": [
+      "Camden",
+      "Camden Council",
+      "https://www.camden.nsw.gov.au",
+      [
+        [
+          "Camden Local Environmental Plan 2010",
+          "2010-514"
+        ]
+      ],
+      "https://www.camden.nsw.gov.au/strategic-planning/planning-controls"
+    ],
+    "LGA-108012472": [
+      "Campbelltown",
+      "Campbelltown City Council",
+      "https://www.campbelltown.nsw.gov.au",
+      [
+        [
+          "Campbelltown Local Environmental Plan 2015",
+          "2015-754"
+        ]
+      ],
+      null
+    ],
+    "LGA-108012513": [
+      "Canada Bay",
+      "City Of Canada Bay Council",
+      "https://www.canadabay.nsw.gov.au",
+      [
+        [
+          "Canada Bay Local Environmental Plan 2013",
+          "2013-389"
+        ]
+      ],
+      "https://www.canadabay.nsw.gov.au/development/plans-policies-and-controls/planning-controls-LEP-DCP"
+    ],
+    "LGA-173954170": [
+      "Canterbury-Bankstown",
+      "Canterbury-Bankstown Council",
+      "https://www.cbcity.nsw.gov.au",
+      [
+        [
+          "Canterbury-Bankstown Local Environmental Plan 2023",
+          "2023-336"
+        ]
+      ],
+      "https://www.cbcity.nsw.gov.au/planning-and-building/planning-city/planning-controls-and-policies"
+    ],
+    "LGA-108012432": [
+      "Carrathool",
+      "Carrathool Shire Council",
+      "https://www.carrathool.nsw.gov.au",
+      [
+        [
+          "Carrathool Local Environmental Plan 2012",
+          "2012-332"
+        ]
+      ],
+      null
+    ],
+    "LGA-173954198": [
+      "Central Coast",
+      "Central Coast Council",
+      "https://www.centralcoast.nsw.gov.au",
+      [
+        [
+          "Central Coast Local Environmental Plan 2022",
+          "2022-308"
+        ]
+      ],
+      null
+    ],
+    "LGA-108012473": [
+      "Central Darling",
+      "Central Darling Shire Council",
+      "https://www.centraldarling.nsw.gov.au",
+      [
+        [
+          "Central Darling Local Environmental Plan 2012",
+          "2013-33"
+        ]
+      ],
+      null
+    ],
+    "LGA-108012514": [
+      "Cessnock",
+      "Cessnock City Council",
+      "https://www.cessnock.nsw.gov.au",
+      [
+        [
+          "Cessnock Local Environmental Plan 2011",
+          "2011-702"
+        ]
+      ],
+      null
+    ],
+    "LGA-108012453": [
+      "City Of Parramatta",
+      "City Of Parramatta Council",
+      "https://www.cityofparramatta.nsw.gov.au",
+      [
+        [
+          "Parramatta Local Environmental Plan 2023",
+          "2023-117"
+        ]
+      ],
+      null
+    ],
+    "LGA-108012388": [
+      "Clarence Valley",
+      "Clarence Valley Council",
+      "https://www.clarence.nsw.gov.au",
+      [
+        [
+          "Clarence Valley Local Environmental Plan 2011",
+          "2011-701"
+        ]
+      ],
+      null
+    ],
+    "LGA-108012433": [
+      "Cobar",
+      "Cobar Shire Council",
+      "https://www.cobar.nsw.gov.au",
+      [
+        [
+          "Cobar Local Environmental Plan 2012",
+          "2012-358"
+        ]
+      ],
+      null
+    ],
+    "LGA-108012474": [
+      "Coffs Harbour",
+      "Coffs Harbour City Council",
+      "https://www.coffsharbour.nsw.gov.au",
+      [
+        [
+          "Coffs Harbour Local Environmental Plan 2013",
+          "2013-564"
+        ]
+      ],
+      null
+    ],
+    "LGA-108012434": [
+      "Coolamon",
+      "Coolamon Shire Council",
+      "https://www.coolamon.nsw.gov.au",
+      [
+        [
+          "Coolamon Local Environmental Plan 2011",
+          "2011-77"
+        ]
+      ],
+      null
+    ],
+    "LGA-108012390": [
+      "Coonamble",
+      "Coonamble Shire Council",
+      "https://www.coonambleshire.nsw.gov.au",
+      [
+        [
+          "Coonamble Local Environmental Plan 2011",
+          "2011-506"
+        ]
+      ],
+      "https://www.coonambleshire.nsw.gov.au/development/development-control-plans"
+    ],
+    "LGA-173953581": [
+      "Cootamundra-Gundagai Regional",
+      "Cootamundra-Gundagai Regional Council",
+      "https://www.cgrc.nsw.gov.au",
+      [
+        [
+          "Cootamundra Local Environmental Plan 2013",
+          "2013-399"
+        ],
+        [
+          "Gundagai Local Environmental Plan 2011",
+          "2011-507"
+        ]
+      ],
+      "https://www.cgrc.nsw.gov.au/building-development-and-planning/plans-policies-and-controls/development-control-plans/"
+    ],
+    "LGA-108012517": [
+      "Cowra",
+      "Cowra Shire Council",
+      "https://www.cowracouncil.com.au",
+      [
+        [
+          "Cowra Local Environmental Plan 2012",
+          "2013-22"
+        ]
+      ],
+      null
+    ],
+    "LGA-173954878": [
+      "Cumberland",
+      "Cumberland Council",
+      "https://www.cumberland.nsw.gov.au",
+      [
+        [
+          "Cumberland Local Environmental Plan 2021",
+          "2021-651"
+        ]
+      ],
+      "https://www.cumberland.nsw.gov.au/build/development-control-plans-dcp"
+    ],
+    "LGA-173919533": [
+      "Dubbo Regional",
+      "Dubbo Regional Council",
+      "https://www.dubbo.nsw.gov.au",
+      [
+        [
+          "Dubbo Regional Local Environmental Plan 2022",
+          "2022-108"
+        ]
+      ],
+      "https://www.dubbo.nsw.gov.au/Builders-Developers/Planning-Controls-Tools-and-Resources/development-control-plan"
+    ],
+    "LGA-108012477": [
+      "Dungog",
+      "Dungog Shire Council",
+      "https://www.dungog.nsw.gov.au",
+      [
+        [
+          "Dungog Local Environmental Plan 2014",
+          "2014-301"
+        ]
+      ],
+      null
+    ],
+    "LGA-173919536": [
+      "Edward River",
+      "Edward River Council",
+      "https://www.edwardriver.nsw.gov.au",
+      [
+        [
+          "Edward River Local Environmental Plan 2013",
+          "2013-462"
+        ]
+      ],
+      null
+    ],
+    "LGA-178764487": [
+      "Eurobodalla",
+      "Eurobodalla Shire Council",
+      "https://www.esc.nsw.gov.au",
+      [
+        [
+          "Eurobodalla Local Environmental Plan 2012",
+          "2012-333"
+        ]
+      ],
+      null
+    ],
+    "LGA-108012437": [
+      "Fairfield",
+      "Fairfield City Council",
+      "https://www.fairfieldcity.nsw.gov.au",
+      [
+        [
+          "Fairfield Local Environmental Plan 2013",
+          "2013-213"
+        ]
+      ],
+      null
+    ],
+    "LGA-173953566": [
+      "Federation",
+      "Federation Council",
+      "https://www.federationcouncil.nsw.gov.au",
+      [
+        [
+          "Corowa Local Environmental Plan 2012",
+          "2012-303"
+        ],
+        [
+          "Urana Local Environmental Plan 2011",
+          "2011-508"
+        ]
+      ],
+      null
+    ],
+    "LGA-108012478": [
+      "Forbes",
+      "Forbes Shire Council",
+      "https://www.forbes.nsw.gov.au",
+      [
+        [
+          "Forbes Local Environmental Plan 2013",
+          "2013-428"
+        ]
+      ],
+      "https://www.forbes.nsw.gov.au/development/local-planning-instruments/forbes-development-control-plans"
+    ],
+    "LGA-173954796": [
+      "Georges River",
+      "Georges River Council",
+      "https://www.georgesriver.nsw.gov.au",
+      [
+        [
+          "Georges River Local Environmental Plan 2021",
+          "2021-587"
+        ]
+      ],
+      "https://www.georgesriver.nsw.gov.au/Development/Planning-Controls/Development-Control-Plans"
+    ],
+    "LGA-108012519": [
+      "Gilgandra",
+      "Gilgandra Shire Council",
+      "https://www.gilgandra.nsw.gov.au",
+      [
+        [
+          "Gilgandra Local Environmental Plan 2011",
+          "2011-641"
+        ]
+      ],
+      null
+    ],
+    "LGA-151997900": [
+      "Glen Innes Severn",
+      "Glen Innes Severn Shire Council",
+      "https://www.gisc.nsw.gov.au",
+      [
+        [
+          "Glen Innes Severn Local Environmental Plan 2012",
+          "2012-467"
+        ]
+      ],
+      null
+    ],
+    "LGA-108012395": [
+      "Goulburn Mulwaree",
+      "Goulburn Mulwaree Council",
+      "https://www.goulburn.nsw.gov.au",
+      [
+        [
+          "Goulburn Mulwaree Local Environmental Plan 2009",
+          "2009-56"
+        ]
+      ],
+      null
+    ],
+    "LGA-108012439": [
+      "Greater Hume Shire",
+      "Greater Hume Shire Council",
+      "https://www.greaterhume.nsw.gov.au",
+      [
+        [
+          "Greater Hume Local Environmental Plan 2012",
+          "2012-522"
+        ]
+      ],
+      null
+    ],
+    "LGA-108012440": [
+      "Griffith",
+      "Griffith City Council",
+      "https://www.griffith.nsw.gov.au",
+      [
+        [
+          "Griffith Local Environmental Plan 2014",
+          "2014-137"
+        ]
+      ],
+      null
+    ],
+    "LGA-108012522": [
+      "Gunnedah",
+      "Gunnedah Shire Council",
+      "https://www.gunnedah.nsw.gov.au",
+      [
+        [
+          "Gunnedah Local Environmental Plan 2012",
+          "2012-304"
+        ]
+      ],
+      null
+    ],
+    "LGA-108012442": [
+      "Gwydir",
+      "Gwydir Shire Council",
+      "https://www.gwydirshire.com",
+      [
+        [
+          "Gwydir Local Environmental Plan 2013",
+          "2013-507"
+        ]
+      ],
+      null
+    ],
+    "LGA-108012399": [
+      "Hawkesbury",
+      "Hawkesbury City Council",
+      "https://www.hawkesbury.nsw.gov.au",
+      [
+        [
+          "Hawkesbury Local Environmental Plan 2012",
+          "2012-470"
+        ]
+      ],
+      null
+    ],
+    "LGA-108012443": [
+      "Hay",
+      "Hay Shire Council",
+      "https://www.hay.nsw.gov.au",
+      [
+        [
+          "Hay Local Environmental Plan 2011",
+          "2011-642"
+        ]
+      ],
+      null
+    ],
+    "LGA-173954192": [
+      "Hilltops",
+      "Hilltops Council",
+      "https://www.hilltops.nsw.gov.au",
+      [
+        [
+          "Hilltops Local Environmental Plan 2022",
+          "2022-874"
+        ]
+      ],
+      "https://www.hilltops.nsw.gov.au/develop/strategic-land-use-planning/"
+    ],
+    "LGA-108012525": [
+      "Hornsby",
+      "The Council Of The Shire Of Hornsby",
+      "https://www.hornsby.nsw.gov.au",
+      [
+        [
+          "Hornsby Local Environmental Plan 2013",
+          "2013-569"
+        ]
+      ],
+      null
+    ],
+    "LGA-108012401": [
+      "Hunters Hill",
+      "The Council Of The Municipality Of Hunters Hill",
+      "https://www.huntershill.nsw.gov.au",
+      [
+        [
+          "Hunters Hill Local Environmental Plan 2012",
+          "2013-34"
+        ]
+      ],
+      null
+    ],
+    "LGA-173919575": [
+      "Inner West",
+      "Inner West Council",
+      "https://www.innerwest.nsw.gov.au",
+      [
+        [
+          "Inner West Local Environmental Plan 2022",
+          "2022-457"
+        ]
+      ],
+      null
+    ],
+    "LGA-108012484": [
+      "Inverell",
+      "Inverell Shire Council",
+      "https://www.inverell.nsw.gov.au",
+      [
+        [
+          "Guyra Local Environmental Plan 2012",
+          "2012-591"
+        ],
+        [
+          "Inverell Local Environmental Plan 2012",
+          "2012-614"
+        ]
+      ],
+      null
+    ],
+    "LGA-108012402": [
+      "Junee",
+      "Junee Shire Council",
+      "https://www.junee.nsw.gov.au",
+      [
+        [
+          "Junee Local Environmental Plan 2012",
+          "2012-674"
+        ]
+      ],
+      null
+    ],
+    "LGA-108012445": [
+      "Kempsey",
+      "Kempsey Shire Council",
+      "https://www.kempsey.nsw.gov.au",
+      [
+        [
+          "Kempsey Local Environmental Plan 2013",
+          "2013-712"
+        ]
+      ],
+      null
+    ],
+    "LGA-108012485": [
+      "Kiama",
+      "The Council Of The Municipality Of Kiama",
+      "https://www.kiama.nsw.gov.au",
+      [
+        [
+          "Kiama Local Environmental Plan 2011",
+          "2011-680"
+        ]
+      ],
+      null
+    ],
+    "LGA-108012403": [
+      "Ku-Ring-Gai",
+      "Ku-Ring-Gai Council",
+      "https://www.krg.nsw.gov.au",
+      [
+        [
+          "Ku-ring-gai Local Environmental Plan 2015",
+          "2015-134"
+        ]
+      ],
+      null
+    ],
+    "LGA-108012446": [
+      "Kyogle",
+      "Kyogle Council",
+      "https://www.kyogle.nsw.gov.au",
+      [
+        [
+          "Kyogle Local Environmental Plan 2012",
+          "2013-25"
+        ]
+      ],
+      "https://www.kyogle.nsw.gov.au/plan-build-business/planning/planning-controls"
+    ],
+    "LGA-108012486": [
+      "Lachlan",
+      "Lachlan Shire Council",
+      "https://www.lachlan.nsw.gov.au",
+      [
+        [
+          "Lachlan Local Environmental Plan 2013",
+          "2013-429"
+        ]
+      ],
+      null
+    ],
+    "LGA-108012528": [
+      "Lake Macquarie",
+      "Lake Macquarie City Council",
+      "https://www.lakemac.com.au",
+      [
+        [
+          "Lake Macquarie Local Environmental Plan 2004",
+          "2004-116"
+        ],
+        [
+          "Lake Macquarie Local Environmental Plan 2014",
+          "2014-605"
+        ]
+      ],
+      null
+    ],
+    "LGA-108012404": [
+      "Lane Cove",
+      "Lane Cove Municipal Council",
+      "https://www.lanecove.nsw.gov.au",
+      [
+        [
+          "Lane Cove Local Environmental Plan 2009",
+          "2010-49"
+        ]
+      ],
+      null
+    ],
+    "LGA-108012447": [
+      "Leeton",
+      "Leeton Shire Council",
+      "https://www.leeton.nsw.gov.au",
+      [
+        [
+          "Leeton Local Environmental Plan 2014",
+          "2014-353"
+        ]
+      ],
+      null
+    ],
+    "LGA-108012529": [
+      "Lismore",
+      "Lismore City Council",
+      "https://www.lismore.nsw.gov.au",
+      [
+        [
+          "Lismore Local Environmental Plan 2012",
+          "2013-66"
+        ]
+      ],
+      null
+    ],
+    "LGA-108012520": [
+      "Lithgow City",
+      "Lithgow City Council",
+      "https://www.council.lithgow.com",
+      [
+        [
+          "Lithgow Local Environmental Plan 2014",
+          "2014-824"
+        ]
+      ],
+      null
+    ],
+    "LGA-108012406": [
+      "Liverpool",
+      "Liverpool City Council",
+      "https://www.liverpool.nsw.gov.au",
+      [
+        [
+          "Liverpool Local Environmental Plan 2008",
+          "2008-403"
+        ]
+      ],
+      null
+    ],
+    "LGA-108012448": [
+      "Liverpool Plains",
+      "Liverpool Plains Shire Council",
+      "https://www.liverpoolplains.nsw.gov.au",
+      [
+        [
+          "Liverpool Plains Local Environmental Plan 2011",
+          "2011-644"
+        ]
+      ],
+      null
+    ],
+    "LGA-108012489": [
+      "Lockhart",
+      "Lockhart Shire Council",
+      "https://www.lockhart.nsw.gov.au",
+      [
+        [
+          "Lockhart Local Environmental Plan 2012",
+          "2012-676"
+        ]
+      ],
+      "https://lockhart.nsw.gov.au/development/planning-policies/"
+    ],
+    "LGA-108012530": [
+      "Maitland",
+      "Maitland City Council",
+      "https://www.maitland.nsw.gov.au",
+      [
+        [
+          "Maitland Local Environmental Plan 2011",
+          "2011-681"
+        ]
+      ],
+      null
+    ],
+    "LGA-173954185": [
+      "Mid-Coast",
+      "Mid-Coast Council",
+      "https://www.midcoast.nsw.gov.au",
+      [
+        [
+          "Gloucester Local Environmental Plan 2010",
+          "2010-241"
+        ],
+        [
+          "Great Lakes Local Environmental Plan 2014",
+          "2014-176"
+        ],
+        [
+          "Greater Taree Local Environmental Plan 2010",
+          "2010-287"
+        ]
+      ],
+      null
+    ],
+    "LGA-108012490": [
+      "Mid-Western Regional",
+      "Mid-Western Regional Council",
+      "https://www.midwestern.nsw.gov.au",
+      [
+        [
+          "Mid-Western Regional Local Environmental Plan 2012",
+          "2012-374"
+        ]
+      ],
+      null
+    ],
+    "LGA-108012531": [
+      "Moree Plains",
+      "Moree Plains Shire Council",
+      "https://www.mpsc.nsw.gov.au",
+      [
+        [
+          "Moree Plains Local Environmental Plan 2011",
+          "2011-646"
+        ]
+      ],
+      null
+    ],
+    "LGA-108012409": [
+      "Mosman",
+      "Mosman Municipal Council",
+      "https://www.mosman.nsw.gov.au",
+      [
+        [
+          "Mosman Local Environmental Plan 2012",
+          "2011-647"
+        ]
+      ],
+      "https://mosman.nsw.gov.au/planning-and-development/planning-controls/DCP"
+    ],
+    "LGA-173953134": [
+      "Murray River",
+      "Murray River Council",
+      "https://www.murrayriver.nsw.gov.au",
+      [
+        [
+          "Murray Local Environmental Plan 2011",
+          "2011-682"
+        ],
+        [
+          "Wakool Local Environmental Plan 2013",
+          "2013-655"
+        ]
+      ],
+      null
+    ],
+    "LGA-173953141": [
+      "Murrumbidgee",
+      "Murrumbidgee Council",
+      "https://www.murrumbidgee.nsw.gov.au",
+      [
+        [
+          "Jerilderie Local Environmental Plan 2012",
+          "2012-263"
+        ],
+        [
+          "Murrumbidgee Local Environmental Plan 2013",
+          "2013-471"
+        ]
+      ],
+      null
+    ],
+    "LGA-108012532": [
+      "Muswellbrook",
+      "Muswellbrook Shire Council",
+      "https://www.muswellbrook.nsw.gov.au",
+      [
+        [
+          "Muswellbrook Local Environmental Plan 2009",
+          "2009-129"
+        ]
+      ],
+      "https://www.muswellbrook.nsw.gov.au/development-control-plan/"
+    ],
+    "LGA-108012410": [
+      "Nambucca Valley",
+      "Nambucca Valley Council",
+      "https://www.nambucca.nsw.gov.au",
+      [
+        [
+          "Nambucca Local Environmental Plan 2010",
+          "2010-401"
+        ]
+      ],
+      null
+    ],
+    "LGA-108012451": [
+      "Narrabri",
+      "Narrabri Shire Council",
+      "https://www.narrabri.nsw.gov.au",
+      [
+        [
+          "Narrabri Local Environmental Plan 2012",
+          "2012-636"
+        ]
+      ],
+      null
+    ],
+    "LGA-108012492": [
+      "Narrandera",
+      "Narrandera Shire Council",
+      "https://www.narrandera.nsw.gov.au",
+      [
+        [
+          "Narrandera Local Environmental Plan 2013",
+          "2013-357"
+        ]
+      ],
+      null
+    ],
+    "LGA-108012533": [
+      "Narromine",
+      "Narromine Shire Council",
+      "https://www.narromine.nsw.gov.au",
+      [
+        [
+          "Narromine Local Environmental Plan 2011",
+          "2011-648"
+        ]
+      ],
+      "https://www.narromine.nsw.gov.au/development/development-control-plan"
+    ],
+    "LGA-108012411": [
+      "Newcastle",
+      "Newcastle City Council",
+      "https://www.newcastle.nsw.gov.au",
+      [
+        [
+          "Newcastle Local Environmental Plan 2012",
+          "2012-255"
+        ]
+      ],
+      "https://newcastle.nsw.gov.au/development/land-use-planning/development-control-plan-and-technical-manuals"
+    ],
+    "LGA-108012452": [
+      "North Sydney",
+      "North Sydney Council",
+      "https://www.northsydney.nsw.gov.au",
+      [
+        [
+          "North Sydney Local Environmental Plan 2013",
+          "2013-411"
+        ]
+      ],
+      null
+    ],
+    "LGA-173919503": [
+      "Northern Beaches",
+      "Northern Beaches Council",
+      "https://www.northernbeaches.nsw.gov.au",
+      [
+        [
+          "Manly Local Environmental Plan 2013",
+          "2013-140"
+        ],
+        [
+          "Pittwater Local Environmental Plan 2014",
+          "2014-320"
+        ],
+        [
+          "Warringah Local Environmental Plan 2011",
+          "2011-649"
+        ]
+      ],
+      "https://www.northernbeaches.nsw.gov.au/planning-and-development/planning-controls"
+    ],
+    "LGA-108012493": [
+      "Oberon",
+      "Oberon Council",
+      "https://www.oberon.nsw.gov.au",
+      [
+        [
+          "Oberon Local Environmental Plan 2013",
+          "2013-713"
+        ]
+      ],
+      null
+    ],
+    "LGA-108012534": [
+      "Orange",
+      "Orange City Council",
+      "https://www.orange.nsw.gov.au",
+      [
+        [
+          "Orange Local Environmental Plan 2011",
+          "2012-55"
+        ]
+      ],
+      null
+    ],
+    "LGA-108012412": [
+      "Parkes",
+      "Parkes Shire Council",
+      "https://www.parkes.nsw.gov.au",
+      [
+        [
+          "Parkes Local Environmental Plan 2012",
+          "2012-615"
+        ]
+      ],
+      null
+    ],
+    "LGA-108012535": [
+      "Penrith",
+      "Penrith City Council",
+      "https://www.penrithcity.nsw.gov.au",
+      [
+        [
+          "Penrith Local Environmental Plan 2010",
+          "2010-540"
+        ]
+      ],
+      "https://www.penrithcity.nsw.gov.au/building-development/planning-zoning/planning-controls/development-control-plans"
+    ],
+    "LGA-108012523": [
+      "Port Macquarie-Hastings",
+      "Port Macquarie-Hastings Council",
+      "https://www.pmhc.nsw.gov.au",
+      [
+        [
+          "Port Macquarie-Hastings Local Environmental Plan 2011",
+          "2011-84"
+        ]
+      ],
+      null
+    ],
+    "LGA-108012454": [
+      "Port Stephens",
+      "Port Stephens Council",
+      "https://www.portstephens.nsw.gov.au",
+      [
+        [
+          "Port Stephens Local Environmental Plan 2013",
+          "2013-755"
+        ]
+      ],
+      null
+    ],
+    "LGA-173954851": [
+      "Queanbeyan-Palerang Regional",
+      "Queanbeyan-Palerang Regional Council",
+      "https://www.qprc.nsw.gov.au",
+      [
+        [
+          "Queanbeyan-Palerang Regional Local Environmental Plan 2022",
+          "2022-600"
+        ]
+      ],
+      null
+    ],
+    "LGA-108012496": [
+      "Randwick",
+      "Randwick City Council",
+      "https://www.randwick.nsw.gov.au",
+      [
+        [
+          "Randwick Local Environmental Plan 2012",
+          "2013-36"
+        ]
+      ],
+      null
+    ],
+    "LGA-108012536": [
+      "Richmond Valley",
+      "Richmond Valley Council",
+      "https://www.richmondvalley.nsw.gov.au",
+      [
+        [
+          "Richmond Valley Local Environmental Plan 2012",
+          "2012-98"
+        ]
+      ],
+      "https://richmondvalley.nsw.gov.au/building-and-planning-services/strategic-planning/development-control-plan/"
+    ],
+    "LGA-108012455": [
+      "Ryde",
+      "Ryde City Council",
+      "https://www.ryde.nsw.gov.au",
+      [
+        [
+          "Ryde Local Environmental Plan 2014",
+          "2014-608"
+        ]
+      ],
+      null
+    ],
+    "LGA-108012537": [
+      "Shellharbour",
+      "Shellharbour City Council",
+      "https://www.shellharbour.nsw.gov.au",
+      [
+        [
+          "Shellharbour Local Environmental Plan 2013",
+          "2013-141"
+        ],
+        [
+          "Shellharbour Rural Local Environmental Plan 2004",
+          "2004-818"
+        ]
+      ],
+      "https://www.shellharbour.nsw.gov.au/plan-and-build/planning-controls-and-guidelines"
+    ],
+    "LGA-108012415": [
+      "Shoalhaven",
+      "Shoalhaven City Council",
+      "https://www.shoalhaven.nsw.gov.au",
+      [
+        [
+          "Shoalhaven Local Environmental Plan (Jerberra Estate) 2014",
+          "2014-51"
+        ],
+        [
+          "Shoalhaven Local Environmental Plan 2014",
+          "2014-179"
+        ]
+      ],
+      null
+    ],
+    "LGA-108012456": [
+      "Singleton",
+      "Singleton Council",
+      "https://www.singleton.nsw.gov.au",
+      [
+        [
+          "Singleton Local Environmental Plan 2013",
+          "2013-524"
+        ]
+      ],
+      null
+    ],
+    "LGA-173919366": [
+      "Snowy Monaro Regional",
+      "Snowy Monaro Regional Council",
+      "https://www.snowymonaro.nsw.gov.au",
+      [
+        [
+          "Bombala Local Environmental Plan 2012",
+          "2012-302"
+        ],
+        [
+          "Cooma-Monaro Local Environmental Plan 2013",
+          "2013-614"
+        ],
+        [
+          "Snowy River Local Environmental Plan 2013",
+          "2013-700"
+        ]
+      ],
+      null
+    ],
+    "LGA-173919850": [
+      "Snowy Valleys",
+      "Snowy Valleys Council",
+      "https://www.snowyvalleys.nsw.gov.au",
+      [
+        [
+          "Tumbarumba Local Environmental Plan 2010",
+          "2010-317"
+        ],
+        [
+          "Tumut Local Environmental Plan 2012",
+          "2012-637"
+        ]
+      ],
+      null
+    ],
+    "LGA-108012538": [
+      "Strathfield",
+      "Strathfield Municipal Council",
+      "https://www.strathfield.nsw.gov.au",
+      [
+        [
+          "Strathfield Local Environmental Plan 2012",
+          "2013-115"
+        ]
+      ],
+      null
+    ],
+    "LGA-108012416": [
+      "Sutherland Shire",
+      "Sutherland Shire Council",
+      "https://www.sutherlandshire.nsw.gov.au",
+      [
+        [
+          "Sutherland Shire Local Environmental Plan 2006",
+          "2006-669"
+        ],
+        [
+          "Sutherland Shire Local Environmental Plan 2015",
+          "2015-319"
+        ]
+      ],
+      null
+    ],
+    "LGA-108012457": [
+      "Sydney",
+      "Council Of The City Of Sydney",
+      "https://www.cityofsydney.nsw.gov.au",
+      [
+        [
+          "Sydney Local Environmental Plan (Glebe Affordable Housing Project) 2011",
+          "2011-335"
+        ],
+        [
+          "Sydney Local Environmental Plan (Green Square Town Centre) 2013",
+          "2013-541"
+        ],
+        [
+          "Sydney Local Environmental Plan (Green Square Town Centre—Stage 2) 2013",
+          "2013-525"
+        ],
+        [
+          "Sydney Local Environmental Plan (Harold Park) 2011",
+          "2011-683"
+        ],
+        [
+          "Sydney Local Environmental Plan 2012",
+          "2012-628"
+        ]
+      ],
+      "https://www.cityofsydney.nsw.gov.au/development-control-plans/sydney-dcp-2012"
+    ],
+    "LGA-108012494": [
+      "Tamworth Regional",
+      "Tamworth Regional Council",
+      "https://www.tamworth.nsw.gov.au",
+      [
+        [
+          "Tamworth Regional Local Environmental Plan 2010",
+          "2011-27"
+        ]
+      ],
+      "https://www.tamworth.nsw.gov.au/develop/planning-controls/development-control-plans"
+    ],
+    "LGA-108012499": [
+      "Temora",
+      "Temora Shire Council",
+      "https://www.temora.nsw.gov.au",
+      [
+        [
+          "Temora Local Environmental Plan 2010",
+          "2010-243"
+        ]
+      ],
+      null
+    ],
+    "LGA-108012539": [
+      "Tenterfield",
+      "Tenterfield Shire Council",
+      "https://www.tenterfield.nsw.gov.au",
+      [
+        [
+          "Tenterfield Local Environmental Plan 2013",
+          "2013-152"
+        ]
+      ],
+      null
+    ],
+    "LGA-108012467": [
+      "The Hills Shire",
+      "The Hills Shire Council",
+      "https://www.thehills.nsw.gov.au",
+      [
+        [
+          "The Hills Local Environmental Plan 2019",
+          "2019-596"
+        ]
+      ],
+      null
+    ],
+    "LGA-108012500": [
+      "Tweed",
+      "Tweed Shire Council",
+      "https://www.tweed.nsw.gov.au",
+      [
+        [
+          "Tweed City Centre Local Environmental Plan 2012",
+          "2013-14"
+        ],
+        [
+          "Tweed Local Environmental Plan 2014",
+          "2014-177"
+        ]
+      ],
+      null
+    ],
+    "LGA-108012541": [
+      "Upper Hunter",
+      "Upper Hunter Shire Council",
+      "https://www.upperhunter.nsw.gov.au",
+      [
+        [
+          "Upper Hunter Local Environmental Plan 2013",
+          "2013-756"
+        ]
+      ],
+      null
+    ],
+    "LGA-108012418": [
+      "Upper Lachlan Shire",
+      "Upper Lachlan Shire Council",
+      "https://www.upperlachlan.nsw.gov.au",
+      [
+        [
+          "Upper Lachlan Local Environmental Plan 2010",
+          "2010-368"
+        ]
+      ],
+      null
+    ],
+    "LGA-108012459": [
+      "Uralla",
+      "Uralla Shire Council",
+      "https://www.uralla.nsw.gov.au",
+      [
+        [
+          "Uralla Local Environmental Plan 2012",
+          "2012-119"
+        ]
+      ],
+      null
+    ],
+    "LGA-108012542": [
+      "Wagga Wagga",
+      "Wagga Wagga City Council",
+      "https://www.wagga.nsw.gov.au",
+      [
+        [
+          "Wagga Wagga Local Environmental Plan 2010",
+          "2010-378"
+        ]
+      ],
+      null
+    ],
+    "LGA-108012460": [
+      "Walcha",
+      "Walcha Council",
+      "https://www.walcha.nsw.gov.au",
+      [
+        [
+          "Walcha Local Environmental Plan 2012",
+          "2012-525"
+        ]
+      ],
+      "https://walcha.nsw.gov.au/planning/development-control-plan-dcp/"
+    ],
+    "LGA-108012502": [
+      "Walgett",
+      "Walgett Shire Council",
+      "https://www.walgett.nsw.gov.au",
+      [
+        [
+          "Walgett Local Environmental Plan 2013",
+          "2013-373"
+        ]
+      ],
+      null
+    ],
+    "LGA-108012543": [
+      "Warren",
+      "Warren Shire Council",
+      "https://www.warren.nsw.gov.au",
+      [
+        [
+          "Warren Local Environmental Plan 2012",
+          "2012-678"
+        ]
+      ],
+      "https://www.warren.nsw.gov.au/development/development-control-plan"
+    ],
+    "LGA-151983061": [
+      "Warrumbungle",
+      "Warrumbungle Shire Council",
+      "https://www.warrumbungle.nsw.gov.au",
+      [
+        [
+          "Warrumbungle Local Environmental Plan 2013",
+          "2013-670"
+        ]
+      ],
+      null
+    ],
+    "LGA-108012461": [
+      "Waverley",
+      "Waverley Council",
+      "https://www.waverley.nsw.gov.au",
+      [
+        [
+          "Waverley Local Environmental Plan 2012",
+          "2012-540"
+        ]
+      ],
+      null
+    ],
+    "LGA-108012503": [
+      "Weddin",
+      "Weddin Shire Council",
+      "https://www.weddin.nsw.gov.au",
+      [
+        [
+          "Weddin Local Environmental Plan 2011",
+          "2011-622"
+        ]
+      ],
+      null
+    ],
+    "LGA-108012421": [
+      "Wentworth",
+      "Wentworth Shire Council",
+      "https://www.wentworth.nsw.gov.au",
+      [
+        [
+          "Wentworth Local Environmental Plan 2011",
+          "2011-684"
+        ]
+      ],
+      null
+    ],
+    "LGA-108012462": [
+      "Willoughby",
+      "Willoughby City Council",
+      "https://www.willoughby.nsw.gov.au",
+      [
+        [
+          "Willoughby Local Environmental Plan 2012",
+          "2012-679"
+        ]
+      ],
+      null
+    ],
+    "LGA-108012504": [
+      "Wingecarribee",
+      "Wingecarribee Shire Council",
+      "https://www.wsc.nsw.gov.au",
+      [
+        [
+          "Wingecarribee Local Environmental Plan 2010",
+          "2010-245"
+        ]
+      ],
+      null
+    ],
+    "LGA-108012546": [
+      "Wollondilly",
+      "Wollondilly Shire Council",
+      "https://www.wollondilly.nsw.gov.au",
+      [
+        [
+          "Wollondilly Local Environmental Plan 2011",
+          "2011-85"
+        ]
+      ],
+      "https://www.wollondilly.nsw.gov.au/planning-and-development/guidelines-and-controls/development-control-plan"
+    ],
+    "LGA-108012422": [
+      "Wollongong",
+      "Wollongong City Council",
+      "https://www.wollongong.nsw.gov.au",
+      [
+        [
+          "Wollongong Local Environmental Plan 2009",
+          "2010-76"
+        ]
+      ],
+      null
+    ],
+    "LGA-108012463": [
+      "Woollahra",
+      "Woollahra Municipal Council",
+      "https://www.woollahra.nsw.gov.au",
+      [
+        [
+          "Woollahra Local Environmental Plan 2014",
+          "2015-20"
+        ]
+      ],
+      null
+    ],
+    "LGA-108012547": [
+      "Yass Valley",
+      "Yass Valley Council",
+      "https://www.yassvalley.nsw.gov.au",
+      [
+        [
+          "Yass Valley Local Environmental Plan (Parkwood) 2020",
+          "2020-422"
+        ],
+        [
+          "Yass Valley Local Environmental Plan 2013",
+          "2013-391"
+        ]
+      ],
+      null
+    ]
+  },
+  "input_sha256": {
+    "nsw_councils_geojson": "d1fcadc3c51b520f6c35b97ebcc4f668655c84d98cd02212c383475e5784bc0e"
+  },
+  "excluded_reference_rows": [
+    {
+      "EPI_NAME": "State Environmental Planning Policy (Precincts - Eastern Harbour City) 2021",
+      "PCO_REF_KEY": "2021-726",
+      "EPI_TYPE": "LEP",
+      "LGA_NAME": "",
+      "reason": "No LGA assignment; SEPP title despite LEP source label. Not applied to councils."
+    }
+  ]
+}

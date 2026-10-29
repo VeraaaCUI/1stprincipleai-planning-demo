@@ -1,0 +1,1030 @@
+{
+  "schema_version": "council-colour-key-0.1",
+  "checked_on": "2026-10-29",
+  "title": "NSW council types",
+  "basis": "Published Office of Local Government council types, based on broad population, density and urban characteristics.",
+  "legend_note": "Colours show OLG council types, not zoning, hazards, development permission or confidence. Adjacent councils may share a colour.",
+  "edition_note": "The published PDF was checked on 29 October 2026; its HTTP Last-Modified is 27 July 2020. This is the published classification edition, not a newly calculated 2026 classification.",
+  "coverage": {
+    "classified_councils": 128,
+    "special_areas": 4,
+    "other_states": "No council-detail classification supplied outside NSW."
+  },
+  "sources": [
+    {
+      "title": "OLG Australian Classification of Local Governments and OLG group numbers",
+      "url": "https://yourcouncil.nsw.gov.au/wp-content/uploads/2020/05/Australian-Classification-of-Local-Government-and-OLG-group-numbers.pdf",
+      "pages": [
+        1,
+        2,
+        3
+      ],
+      "checked_on": "2026-10-29",
+      "http_last_modified": "Mon, 27 Jul 2020 00:58:03 GMT",
+      "sha256": "085a34709c956055c7716f5c5144a5c421bf98a1c9a1c6c11ba1ef215208efe3"
+    },
+    {
+      "title": "Your Council NSW: classification explanation",
+      "url": "https://yourcouncil.nsw.gov.au/faq/",
+      "checked_on": "2026-10-29"
+    },
+    {
+      "title": "Your Council NSW: source data directory",
+      "url": "https://yourcouncil.nsw.gov.au/data/",
+      "checked_on": "2026-10-29"
+    }
+  ],
+  "attribution": "Council-type facts: NSW Office of Local Government, Your Council NSW. Colour palette and name-to-map crosswalk: 1stprincipleai.",
+  "categories": [
+    {
+      "id": "metropolitan",
+      "label": "Metropolitan",
+      "color": "#4E79A7",
+      "olg_groups": [
+        1,
+        2,
+        3
+      ],
+      "description": "OLG metropolitan category, including the capital city and developed metropolitan councils.",
+      "count": 25
+    },
+    {
+      "id": "metropolitan_fringe",
+      "label": "Metropolitan fringe",
+      "color": "#8F6BAF",
+      "olg_groups": [
+        6,
+        7
+      ],
+      "description": "OLG fringe category: developing councils on the margin of a metropolitan or regional urban centre.",
+      "count": 9
+    },
+    {
+      "id": "regional_town_city",
+      "label": "Regional town / city",
+      "color": "#4A8F8B",
+      "olg_groups": [
+        4,
+        5
+      ],
+      "description": "OLG regional town/city category, based on broad demographic and urban characteristics.",
+      "count": 37
+    },
+    {
+      "id": "large_rural",
+      "label": "Large rural",
+      "color": "#C99B4A",
+      "olg_groups": [
+        10,
+        11
+      ],
+      "description": "OLG large rural category; a demographic classification, not a land-use zone.",
+      "count": 42
+    },
+    {
+      "id": "rural",
+      "label": "Rural",
+      "color": "#B97965",
+      "olg_groups": [
+        8,
+        9
+      ],
+      "description": "OLG rural category; it does not mean every property is rural-zoned.",
+      "count": 15
+    },
+    {
+      "id": "special_area",
+      "label": "Unincorporated / special area",
+      "color": "#88949A",
+      "olg_groups": [],
+      "description": "Shown separately from the 128 general-purpose councils; no OLG council type assigned.",
+      "count": 4
+    }
+  ],
+  "councils": {
+    "LGA-108012465": {
+      "name": "Albury City",
+      "category_id": "regional_town_city",
+      "source_name": "Albury",
+      "olg_group": 4,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-173919376": {
+      "name": "Armidale Regional",
+      "category_id": "regional_town_city",
+      "source_name": "Armidale Regional",
+      "olg_group": 4,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012466": {
+      "name": "Ballina",
+      "category_id": "regional_town_city",
+      "source_name": "Ballina",
+      "olg_group": 4,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012507": {
+      "name": "Balranald",
+      "category_id": "rural",
+      "source_name": "Balranald",
+      "olg_group": 9,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012426": {
+      "name": "Bathurst Regional",
+      "category_id": "regional_town_city",
+      "source_name": "Bathurst Regional",
+      "olg_group": 4,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-174469757": {
+      "name": "Bayside",
+      "category_id": "metropolitan",
+      "source_name": "Bayside",
+      "olg_group": 3,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012508": {
+      "name": "Bega Valley",
+      "category_id": "regional_town_city",
+      "source_name": "Bega Valley",
+      "olg_group": 4,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012380": {
+      "name": "Bellingen",
+      "category_id": "large_rural",
+      "source_name": "Bellingen",
+      "olg_group": 11,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012427": {
+      "name": "Berrigan",
+      "category_id": "large_rural",
+      "source_name": "Berrigan",
+      "olg_group": 10,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012468": {
+      "name": "Blacktown",
+      "category_id": "metropolitan",
+      "source_name": "Blacktown",
+      "olg_group": 3,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012509": {
+      "name": "Bland",
+      "category_id": "large_rural",
+      "source_name": "Bland",
+      "olg_group": 10,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012381": {
+      "name": "Blayney",
+      "category_id": "large_rural",
+      "source_name": "Blayney",
+      "olg_group": 10,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012428": {
+      "name": "Blue Mountains",
+      "category_id": "metropolitan_fringe",
+      "source_name": "Blue Mountains",
+      "olg_group": 7,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012469": {
+      "name": "Bogan",
+      "category_id": "rural",
+      "source_name": "Bogan",
+      "olg_group": 9,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012511": {
+      "name": "Bourke",
+      "category_id": "rural",
+      "source_name": "Bourke",
+      "olg_group": 9,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012384": {
+      "name": "Brewarrina",
+      "category_id": "rural",
+      "source_name": "Brewarrina",
+      "olg_group": 8,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012430": {
+      "name": "Broken Hill",
+      "category_id": "regional_town_city",
+      "source_name": "Broken Hill",
+      "olg_group": 4,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012471": {
+      "name": "Burwood",
+      "category_id": "metropolitan",
+      "source_name": "Burwood",
+      "olg_group": 2,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012512": {
+      "name": "Byron",
+      "category_id": "regional_town_city",
+      "source_name": "Byron",
+      "olg_group": 4,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012385": {
+      "name": "Cabonne",
+      "category_id": "large_rural",
+      "source_name": "Cabonne",
+      "olg_group": 11,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012431": {
+      "name": "Camden",
+      "category_id": "metropolitan_fringe",
+      "source_name": "Camden",
+      "olg_group": 7,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012472": {
+      "name": "Campbelltown",
+      "category_id": "metropolitan_fringe",
+      "source_name": "Campbelltown",
+      "olg_group": 7,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012513": {
+      "name": "Canada Bay",
+      "category_id": "metropolitan",
+      "source_name": "Canada Bay",
+      "olg_group": 3,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-173954170": {
+      "name": "Canterbury-Bankstown",
+      "category_id": "metropolitan",
+      "source_name": "Canterbury-Bankstown",
+      "olg_group": 3,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012432": {
+      "name": "Carrathool",
+      "category_id": "rural",
+      "source_name": "Carrathool",
+      "olg_group": 9,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-173954198": {
+      "name": "Central Coast",
+      "category_id": "metropolitan_fringe",
+      "source_name": "Central Coast",
+      "olg_group": 7,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012473": {
+      "name": "Central Darling",
+      "category_id": "rural",
+      "source_name": "Central Darling",
+      "olg_group": 9,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012514": {
+      "name": "Cessnock",
+      "category_id": "regional_town_city",
+      "source_name": "Cessnock",
+      "olg_group": 4,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012453": {
+      "name": "City Of Parramatta",
+      "category_id": "metropolitan",
+      "source_name": "Parramatta",
+      "olg_group": 3,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012388": {
+      "name": "Clarence Valley",
+      "category_id": "regional_town_city",
+      "source_name": "Clarence Valley",
+      "olg_group": 4,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012433": {
+      "name": "Cobar",
+      "category_id": "large_rural",
+      "source_name": "Cobar",
+      "olg_group": 10,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012474": {
+      "name": "Coffs Harbour",
+      "category_id": "regional_town_city",
+      "source_name": "Coffs Harbour",
+      "olg_group": 5,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012434": {
+      "name": "Coolamon",
+      "category_id": "rural",
+      "source_name": "Coolamon",
+      "olg_group": 9,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012390": {
+      "name": "Coonamble",
+      "category_id": "rural",
+      "source_name": "Coonamble",
+      "olg_group": 9,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-173953581": {
+      "name": "Cootamundra-Gundagai Regional",
+      "category_id": "large_rural",
+      "source_name": "Cootamundra-Gundagai Regional",
+      "olg_group": 11,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012517": {
+      "name": "Cowra",
+      "category_id": "large_rural",
+      "source_name": "Cowra",
+      "olg_group": 11,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-173954878": {
+      "name": "Cumberland",
+      "category_id": "metropolitan",
+      "source_name": "Cumberland",
+      "olg_group": 3,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-173919533": {
+      "name": "Dubbo Regional",
+      "category_id": "regional_town_city",
+      "source_name": "Dubbo Regional",
+      "olg_group": 4,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012477": {
+      "name": "Dungog",
+      "category_id": "large_rural",
+      "source_name": "Dungog",
+      "olg_group": 10,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-173919536": {
+      "name": "Edward River",
+      "category_id": "large_rural",
+      "source_name": "Edward River",
+      "olg_group": 10,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-178764487": {
+      "name": "Eurobodalla",
+      "category_id": "regional_town_city",
+      "source_name": "Eurobodalla",
+      "olg_group": 4,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012437": {
+      "name": "Fairfield",
+      "category_id": "metropolitan",
+      "source_name": "Fairfield",
+      "olg_group": 3,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-173953566": {
+      "name": "Federation",
+      "category_id": "large_rural",
+      "source_name": "Federation",
+      "olg_group": 11,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012478": {
+      "name": "Forbes",
+      "category_id": "large_rural",
+      "source_name": "Forbes",
+      "olg_group": 10,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-173954796": {
+      "name": "Georges River",
+      "category_id": "metropolitan",
+      "source_name": "Georges River",
+      "olg_group": 3,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012519": {
+      "name": "Gilgandra",
+      "category_id": "rural",
+      "source_name": "Gilgandra",
+      "olg_group": 9,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-151997900": {
+      "name": "Glen Innes Severn",
+      "category_id": "large_rural",
+      "source_name": "Glen Innes Severn",
+      "olg_group": 10,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012395": {
+      "name": "Goulburn Mulwaree",
+      "category_id": "regional_town_city",
+      "source_name": "Goulburn Mulwaree",
+      "olg_group": 4,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012439": {
+      "name": "Greater Hume Shire",
+      "category_id": "large_rural",
+      "source_name": "Greater Hume",
+      "olg_group": 11,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012440": {
+      "name": "Griffith",
+      "category_id": "regional_town_city",
+      "source_name": "Griffith",
+      "olg_group": 4,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012522": {
+      "name": "Gunnedah",
+      "category_id": "large_rural",
+      "source_name": "Gunnedah",
+      "olg_group": 11,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012442": {
+      "name": "Gwydir",
+      "category_id": "large_rural",
+      "source_name": "Gwydir",
+      "olg_group": 10,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012399": {
+      "name": "Hawkesbury",
+      "category_id": "metropolitan_fringe",
+      "source_name": "Hawkesbury",
+      "olg_group": 6,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012443": {
+      "name": "Hay",
+      "category_id": "rural",
+      "source_name": "Hay",
+      "olg_group": 9,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-173954192": {
+      "name": "Hilltops",
+      "category_id": "large_rural",
+      "source_name": "Hilltops",
+      "olg_group": 11,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012525": {
+      "name": "Hornsby",
+      "category_id": "metropolitan_fringe",
+      "source_name": "Hornsby",
+      "olg_group": 7,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012401": {
+      "name": "Hunters Hill",
+      "category_id": "metropolitan",
+      "source_name": "Hunters Hill",
+      "olg_group": 2,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-173919575": {
+      "name": "Inner West",
+      "category_id": "metropolitan",
+      "source_name": "Inner West",
+      "olg_group": 3,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012484": {
+      "name": "Inverell",
+      "category_id": "large_rural",
+      "source_name": "Inverell",
+      "olg_group": 11,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012402": {
+      "name": "Junee",
+      "category_id": "large_rural",
+      "source_name": "Junee",
+      "olg_group": 10,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012445": {
+      "name": "Kempsey",
+      "category_id": "regional_town_city",
+      "source_name": "Kempsey",
+      "olg_group": 4,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012485": {
+      "name": "Kiama",
+      "category_id": "regional_town_city",
+      "source_name": "Kiama (M)",
+      "olg_group": 4,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012403": {
+      "name": "Ku-Ring-Gai",
+      "category_id": "metropolitan",
+      "source_name": "Ku-ring-gai",
+      "olg_group": 3,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012446": {
+      "name": "Kyogle",
+      "category_id": "large_rural",
+      "source_name": "Kyogle",
+      "olg_group": 10,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012486": {
+      "name": "Lachlan",
+      "category_id": "large_rural",
+      "source_name": "Lachlan",
+      "olg_group": 10,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012528": {
+      "name": "Lake Macquarie",
+      "category_id": "regional_town_city",
+      "source_name": "Lake Macquarie",
+      "olg_group": 5,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012404": {
+      "name": "Lane Cove",
+      "category_id": "metropolitan",
+      "source_name": "Lane Cove",
+      "olg_group": 2,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012447": {
+      "name": "Leeton",
+      "category_id": "large_rural",
+      "source_name": "Leeton",
+      "olg_group": 11,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012529": {
+      "name": "Lismore",
+      "category_id": "regional_town_city",
+      "source_name": "Lismore",
+      "olg_group": 4,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012520": {
+      "name": "Lithgow City",
+      "category_id": "regional_town_city",
+      "source_name": "Lithgow",
+      "olg_group": 4,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012406": {
+      "name": "Liverpool",
+      "category_id": "metropolitan",
+      "source_name": "Liverpool",
+      "olg_group": 3,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012448": {
+      "name": "Liverpool Plains",
+      "category_id": "large_rural",
+      "source_name": "Liverpool Plains",
+      "olg_group": 10,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012489": {
+      "name": "Lockhart",
+      "category_id": "rural",
+      "source_name": "Lockhart",
+      "olg_group": 9,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012530": {
+      "name": "Maitland",
+      "category_id": "regional_town_city",
+      "source_name": "Maitland",
+      "olg_group": 5,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-173954185": {
+      "name": "Mid-Coast",
+      "category_id": "regional_town_city",
+      "source_name": "Mid-Coast",
+      "olg_group": 5,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012490": {
+      "name": "Mid-Western Regional",
+      "category_id": "regional_town_city",
+      "source_name": "Mid-Western Regional",
+      "olg_group": 4,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012531": {
+      "name": "Moree Plains",
+      "category_id": "large_rural",
+      "source_name": "Moree Plains",
+      "olg_group": 11,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012409": {
+      "name": "Mosman",
+      "category_id": "metropolitan",
+      "source_name": "Mosman",
+      "olg_group": 2,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-173953134": {
+      "name": "Murray River",
+      "category_id": "large_rural",
+      "source_name": "Murray River",
+      "olg_group": 11,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-173953141": {
+      "name": "Murrumbidgee",
+      "category_id": "rural",
+      "source_name": "Murrumbidgee",
+      "olg_group": 9,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012532": {
+      "name": "Muswellbrook",
+      "category_id": "large_rural",
+      "source_name": "Muswellbrook",
+      "olg_group": 11,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012410": {
+      "name": "Nambucca Valley",
+      "category_id": "large_rural",
+      "source_name": "Nambucca",
+      "olg_group": 11,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012451": {
+      "name": "Narrabri",
+      "category_id": "large_rural",
+      "source_name": "Narrabri",
+      "olg_group": 11,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012492": {
+      "name": "Narrandera",
+      "category_id": "large_rural",
+      "source_name": "Narrandera",
+      "olg_group": 10,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012533": {
+      "name": "Narromine",
+      "category_id": "large_rural",
+      "source_name": "Narromine",
+      "olg_group": 10,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012411": {
+      "name": "Newcastle",
+      "category_id": "regional_town_city",
+      "source_name": "Newcastle",
+      "olg_group": 5,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012452": {
+      "name": "North Sydney",
+      "category_id": "metropolitan",
+      "source_name": "North Sydney",
+      "olg_group": 3,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-173919503": {
+      "name": "Northern Beaches",
+      "category_id": "metropolitan",
+      "source_name": "Northern Beaches",
+      "olg_group": 3,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012493": {
+      "name": "Oberon",
+      "category_id": "large_rural",
+      "source_name": "Oberon",
+      "olg_group": 10,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012534": {
+      "name": "Orange",
+      "category_id": "regional_town_city",
+      "source_name": "Orange",
+      "olg_group": 4,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012412": {
+      "name": "Parkes",
+      "category_id": "large_rural",
+      "source_name": "Parkes",
+      "olg_group": 11,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012535": {
+      "name": "Penrith",
+      "category_id": "metropolitan_fringe",
+      "source_name": "Penrith",
+      "olg_group": 7,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012523": {
+      "name": "Port Macquarie-Hastings",
+      "category_id": "regional_town_city",
+      "source_name": "Port Macquarie-Hastings",
+      "olg_group": 5,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012454": {
+      "name": "Port Stephens",
+      "category_id": "regional_town_city",
+      "source_name": "Port Stephens",
+      "olg_group": 5,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-173954851": {
+      "name": "Queanbeyan-Palerang Regional",
+      "category_id": "regional_town_city",
+      "source_name": "Queanbeyan-Palerang",
+      "olg_group": 4,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012496": {
+      "name": "Randwick",
+      "category_id": "metropolitan",
+      "source_name": "Randwick",
+      "olg_group": 3,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012536": {
+      "name": "Richmond Valley",
+      "category_id": "regional_town_city",
+      "source_name": "Richmond Valley",
+      "olg_group": 4,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012455": {
+      "name": "Ryde",
+      "category_id": "metropolitan",
+      "source_name": "Ryde",
+      "olg_group": 3,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012537": {
+      "name": "Shellharbour",
+      "category_id": "regional_town_city",
+      "source_name": "Shellharbour",
+      "olg_group": 5,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012415": {
+      "name": "Shoalhaven",
+      "category_id": "regional_town_city",
+      "source_name": "Shoalhaven",
+      "olg_group": 5,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012456": {
+      "name": "Singleton",
+      "category_id": "regional_town_city",
+      "source_name": "Singleton",
+      "olg_group": 4,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-173919366": {
+      "name": "Snowy Monaro Regional",
+      "category_id": "regional_town_city",
+      "source_name": "Snowy Monaro Regional",
+      "olg_group": 4,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-173919850": {
+      "name": "Snowy Valleys",
+      "category_id": "large_rural",
+      "source_name": "Snowy Valleys",
+      "olg_group": 11,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012538": {
+      "name": "Strathfield",
+      "category_id": "metropolitan",
+      "source_name": "Strathfield",
+      "olg_group": 2,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012416": {
+      "name": "Sutherland Shire",
+      "category_id": "metropolitan",
+      "source_name": "Sutherland",
+      "olg_group": 3,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012457": {
+      "name": "Sydney",
+      "category_id": "metropolitan",
+      "source_name": "Sydney",
+      "olg_group": 1,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012494": {
+      "name": "Tamworth Regional",
+      "category_id": "regional_town_city",
+      "source_name": "Tamworth Regional",
+      "olg_group": 4,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012499": {
+      "name": "Temora",
+      "category_id": "large_rural",
+      "source_name": "Temora",
+      "olg_group": 10,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012539": {
+      "name": "Tenterfield",
+      "category_id": "large_rural",
+      "source_name": "Tenterfield",
+      "olg_group": 10,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012467": {
+      "name": "The Hills Shire",
+      "category_id": "metropolitan_fringe",
+      "source_name": "Hills",
+      "olg_group": 7,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012500": {
+      "name": "Tweed",
+      "category_id": "regional_town_city",
+      "source_name": "Tweed",
+      "olg_group": 5,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-185430363": {
+      "name": "Unincorporated - Botany Bay Area",
+      "category_id": "special_area",
+      "olg_group": null,
+      "source_name": null,
+      "classification_status": "not_applicable"
+    },
+    "LGA-108012464": {
+      "name": "Unincorporated - Far West Area",
+      "category_id": "special_area",
+      "olg_group": null,
+      "source_name": null,
+      "classification_status": "not_applicable"
+    },
+    "LGA-108012548": {
+      "name": "Unincorporated - Lord Howe Island",
+      "category_id": "special_area",
+      "olg_group": null,
+      "source_name": null,
+      "classification_status": "not_applicable"
+    },
+    "LGA-108012470": {
+      "name": "Unincorporated - Sydney Harbour Area",
+      "category_id": "special_area",
+      "olg_group": null,
+      "source_name": null,
+      "classification_status": "not_applicable"
+    },
+    "LGA-108012541": {
+      "name": "Upper Hunter",
+      "category_id": "large_rural",
+      "source_name": "Upper Hunter",
+      "olg_group": 11,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012418": {
+      "name": "Upper Lachlan Shire",
+      "category_id": "large_rural",
+      "source_name": "Upper Lachlan",
+      "olg_group": 10,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012459": {
+      "name": "Uralla",
+      "category_id": "large_rural",
+      "source_name": "Uralla",
+      "olg_group": 10,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012542": {
+      "name": "Wagga Wagga",
+      "category_id": "regional_town_city",
+      "source_name": "Wagga Wagga",
+      "olg_group": 4,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012460": {
+      "name": "Walcha",
+      "category_id": "rural",
+      "source_name": "Walcha",
+      "olg_group": 9,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012502": {
+      "name": "Walgett",
+      "category_id": "large_rural",
+      "source_name": "Walgett",
+      "olg_group": 10,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012543": {
+      "name": "Warren",
+      "category_id": "rural",
+      "source_name": "Warren",
+      "olg_group": 9,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-151983061": {
+      "name": "Warrumbungle",
+      "category_id": "large_rural",
+      "source_name": "Warrumbungle",
+      "olg_group": 10,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012461": {
+      "name": "Waverley",
+      "category_id": "metropolitan",
+      "source_name": "Waverley",
+      "olg_group": 3,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012503": {
+      "name": "Weddin",
+      "category_id": "rural",
+      "source_name": "Weddin",
+      "olg_group": 9,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012421": {
+      "name": "Wentworth",
+      "category_id": "large_rural",
+      "source_name": "Wentworth",
+      "olg_group": 10,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012462": {
+      "name": "Willoughby",
+      "category_id": "metropolitan",
+      "source_name": "Willoughby",
+      "olg_group": 3,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012504": {
+      "name": "Wingecarribee",
+      "category_id": "regional_town_city",
+      "source_name": "Wingecarribee",
+      "olg_group": 4,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012546": {
+      "name": "Wollondilly",
+      "category_id": "metropolitan_fringe",
+      "source_name": "Wollondilly",
+      "olg_group": 6,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012422": {
+      "name": "Wollongong",
+      "category_id": "regional_town_city",
+      "source_name": "Wollongong",
+      "olg_group": 5,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012463": {
+      "name": "Woollahra",
+      "category_id": "metropolitan",
+      "source_name": "Woollahra",
+      "olg_group": 2,
+      "classification_status": "published_olg_listing"
+    },
+    "LGA-108012547": {
+      "name": "Yass Valley",
+      "category_id": "large_rural",
+      "source_name": "Yass Valley",
+      "olg_group": 11,
+      "classification_status": "published_olg_listing"
+    }
+  }
+}

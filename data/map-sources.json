@@ -40,6 +40,42 @@
     },
     "places.json": {
       "sha256": "8838e160aa3af2bd6d74787ca4da748bc5dd7f4ec87bb385c9f8da607e422ba5"
+    },
+    "council-map-categories.json": {
+      "sha256": "9f6a16bbf5a2775f94faec92357b407e5b3d932faa6325312d7ab3966444f9d5"
+    },
+    "council-document-sources.json": {
+      "sha256": "004d1fda8c0fb3c9b01d797068af66989ad8431bd3c1cdd8590ee3b8e029e79b"
     }
+  },
+  "national_street_map": {
+    "provider": "OpenStreetMap contributors",
+    "tiles": "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+    "copyright_url": "https://www.openstreetmap.org/copyright",
+    "usage_policy": "https://operations.osmfoundation.org/policies/tiles/",
+    "checked_on": "2026-10-29",
+    "coverage": "Australia mainland, states and territories; external territory coverage not guaranteed",
+    "availability": "Best effort, no service guarantee; interactive viewing only, no bulk/offline downloads"
+  },
+  "national_address_search": {
+    "provider": "Photon / OpenStreetMap",
+    "url": "https://photon.komoot.io/api/",
+    "terms": "https://github.com/komoot/photon#demo-server",
+    "checked_on": "2026-10-29",
+    "official_verification": false,
+    "limitations": "Explicit submit only, limited fair use, no service guarantee, incomplete community data. Street-number points and area results remain distinct; no unit verification or local planning-law coverage outside NSW."
+  },
+  "council_type_classification": {
+    "file": "council-map-categories.json",
+    "provider": "NSW Office of Local Government",
+    "meaning": "Published population and urban-character categories. Not zoning, hazard, buildability or approval confidence."
+  },
+  "council_documents": {
+    "file": "council-document-sources.json",
+    "councils": 128,
+    "lep_references": 150,
+    "dcp_pages_checked": 28,
+    "legal_text_verified": false,
+    "limitation": "Official spatial catalogue references and document entry pages; property applicability and current consolidated legislation require verification."
   }
 }

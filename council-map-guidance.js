@@ -45,6 +45,7 @@
   }
   function describeLocation(selection) {
     if (!selection) return { level: 'none', title: "No location selected", reason: "Select a council, locality or address." };
+    if(isOutsideCoverage(selection))return {level:'low',title:'Low · National result not verified',reason:'Check the returned street number and locality. National results use community mapping; the responsible council and local planning documents are not connected outside NSW.'};
     if (selection.kind === 'address') {
       if (selection.origin === 'saved_case_point') return {level:'low',title:'Low · Saved case location',reason:'Showing the saved case reference point. Live address and council verification is unavailable; confirm the location before relying on it.'};
       if (selection.exact && (selection.council_ids || []).length === 1) return { level: 'high', title: "High · Address and council matched", reason: "The official service returned an exact input match and the address point was checked against the council boundary. This is not a lot survey or a planning conclusion." };
@@ -52,10 +53,18 @@
     }
     if (selection.kind === 'council') return { level: 'high', title: "High · Council area selected", reason: "You have selected an official council area. A specific property has not been located." };
     if (selection.kind === 'place') return { level: 'medium', title: "Medium · Locality area matched", reason: "The suburb or locality area has been located. It may cross council boundaries; use a complete address to confirm." };
+    if(selection.kind==='street')return {level:'low',title:'Low · Street reference only',reason:'A street has been located, but the requested street number has not been verified. Enter and check a complete address.'};
+    if(selection.kind==='locality')return {level:'low',title:'Low · Locality reference only',reason:'The result identifies a locality, not a particular property. National search results and the responsible authority remain unverified.'};
     return { level: 'low', title: "Low · Postcode area", reason: "A postcode may cover several localities and councils. Select a locality or enter a complete address." };
   }
+  function isOutsideCoverage(selection){return Boolean(selection&&(selection.coverage==='outside_nsw'||selection.coverage==='unconfirmed'||selection.state&&selection.state!=='NSW'));}
   function buildGuidance(question, selection, featuresById) {
     const text = String(question || '').trim();
+    if(isOutsideCoverage(selection))return {
+      questionProvided:Boolean(text),topicLabels:['Location search only'],location:describeLocation(selection),planningConfidence:'low',planningConfidenceLabel:'Low · Local planning content not connected',planningConfidenceReason:'The location is outside the verified NSW content coverage, or its state remains unconfirmed. Local planning rules and council responsibility have not been connected.',
+      steps:['Confirm the full street address, state and responsible planning authority.','Gather the proposed work, site survey and current zoning and constraint information for that jurisdiction.','Ask a local planner or certifier to identify the applicable state and council controls.'],
+      missing:['Confirmed address and responsible authority','Local planning and building instruments for this jurisdiction','Current site evidence and professional review'],sources:[],pilot:false,scopeNote:'Australian navigation does not extend NSW planning rules to other states or territories. No local legal assessment is available for this selection.',canAuthorizeProgression:false,professionalVerificationCompleted:false
+    };
     const topics = TOPICS.filter(topic => topic.pattern.test(text));
     const selected = selection ? (selection.council_ids || []).map(id => featuresById[id]).filter(Boolean) : [];
     const oneCouncil = selected.length === 1 && !selected[0].properties.is_unincorporated;
@@ -94,7 +103,7 @@
     if (postcode && !/^(?:2\d{3}|0(?:8\d{2}|9\d{2}))$/.test(postcode)) return null;
     return { houseNumber: match[1], roadName: match[2].trim(), roadType: match[3], suburb, postCode: postcode, projection: 'EPSG:4326' };
   }
-  const api = { SOURCES, TOPICS, normalize, councilKey, isPilot, describeLocation, buildGuidance, parseAddress };
+  const api = { SOURCES, TOPICS, normalize, councilKey, isPilot, describeLocation, buildGuidance, parseAddress,isOutsideCoverage };
   scope.LynnCouncilGuidance = api;
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
 })(typeof window !== 'undefined' ? window : globalThis);

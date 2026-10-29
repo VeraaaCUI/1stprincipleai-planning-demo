@@ -293,13 +293,14 @@
     const isMap = ui.view === 'map';
     const isServices = ui.view === 'services';
     const isCase = !isMap && !isServices;
+    document.body.dataset.view=ui.view;
     document.getElementById('council-home').hidden = !isMap;
     document.getElementById('services-home').hidden = !isServices;
     document.getElementById('case-ribbon').hidden = !isCase;
     document.getElementById('case-stage-section').hidden = !isCase;
     outlet.hidden = !isCase;
-    document.getElementById('page-title').textContent = isMap ? 'From a property question to a project plan.' : isServices ? 'Take the next step with the right support.' : 'The evidence behind the example project.';
-    document.getElementById('page-description').textContent = isMap ? 'Find the address, get a short planning preview, then explore costs, application preparation and specialist review.' : isServices ? 'Your location, question and preliminary report stay together as you plan the next phase.' : 'Inspect the historical records, decision questions and evidence behind CASE-0001. This audit trail supports the customer journey.';
+    document.getElementById('page-title').textContent = isMap ? 'Explore Australia. Plan your next step.' : isServices ? 'Take the next step with the right support.' : 'The evidence behind the example project.';
+    document.getElementById('page-description').textContent = isMap ? 'Find a street address, explore NSW council controls and prepare a project brief.' : isServices ? 'Your location, question and preliminary report stay together as you plan the next phase.' : 'Inspect the historical records, decision questions and evidence behind CASE-0001. This audit trail supports the customer journey.';
     document.querySelectorAll('[data-view]').forEach(control => {
       if (control.dataset.view === ui.view) control.setAttribute('aria-current', 'page'); else control.removeAttribute('aria-current');
     });

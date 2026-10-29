@@ -1,8 +1,8 @@
 {
   "files": {
     "index.html": {
-      "bytes": 137287,
-      "sha256": "f5c888b1773af30c090053d15a6695e2bd942042b032fb467286972f1dc89212"
+      "bytes": 137478,
+      "sha256": "64906154d83d5d4d3e4500e174de76ca9a6e353b9717ef2cb250d4cdd19bfaf0"
     },
     "styles.css": {
       "bytes": 26346,
@@ -13,28 +13,28 @@
       "sha256": "7665939192a7cd690e1e1ac7ad53725962c56a86f7fcc355c6708450653779d3"
     },
     "app.js": {
-      "bytes": 40312,
-      "sha256": "8fa190e18f47ccbf932c1c7b073f6876268d4ddc0cd56fb99bca18d228f3bdc3"
+      "bytes": 40315,
+      "sha256": "6c0996eac9c7073f294f38eadc2783ba450fef8553c48baf9cbf017b58719c72"
     },
     ".nojekyll": {
       "bytes": 1,
       "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
     },
     "council-map.js": {
-      "bytes": 36911,
-      "sha256": "0ebc445a4c2064c6c8f547ac82968125b20020a320699868abbeab7099949a98"
+      "bytes": 49519,
+      "sha256": "3848495ebbe2e88e0ffd0535090ce7241f0919ba6e6b13765d16fae2e9145f39"
     },
     "council-map.css": {
-      "bytes": 9898,
-      "sha256": "cdacb06c2004def7ef1c7b79acd3f2a33373f1208e696527abee2495b22ad15b"
+      "bytes": 19191,
+      "sha256": "5c88ad5e5fa2744dc27482938137123df93ea8d2bc5ac67bd018c9cd24f6b937"
     },
     "council-map-guidance.js": {
-      "bytes": 12200,
-      "sha256": "5a3cb71a01ec7024e0a846a88db8906cd526d306e62994d24c64d18e005eca4e"
+      "bytes": 14321,
+      "sha256": "e0dd30956f22213fa2e8b7402dd30ec0640df53b69b206b62758f767308b03a2"
     },
     "planning-report.js": {
-      "bytes": 8077,
-      "sha256": "e1012b008bd52ee3e47c28a3345d62786c7458f4eded8d6dc714c1833a9e2112"
+      "bytes": 8713,
+      "sha256": "acfa8c881a7c837b0036979e730fa10fafc7b824c87a7b037d3512321a260bc0"
     },
     "customer-journey.css": {
       "bytes": 4018,
@@ -47,6 +47,14 @@
     "advanced-services.css": {
       "bytes": 14388,
       "sha256": "4ab6f95d592665c74609139e2e42af70706823eb83e9367927c0362c59160fe9"
+    },
+    "address-search.js": {
+      "bytes": 15657,
+      "sha256": "88dd5ac3c6e17bc7b17addf231c29c0578ce81c9a02cd1557e60b2151a38d09a"
+    },
+    "council-documents.js": {
+      "bytes": 29047,
+      "sha256": "ff474701908adf69caeffa49344bc4552694bbe620d3860a0736ed6eb0a6a70b"
     },
     "vendor/leaflet.js": {
       "bytes": 147552,
@@ -69,12 +77,20 @@
       "sha256": "8838e160aa3af2bd6d74787ca4da748bc5dd7f4ec87bb385c9f8da607e422ba5"
     },
     "data/map-sources.json": {
-      "bytes": 2870,
-      "sha256": "f4a26fbffe7515ce56c193e73f28c9c07c0802c38ec4752e5372f7cc5441e09a"
+      "bytes": 4828,
+      "sha256": "bef726e8d94da9b1a2a01f7d869e6b141fb5f468222d5b717a9b55887d17b6e7"
+    },
+    "data/council-map-categories.json": {
+      "bytes": 32059,
+      "sha256": "9f6a16bbf5a2775f94faec92357b407e5b3d932faa6325312d7ab3966444f9d5"
+    },
+    "data/council-document-sources.json": {
+      "bytes": 42496,
+      "sha256": "004d1fda8c0fb3c9b01d797068af66989ad8431bd3c1cdd8590ee3b8e029e79b"
     }
   },
   "case_id": "CASE-0001",
-  "public_asset_count": 18,
+  "public_asset_count": 22,
   "boundary_features": 132,
   "places": 4607,
   "case_snapshot_as_at": "2026-10-29",

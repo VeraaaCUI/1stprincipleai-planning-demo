@@ -30,10 +30,13 @@
     const secondary = /granny|secondary\s*dwelling|附属住宅|次住宅|副住宅|祖母房/i.test(question || '');
     const ids = selection?.council_ids || [];
     const confirmedCaseAuthority = ids.length === 1 && G.isPilot(byId[ids[0]]);
-    const contextualCase = isCase && secondary && confirmedCaseAuthority && (selection.exact || selection.origin === 'saved_case_point');
-    const councilNames = ids.map(id => byId[id]).filter(Boolean).map(feature => feature.properties.council_name || feature.properties.name);
+    const outsideCoverage=G.isOutsideCoverage(selection);
+    const contextualCase = !outsideCoverage && isCase && secondary && confirmedCaseAuthority && (selection.exact || selection.origin === 'saved_case_point');
+    const councilNames = outsideCoverage?[]:ids.map(id => byId[id]).filter(Boolean).map(feature => feature.properties.council_name || feature.properties.name);
     let summary;
-    if (contextualCase) {
+    if(outsideCoverage){
+      summary='This location can be explored on the Australian map, but local council and planning-law content is currently connected only for NSW. Confirm the complete address and responsible authority, then ask a local planner or certifier to check the relevant state and council controls for your proposal. No permission, approval pathway or site-risk conclusion can be provided from this demo for the selected location.';
+    } else if (contextualCase) {
       summary = 'The NSW Housing SEPP 2021 provides a pathway for secondary dwellings on qualifying residential land, subject to the applicable requirements; it does not establish that this proposal is permitted at this address. Historical CASE-0001 records indicate R2 zoning, bushfire and biodiversity constraints, so a planner or certifier should check current controls and obtain bushfire and tree advice where triggered. Current planning certificates, title restrictions, specialist reports and key design measurements remain unverified, so DA or CDC eligibility cannot yet be confirmed.';
     } else if (secondary && ids.length === 1) {
       summary = 'NSW guidance on the Housing SEPP 2021 allows secondary dwellings to be considered on qualifying residential land, with DA or CDC depending on all applicable requirements. Confirm this property’s current zoning, existing dwelling, full works, floor area and title, then screen bushfire, flood, biodiversity and tree constraints. A planner or certifier should confirm the pathway and any specialist assessments before detailed pricing or application preparation.';
@@ -56,13 +59,13 @@
     ] : [];
     return {
       caseId: contextualCase ? CASE.id : null, summary, confidence: 'low',
-      confidenceLabel:'Low · Site and proposal evidence incomplete',
+      confidenceLabel:outsideCoverage?'Low · Local planning content not connected':'Low · Site and proposal evidence incomplete',
       confidenceReason:'Location confidence identifies a place. Planning confidence remains Low because current controls, original evidence and professional review are incomplete; it is not an approval probability.',
       mode:contextualCase ? 'AI-prepared case preview' : 'Prepared guidance preview',
       modeNote:'This demo uses a prepared evidence summary and local topic matching. Live AI analysis and professional sign-off are not connected.',
       preparedOn:'2026-10-29', location:{name:selection?.name || 'Location not confirmed',kind:selection?.kind || 'none',councilNames,address:selection?.kind === 'address' ? selection.name : null},
       question:String(question || '').trim(), missing, risks,
-      sources:secondary ? (contextualCase ? SOURCES : SOURCES.slice(0,4)) : guidance.sources,
+      sources:outsideCoverage?[]:secondary ? (contextualCase ? SOURCES : SOURCES.slice(0,4)) : guidance.sources,
       evidenceNote:contextualCase ? 'Historical case indications are shown as later-file context, not facts verified at the initial enquiry. Evidence IDs refer to the supplied index; original documents have not been independently checked.' : guidance.scopeNote,
       canAuthorizeProgression:false, professionalVerificationCompleted:false
     };
