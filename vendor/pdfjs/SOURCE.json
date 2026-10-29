@@ -1,0 +1,11 @@
+{
+  "name": "PDF.js / pdfjs-dist",
+  "version": "6.4.299",
+  "licence": "Apache-2.0",
+  "project": "https://github.com/mozilla/pdf.js",
+  "release": "https://github.com/mozilla/pdf.js/releases/tag/v6.4.299",
+  "npm_tarball": "https://registry.npmjs.org/pdfjs-dist/-/pdfjs-dist-6.4.299.tgz",
+  "npm_tarball_integrity": "sha512-AVl138zALtfaAPvADulE0PZThbYzCBS79nL4pOSL/6Sm/4AH5A21BD9VHt97OlCuzJuCpmeZtAtkinisF4Vb1g==",
+  "checked_on": "2026-10-29",
+  "usage": "Local text extraction and page rendering; no document upload or remote model calls."
+}

@@ -1,8 +1,8 @@
 {
   "files": {
     "index.html": {
-      "bytes": 137478,
-      "sha256": "64906154d83d5d4d3e4500e174de76ca9a6e353b9717ef2cb250d4cdd19bfaf0"
+      "bytes": 137798,
+      "sha256": "96255cf841d711b4b7902f30e0b962e599cdf6cc26cec23344610e5224631b4b"
     },
     "styles.css": {
       "bytes": 26346,
@@ -13,8 +13,8 @@
       "sha256": "7665939192a7cd690e1e1ac7ad53725962c56a86f7fcc355c6708450653779d3"
     },
     "app.js": {
-      "bytes": 40315,
-      "sha256": "6c0996eac9c7073f294f38eadc2783ba450fef8553c48baf9cbf017b58719c72"
+      "bytes": 40344,
+      "sha256": "da9310e79270aec96d7e43d2ee2582fd24457b5eec5ad82bd54bed75f8f34efb"
     },
     ".nojekyll": {
       "bytes": 1,
@@ -41,12 +41,12 @@
       "sha256": "0c3f1a8805ff32b91f11824346732d5685fea858115550da2faf24a9a102c3a7"
     },
     "advanced-services.js": {
-      "bytes": 33084,
-      "sha256": "a0646e718d8fea2ba411572e72ea0dbff953825483b175d8cc345f9df0b817c0"
+      "bytes": 41518,
+      "sha256": "8891a2a311d7fcc934fc276de8bf461fbd63fcf61700131f830fe748f0e029d0"
     },
     "advanced-services.css": {
-      "bytes": 14388,
-      "sha256": "4ab6f95d592665c74609139e2e42af70706823eb83e9367927c0362c59160fe9"
+      "bytes": 18071,
+      "sha256": "aa07b5461904b1f16c8b9db27a067a7733a16d74b0b9f08da6319df75030d3f4"
     },
     "address-search.js": {
       "bytes": 15657,
@@ -55,6 +55,94 @@
     "council-documents.js": {
       "bytes": 29047,
       "sha256": "ff474701908adf69caeffa49344bc4552694bbe620d3860a0736ed6eb0a6a70b"
+    },
+    "pdf-intake.js": {
+      "bytes": 21349,
+      "sha256": "4fe7d18a692c8e047b00289f5c9b504d132acbe919cb02768abab13391c07231"
+    },
+    "pdf-intake.css": {
+      "bytes": 7074,
+      "sha256": "ae5ffbc9a2e87a3eaf1882c6dbc2aaced4765c012b02dfbcdc0f56505cf5aaa7"
+    },
+    "project-progress.js": {
+      "bytes": 22408,
+      "sha256": "84e931b29ae29356f7fece47121f558523a65e5f9fc5f2efa3977a99b503c358"
+    },
+    "project-progress.css": {
+      "bytes": 7876,
+      "sha256": "05d4137d255b7b6a868edbd4c7d0c4d16003d047a44d4bfe88c75ad66f6c3207"
+    },
+    "expert-contact.js": {
+      "bytes": 24491,
+      "sha256": "10310c2a8654a3873d550ec7a3961d00abfed2475a792fc35a8c2697f818f897"
+    },
+    "expert-contact.css": {
+      "bytes": 5414,
+      "sha256": "d8ff4c37ac894febf3c6c09170d8ca5bb2e44b4ca5315452a8bd47d8976b6405"
+    },
+    "data/demo-concept-plan.pdf": {
+      "bytes": 5392,
+      "sha256": "f25b23b2d07d8d90e86f6c05f29203864f20f65ad496ab0fc617e7d07018bf62"
+    },
+    "vendor/pdfjs/pdf.mjs": {
+      "bytes": 860818,
+      "sha256": "dd13af821c9c3e1778653340d6539a1ba07bc56cba40073a4c727864cf0c232a"
+    },
+    "vendor/pdfjs/pdf.worker.mjs": {
+      "bytes": 2229713,
+      "sha256": "07ceb740d746e5d9012fcf9f27d5c7dea09f7d2f5e74f5c8109e5787551a2333"
+    },
+    "vendor/pdfjs/LICENSE": {
+      "bytes": 10174,
+      "sha256": "0d542e0c8804e39aa7f37eb00da5a762149dc682d7829451287e11b938e94594"
+    },
+    "vendor/pdfjs/SOURCE.json": {
+      "bytes": 557,
+      "sha256": "2b45bcb2edd5d4e03c53418c85fa86b923b06f53a5dd3b484bd6fa156d09aa8a"
+    },
+    "vendor/pdfjs/wasm/qcms_bg.wasm": {
+      "bytes": 96589,
+      "sha256": "663d86126d5f5fcb1c61490f94353e2a8375660b8c5498ab3ebab5a34b08800e"
+    },
+    "vendor/pdfjs/wasm/openjpeg.wasm": {
+      "bytes": 251131,
+      "sha256": "95e5002597af0824004aa57b1900fe019715db389e37640b1e58395e42f00cc5"
+    },
+    "vendor/pdfjs/wasm/openjpeg_nowasm_fallback.js": {
+      "bytes": 445781,
+      "sha256": "9047b34b6bc142d85e4b0aa1b08b0b9baad4c6f8b7ac87641b9e8f90eb6fd23e"
+    },
+    "vendor/pdfjs/wasm/jbig2.wasm": {
+      "bytes": 103671,
+      "sha256": "466f45c2a61a698152fb5400c27e56ff2ceb73dcb71fde3fc366a502308eaab0"
+    },
+    "vendor/pdfjs/wasm/jbig2_nowasm_fallback.js": {
+      "bytes": 152009,
+      "sha256": "68686ced624a48c42f84cdaa482ec44b72b0de4dc84a0df903af1fb7b45b5d9a"
+    },
+    "vendor/pdfjs/wasm/LICENSE_QCMS": {
+      "bytes": 1121,
+      "sha256": "36d847ae882f6574ebc72f56a4f354e4f104fde4a584373496482e97d52d31bc"
+    },
+    "vendor/pdfjs/wasm/LICENSE_PDFJS_QCMS": {
+      "bytes": 1036,
+      "sha256": "508a77d2e7b51d98adeed32648ad124b7b30241a8e70b2e72c99f92d8e5874d1"
+    },
+    "vendor/pdfjs/wasm/LICENSE_PDFJS_OPENJPEG": {
+      "bytes": 1285,
+      "sha256": "717fc62da03292dbb4dd0c8280bd4ce7bb8550dcf31d772bc93455fb50313425"
+    },
+    "vendor/pdfjs/wasm/LICENSE_PDFJS_JBIG2": {
+      "bytes": 555,
+      "sha256": "aad3cce09842e00e9e11ad5e8fef8cc02fbc3a3768fe2f007443b9cee37aaee5"
+    },
+    "vendor/pdfjs/wasm/LICENSE_OPENJPEG": {
+      "bytes": 2112,
+      "sha256": "a6af136f3e15038a666b61f376612a07d9a4e48cb7c01adbf3e33b3f14ab49b6"
+    },
+    "vendor/pdfjs/wasm/LICENSE_JBIG2": {
+      "bytes": 12862,
+      "sha256": "9e66b7f1b934a28b37f3bc4dac97915de1674271e79a0a88182a18ed9731b4d1"
     },
     "vendor/leaflet.js": {
       "bytes": 147552,
@@ -90,7 +178,7 @@
     }
   },
   "case_id": "CASE-0001",
-  "public_asset_count": 22,
+  "public_asset_count": 44,
   "boundary_features": 132,
   "places": 4607,
   "case_snapshot_as_at": "2026-10-29",

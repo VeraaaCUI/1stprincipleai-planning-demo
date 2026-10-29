@@ -299,8 +299,8 @@
     document.getElementById('case-ribbon').hidden = !isCase;
     document.getElementById('case-stage-section').hidden = !isCase;
     outlet.hidden = !isCase;
-    document.getElementById('page-title').textContent = isMap ? 'Explore Australia. Plan your next step.' : isServices ? 'Take the next step with the right support.' : 'The evidence behind the example project.';
-    document.getElementById('page-description').textContent = isMap ? 'Find a street address, explore NSW council controls and prepare a project brief.' : isServices ? 'Your location, question and preliminary report stay together as you plan the next phase.' : 'Inspect the historical records, decision questions and evidence behind CASE-0001. This audit trail supports the customer journey.';
+    document.getElementById('page-title').textContent = isMap ? 'Explore Australia. Plan your next step.' : isServices ? 'Your project, from drawings to delivery.' : 'The evidence behind the example project.';
+    document.getElementById('page-description').textContent = isMap ? 'Find a street address, explore NSW council controls and prepare a project brief.' : isServices ? 'Review your information, track the next steps and prepare a conversation with the right expert.' : 'Inspect the historical records, decision questions and evidence behind CASE-0001. This audit trail supports the customer journey.';
     document.querySelectorAll('[data-view]').forEach(control => {
       if (control.dataset.view === ui.view) control.setAttribute('aria-current', 'page'); else control.removeAttribute('aria-current');
     });
@@ -325,7 +325,7 @@
   window.addEventListener('lynn:open-case', () => { ui.stage = 'enquiry'; setView('workflow'); document.getElementById('main-content').focus(); });
   window.addEventListener('firstprinciple:evidence-tour', () => showTour(0));
   window.addEventListener('firstprinciple:report-ready', event => { serviceContext=event.detail; document.getElementById('services-nav').hidden=false; });
-  window.addEventListener('firstprinciple:report-cleared', () => { serviceContext=null; document.getElementById('services-nav').hidden=true; });
+  window.addEventListener('firstprinciple:report-cleared', () => { serviceContext=null;servicesApi?.show(null); document.getElementById('services-nav').hidden=true; });
   window.addEventListener('firstprinciple:advanced-services', event => {
     serviceContext=event.detail; servicesApi?.show(serviceContext); setView('services');
     document.getElementById('main-content').scrollIntoView({behavior:'instant',block:'start'}); document.getElementById('main-content').focus();
