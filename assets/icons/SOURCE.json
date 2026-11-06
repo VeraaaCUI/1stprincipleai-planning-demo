@@ -1,0 +1,11 @@
+{
+  "library": "Bootstrap Icons",
+  "version": "1.13.1",
+  "license": "MIT",
+  "source": "https://github.com/twbs/icons/tree/v1.13.1",
+  "assets": [
+    "chevron-down.svg",
+    "check-circle-fill.svg"
+  ],
+  "changes": "None. CSS applies presentation colour and rotation."
+}

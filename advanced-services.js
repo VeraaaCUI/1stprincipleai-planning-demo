@@ -60,10 +60,13 @@
     const report = input?.report || {};
     const names = Array.isArray(location.councilNames) ? location.councilNames.map(name => clip(name, 180)).filter(Boolean) : [];
     const summary = Array.isArray(report.summary) ? report.summary.map(item => clip(item)).filter(Boolean).join('\n\n') : clip(report.summary, 6000);
+    const spatial=report.spatialEvidence;
+    const spatialEvidence=spatial&&Number.isSafeInteger(spatial.propertyId)&&spatial.propertyId>0?{propertyId:spatial.propertyId,lotLabels:Array.isArray(spatial.lotLabels)?spatial.lotLabels.map(item=>clip(item,180)).filter(Boolean).slice(0,100):[],zones:Array.isArray(spatial.zones)?spatial.zones.map(item=>clip(item,30)).filter(Boolean).slice(0,100):[],retrievedAt:clip(spatial.retrievedAt,60),status:clip(spatial.status,30),sourceUrl:/^https:\/\//.test(spatial.sourceUrl||'')?clip(spatial.sourceUrl,1200):'',legalApplicabilityAssessed:false}:null;
+    const projectIntent=report.projectIntent?{id:clip(report.projectIntent.id,80),label:clip(report.projectIntent.label,180),status:'user_selected_intent',legalApplicabilityAssessed:false}:null;
     return {
-      location: { name: clip(location.name, 250) || clip(location.address, 250) || 'Location not provided', address: clip(location.address, 250), councilNames: names, kind: clip(location.kind, 30) },
+      location: { name: clip(location.name, 250) || clip(location.address, 250) || 'Location not provided', address: clip(location.address, 250), councilNames: names, kind: clip(location.kind, 30),state:clip(location.state,30),coverage:clip(location.coverage,30),precision:clip(location.precision,60),source:clip(location.source,250),council_ids:Array.isArray(location.council_ids)?location.council_ids.map(id=>clip(id,60)):[] },
       question: clip(input?.question, 1600),
-      report: { summary, confidence: /^(high|medium|low)$/i.test(report.confidence || '') ? report.confidence.toLowerCase() : 'low', missing: Array.isArray(report.missing) ? report.missing.map(item => clip(item, 500)).filter(Boolean).slice(0, 30) : [], caseId: clip(report.caseId || input?.caseId, 80), sources: Array.isArray(report.sources) ? report.sources.filter(source => /^https:\/\//.test(source?.url || '')).map(source => ({ title: clip(source.title, 250), url: clip(source.url, 1200) })).slice(0, 20) : [] }
+      report: { summary, spatialEvidence, projectIntent, confidence: /^(high|medium|low)$/i.test(report.confidence || '') ? report.confidence.toLowerCase() : 'low', missing: Array.isArray(report.missing) ? report.missing.map(item => clip(item, 500)).filter(Boolean).slice(0, 30) : [], caseId: clip(report.caseId || input?.caseId, 80), sources: Array.isArray(report.sources) ? report.sources.filter(source => /^https:\/\//.test(source?.url || '')).map(source => ({ title: clip(source.title, 250), url: clip(source.url, 1200) })).slice(0, 20) : [] }
     };
   }
   function mount(root) {
@@ -97,7 +100,8 @@
     const questionText = el('p', '', 'fps-question');
     const reportDetails = el('details', null, 'fps-report-details');
     const reportText = el('p'); const sourceList = el('ul', null, 'fps-source-list');
-    reportDetails.append(el('summary', 'Review the preliminary report and sources'), reportText, sourceList);
+    const spatialText=el('p',null,'fps-muted');spatialText.hidden=true;
+    reportDetails.append(el('summary', 'Review the preliminary report and sources'), reportText, spatialText, sourceList);
     const missing = el('div', null, 'fps-missing'); const missingList = el('ul');
     missing.append(el('h4', 'Evidence to resolve'), missingList);
     contextPanel.append(contextTop, questionText, reportDetails, missing);
@@ -243,7 +247,7 @@
     function syncProject(){
       if(syncing)return;syncing=true;
       try{
-        const project={hasContext,route,pdf:pdfState,drawingSummary:pdfState,confirmedFacts:(pdfState.facts||[]).filter(fact=>fact.status==='confirmed'),materialStatus:{...materialStatus},budget:budgetResult(),briefPrepared,specialists:[...expertSelection],supportedNSW:context.location.councilNames.length>0,email:emailState};
+        const project={hasContext,route,pdf:pdfState,drawingSummary:pdfState,confirmedFacts:(pdfState.facts||[]).filter(fact=>fact.status==='confirmed'),materialStatus:{...materialStatus},budget:budgetResult(),briefPrepared,specialists:[...expertSelection],supportedNSW:context.location.state==='NSW'&&context.location.coverage==='nsw',email:emailState};
         emailApi?.updateProject(project);emailState=emailApi?.getState()||emailState;project.email=emailState;progressApi?.update(project);
         renderNextTasks();
       }finally{syncing=false;}
@@ -300,7 +304,7 @@
       const section = (title, lines) => [title, ...lines, ''].join('\n');
       const lines = [
         '1stprincipleai — Service brief', 'Demo draft for review · ' + data.preparedOn, '',
-        section('PROJECT', [data.location.name, data.location.councilNames.join(' / ') || 'Council to confirm', data.preliminaryReport.caseId ? 'Case reference: ' + data.preliminaryReport.caseId : '', 'Initial question: ' + (data.question || 'To be provided'), 'Priorities: ' + (data.projectAim || 'To discuss'), 'Preferred timing: ' + (data.preferredTiming || 'To discuss')].filter(Boolean)),
+        section('PROJECT', [data.location.name, data.location.councilNames.join(' / ') || 'Council to confirm', data.preliminaryReport.projectIntent ? 'Project intention: '+data.preliminaryReport.projectIntent.label+' (not a verified planning classification)' : '', data.preliminaryReport.caseId ? 'Case reference: ' + data.preliminaryReport.caseId : '', 'Initial question: ' + (data.question || 'To be provided'), 'Priorities: ' + (data.projectAim || 'To discuss'), 'Preferred timing: ' + (data.preferredTiming || 'To discuss')].filter(Boolean)),
         section('PRELIMINARY REPORT', ['Confidence: ' + data.preliminaryReport.confidence.toUpperCase(), data.preliminaryReport.summary || 'Report not provided.']),
         section('EVIDENCE TO RESOLVE', data.preliminaryReport.missing.length ? data.preliminaryReport.missing.map(item => '• ' + item) : ['Confirm the site evidence, applicable controls and professional review requirements.']),
         section('REQUESTED SUPPORT', data.requestedServices.map(item => '• ' + item.title)),
@@ -323,9 +327,29 @@
       document.body.append(anchor); anchor.click(); anchor.remove(); setTimeout(() => URL.revokeObjectURL(url), 1000);
       briefStatus.textContent = 'Brief downloaded. It has not been sent or submitted.';
     }
-    function show(input) {
+    function renderContext(){
+        locationText.textContent = context.location.name;
+        councilText.textContent = context.location.councilNames.join(' / ') || 'Responsible council to confirm';
+        confidence.textContent = 'Report confidence · ' + context.report.confidence.charAt(0).toUpperCase() + context.report.confidence.slice(1);
+        questionText.textContent = context.question ? 'Your question: ' + context.question : 'Describe the intended works with your reviewing planner.';
+        reportText.textContent = context.report.summary || 'Return to the location report to prepare a preliminary assessment first.'; sourceList.replaceChildren();
+        const spatial=context.report.spatialEvidence;spatialText.hidden=!spatial;
+        spatialText.textContent=spatial?'Mapped property '+spatial.propertyId+' · '+spatial.lotLabels.join(' · ')+'. Returned zone codes: '+(spatial.zones.join(' / ')||'Unresolved')+'. Retrieved '+spatial.retrievedAt+'. Spatial evidence only; legal applicability remains unassessed.':'';
+        context.report.sources.forEach(source => { const link = el('a', source.title || 'Official source'); link.href = source.url; link.target = '_blank'; link.rel = 'noopener noreferrer'; const item = el('li'); item.append(link); sourceList.append(item); });
+        missingList.replaceChildren();
+        (context.report.missing.length ? context.report.missing : ['Confirm current site evidence, applicable controls and the responsible professional reviewer.']).forEach(text => missingList.append(el('li', text)));
+    }
+    function show(input,options={}) {
       const next = normalize(input); const nextSignature = JSON.stringify(next);
+      const wasContext=hasContext;
       hasContext = Boolean(input?.location && input?.report);
+      const sameProperty=wasContext&&hasContext&&context.location.kind===next.location.kind&&context.location.name===next.location.name&&context.location.state===next.location.state;
+      if(nextSignature!==signature&&options.preserveProject&&sameProperty){
+        context=next;signature=nextSignature;renderContext();briefPrepared=false;briefPreview.hidden=true;
+        briefStatus.textContent='Your updated preview is attached. Review your existing assumptions and prepare a fresh brief.';
+        syncing=true;
+        try{pdfApi?.setContext(context,{preserveProject:true});pdfState=pdfApi?.getState()||pdfState;emailApi?.setContext(context,{reset:true});emailState=emailApi?.getState()||emailState;}finally{syncing=false;}
+      }
       if (nextSignature !== signature) {
         context = next; signature = nextSignature;
         route=null;toolsArea.hidden=true;routeStatus.textContent='Choose a starting point. You can change it as your information develops.';Object.values(routeButtons).forEach(action=>action.setAttribute('aria-pressed','false'));
@@ -335,14 +359,7 @@
         if (/bushfire|bush fire|bal[- ]/.test(risks)) expertSelection.add('bushfire');
         if (/tree|arbor/.test(risks)) expertSelection.add('arborist');
         if (/flood|drainage/.test(risks)) expertSelection.add('flood');
-        locationText.textContent = context.location.name;
-        councilText.textContent = context.location.councilNames.join(' / ') || 'Responsible council to confirm';
-        confidence.textContent = 'Report confidence · ' + context.report.confidence.charAt(0).toUpperCase() + context.report.confidence.slice(1);
-        questionText.textContent = context.question ? 'Your question: ' + context.question : 'Describe the intended works with your reviewing planner.';
-        reportText.textContent = context.report.summary || 'Return to the location report to prepare a preliminary assessment first.'; sourceList.replaceChildren();
-        context.report.sources.forEach(source => { const link = el('a', source.title || 'Official source'); link.href = source.url; link.target = '_blank'; link.rel = 'noopener noreferrer'; const item = el('li'); item.append(link); sourceList.append(item); });
-        missingList.replaceChildren();
-        (context.report.missing.length ? context.report.missing : ['Confirm current site evidence, applicable controls and the responsible professional reviewer.']).forEach(text => missingList.append(el('li', text)));
+        renderContext();
         ALLOWANCES.forEach(item => { costInputs[item.id].value = ''; }); contingencyInput.value = ''; gstSelect.value = '';
         Object.values(materialSelects).forEach(select => { select.value = 'not_started'; });
         Object.values(scopeInputs).forEach(item => { item.input.checked = true; item.card.classList.add('is-selected'); });

@@ -63,7 +63,7 @@
       confidenceReason:'Location confidence identifies a place. Planning confidence remains Low because current controls, original evidence and professional review are incomplete; it is not an approval probability.',
       mode:contextualCase ? 'AI-prepared case preview' : 'Prepared guidance preview',
       modeNote:'This demo uses a prepared evidence summary and local topic matching. Live AI analysis and professional sign-off are not connected.',
-      preparedOn:'2026-10-29', location:{name:selection?.name || 'Location not confirmed',kind:selection?.kind || 'none',councilNames,address:selection?.kind === 'address' ? selection.name : null},
+      preparedOn:'2026-10-29', location:{name:selection?.name || 'Location not confirmed',kind:selection?.kind || 'none',councilNames,address:selection?.kind === 'address' ? selection.name : null,state:selection?.state||null,coverage:selection?.coverage||'unconfirmed',precision:selection?.precision||selection?.kind||null,source:selection?.source||null,council_ids:[...ids]},
       question:String(question || '').trim(), missing, risks,
       sources:outsideCoverage?[]:secondary ? (contextualCase ? SOURCES : SOURCES.slice(0,4)) : guidance.sources,
       evidenceNote:contextualCase ? 'Historical case indications are shown as later-file context, not facts verified at the initial enquiry. Evidence IDs refer to the supplied index; original documents have not been independently checked.' : guidance.scopeNote,

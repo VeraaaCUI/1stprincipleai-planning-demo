@@ -92,7 +92,7 @@
     function getState(){return copy(state);}
     function cancel(){run++;previewRun++;if(activeTask){activeTask.destroy().catch(()=>{});activeTask=null;}pdfDocument=null;pages=[];canvasWrap.replaceChildren();thumbnails.replaceChildren();}
     function reset(){cancel();state=blank();chosenFile=null;fileInput.value='';chosen.textContent='No drawing selected.';result.hidden=true;progress.hidden=true;submit.disabled=true;submit.textContent='Read drawing PDF';sample.disabled=false;remove.hidden=true;status.textContent='Select a PDF, then read its text layer. Scanned image-only pages need OCR or manual review.';notify();}
-    function setContext(context,config={}){const key=JSON.stringify({location:context?.location?.name||context?.location?.address||'',question:context?.question||'',caseId:context?.report?.caseId||'',summary:context?.report?.summary||''});if(config.reset||key!==contextKey){contextKey=key;reset();}}
+    function setContext(context,config={}){const key=JSON.stringify({location:context?.location?.name||context?.location?.address||'',question:context?.question||'',caseId:context?.report?.caseId||'',summary:context?.report?.summary||''});if(config.reset||key!==contextKey){let sameProperty=false;try{sameProperty=Boolean(config.preserveProject&&JSON.parse(contextKey).location&&JSON.parse(contextKey).location===JSON.parse(key).location);}catch(_){}contextKey=key;if(!sameProperty)reset();}}
     async function readChosen(){if(chosenFile)await processFile(chosenFile,false);}
     async function loadDemo(){
       cancel();const token=run;sample.disabled=true;status.textContent='Loading an illustrative drawing PDF. It is not an actual case drawing.';

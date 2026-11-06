@@ -1,0 +1,9 @@
+{
+  "family": "Cormorant Garamond",
+  "source": "https://github.com/google/fonts/tree/main/ofl/cormorantgaramond",
+  "css_source": "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&display=swap",
+  "licence": "SIL Open Font License 1.1",
+  "licence_url": "https://raw.githubusercontent.com/google/fonts/main/ofl/cormorantgaramond/OFL.txt",
+  "downloaded": "2026-10-31",
+  "usage": "Self-hosted display font; no browser requests to Google Fonts"
+}

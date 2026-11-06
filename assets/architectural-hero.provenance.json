@@ -1,0 +1,26 @@
+{
+  "asset": "architectural-hero.jpg",
+  "title": "Salk Institute from interior courtyard in La Jolla, CA",
+  "creator": "Carol M. Highsmith",
+  "photographed": "2011-08-02",
+  "source_page": "https://commons.wikimedia.org/wiki/File:Salk_Institute_Highsmith.jpg",
+  "source_collection": "Carol M. Highsmith Archive, Library of Congress, highsm.13139",
+  "collection_record": "https://hdl.loc.gov/loc.pnp/highsm.13139",
+  "download_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/14/Salk_Institute_Highsmith.jpg/1920px-Salk_Institute_Highsmith.jpg",
+  "original_url": "https://upload.wikimedia.org/wikipedia/commons/1/14/Salk_Institute_Highsmith.jpg",
+  "license": "Public domain (PD-Highsmith)",
+  "license_explanation_url": "https://commons.wikimedia.org/wiki/Template:PD-Highsmith",
+  "source_metadata": {
+    "LicenseShortName": "Public domain",
+    "UsageTerms": "Public domain",
+    "AttributionRequired": "false",
+    "Copyrighted": "False",
+    "License": "pd"
+  },
+  "verified_on": "2026-10-31",
+  "verification": "Wikimedia Commons API imageinfo extmetadata, source revision wikitext PD-Highsmith tag, and PD-Highsmith template retrieved successfully (HTTP 200). Library of Congress record was linked by Commons but direct retrieval returned HTTP 403; no claim of direct LOC-page review.",
+  "usage": "Architectural brand illustration only. This depicts a California institutional building, not an Australian case site, property or verified planning outcome.",
+  "alterations": "Original downloaded JPEG is unchanged. The website applies object-fit cropping and a CSS grayscale/contrast/brightness/sepia tonal treatment; no claim of original warm-stone reference photography.",
+  "bytes": 554170,
+  "sha256": "a7c9ba19256ea1910a8e9687725b132d6ebbf258f21f83d5e2a7704e4fcc509b"
+}

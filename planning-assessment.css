@@ -1,0 +1,126 @@
+/* A render-only assessment below the retained map. The :is scope outranks legacy map form rules. */
+.fpa-assessment{--fpa-paper:#fffefa;--fpa-bg:#f4f2ec;--fpa-ink:#263b32;--fpa-muted:#58675b;--fpa-green:#223c34;--fpa-soft:#e6ece4;--fpa-line:#dedfd5;--fpa-accent:#91462f;min-width:0;margin-top:40px;color:var(--fpa-ink);font-family:'Segoe UI',system-ui,sans-serif;line-height:1.7;font-size:15px;overflow-wrap:anywhere}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) *{box-sizing:border-box}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) :is(h2,h3,h4,p,figure,fieldset){margin:0}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) :is(button,select,a,summary){font:inherit;-webkit-tap-highlight-color:transparent}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) :is(button,summary){cursor:pointer}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) :is(button,select,a,summary):focus-visible{outline:3px solid var(--fpa-accent);outline-offset:3px}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) h2{font-family:Georgia,'Times New Roman',serif;font-size:32px;font-weight:400;line-height:1.25;letter-spacing:-.4px}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) h3{font-family:Georgia,'Times New Roman',serif;font-size:25px;font-weight:400;line-height:1.35;letter-spacing:-.2px}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) h4{font-size:16px;font-weight:600;line-height:1.5;margin-bottom:12px}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-kicker{font-size:11px;color:var(--fpa-muted);letter-spacing:.09em;font-weight:600;margin-bottom:10px}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-copy{font-size:14px;color:var(--fpa-muted);line-height:1.8;margin-top:12px;max-width:90ch}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-fine{font-size:12px;color:var(--fpa-muted);line-height:1.8;margin-top:10px}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-selector{padding:32px;background:var(--fpa-paper);border:1px solid var(--fpa-line);border-radius:8px}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-choice-group{border:0;padding:0;margin-top:24px;min-width:0}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) legend{padding:0 0 10px;font-size:13px;font-weight:600;color:var(--fpa-ink)}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-choice-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-button{display:inline-flex;justify-content:center;align-items:center;gap:8px;border:1px solid #7c887c;background:var(--fpa-paper);color:var(--fpa-green);border-radius:5px;padding:10px 16px;min-height:48px;max-width:100%;font-size:14px;line-height:1.5;white-space:normal;text-align:center;cursor:pointer}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-button[aria-pressed=true],:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-primary{background:var(--fpa-green);border-color:var(--fpa-green);color:var(--fpa-paper)}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-button:hover{background:var(--fpa-soft);color:var(--fpa-green)}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-mode-options{display:flex;gap:8px;flex-wrap:wrap}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-context{padding-top:24px;margin-top:24px;border-top:1px solid var(--fpa-line)}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-context h3{font-size:22px}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-property-meta{font-size:13px;color:var(--fpa-muted);margin-top:8px}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-inline-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-example-banner{padding:18px 20px;background:#f7f0e4;border-left:3px solid #a67540}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-example-banner>strong{display:block;margin-top:10px;font-size:16px;font-weight:500}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-example-choices{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:20px}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-select-field{margin-top:16px;max-width:520px;min-width:0}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-select-field label{display:block;font-size:13px;font-weight:600;color:var(--fpa-ink);margin:0 0 8px}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-select-field select{min-height:48px;width:100%;font-size:14px;color:var(--fpa-ink);border:1px solid #7c887c;border-radius:5px;background:var(--fpa-paper);padding:10px 36px 10px 12px}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-detail{margin-top:40px}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-section-nav{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 24px}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-section-nav .fpa-button{font-size:12px;min-height:44px;padding:8px 12px}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-detail-heading{margin-bottom:24px;max-width:95ch}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-assessment-status{display:flex;align-items:center;flex-wrap:wrap;gap:12px;margin-top:18px}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-confidence{font-size:12px;color:var(--fpa-muted)}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-quality{display:inline-block;border:1px solid #dedfd5;border-radius:4px;background:var(--fpa-bg);color:var(--fpa-muted);font-size:11px;line-height:1.6;padding:4px 8px;font-weight:500;vertical-align:middle;max-width:100%;white-space:normal}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-quality[data-data-quality=verified_official_data]{background:#e6ece4;border-color:#c7d3c4;color:#38513b}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-quality[data-data-quality=prototype_example]{background:#f7f0e4;border-color:#e4d3b8;color:#80542c}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-quality[data-data-quality=missing_data]{background:#f4ece8;border-color:#e4d4ca;color:#865b47}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-section{padding:28px 32px;margin-bottom:16px;border:1px solid var(--fpa-line);border-radius:8px;background:var(--fpa-paper);min-width:0}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-section-heading{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:16px}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-section-heading h3{flex:1;min-width:200px;font-size:25px}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-section-number{font-family:Georgia,'Times New Roman',serif;font-size:16px;color:#91462f;align-self:flex-start;padding-top:6px}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-item-list,:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-missing-list{list-style:none;padding:0;margin:20px 0 0;display:grid;gap:16px}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) :is(.fpa-item-list,.fpa-missing-list)>li{border-top:1px solid var(--fpa-line);padding-top:16px;min-width:0}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) :is(.fpa-item-list,.fpa-missing-list)>li>strong{display:inline-block;font-size:14px;margin-right:12px}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-resolution{padding:12px 14px;background:var(--fpa-bg);font-size:13px;color:var(--fpa-muted);margin-top:12px}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-source{display:inline-flex;align-items:center;min-height:44px;color:var(--fpa-green);font-size:12px;text-decoration:underline;text-underline-offset:3px;max-width:100%}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-official{margin-top:24px;padding:20px;background:var(--fpa-bg);border-radius:6px}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-official-row{margin-top:16px;padding-top:12px;border-top:1px solid var(--fpa-line)}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-official-row dl{display:grid;grid-template-columns:minmax(140px,.7fr) minmax(0,1.3fr);gap:12px;font-size:13px;margin:0}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) :is(dt,dd){margin:0}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) dt{color:var(--fpa-muted)}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-pathways{margin-top:20px}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-pathway{margin-top:10px;border:1px solid var(--fpa-line);border-radius:5px;background:var(--fpa-paper)}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-pathway>summary{padding:14px 16px;min-height:48px;font-size:15px;font-weight:600;color:var(--fpa-green)}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-pathway>summary>span:first-child{margin-right:12px}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-pathway-body{padding:0 20px 20px}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-pathway-body h4{margin-top:20px}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-step-list{margin:12px 0 0;padding-left:22px;font-size:14px;color:var(--fpa-ink)}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-step-list li{padding-left:6px;margin-top:14px}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-sketch{margin-top:24px;padding:20px;background:#f8f8f2;border:1px solid var(--fpa-line);border-radius:6px}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-sketch figcaption{display:flex;align-items:center;gap:12px;flex-wrap:wrap;font-size:14px;margin-bottom:12px}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-sketch svg{width:100%;max-width:760px;height:auto;display:block;margin-inline:auto;background:#fffefa;border-radius:4px}
+.fpa-parcel-outline,.fpa-lot-outline{fill:#e6ece4;stroke:#355748;stroke-width:2;vector-effect:non-scaling-stroke}.fpa-assumed-envelope{fill:#dae7df77;stroke:#58675b;stroke-dasharray:6 5;stroke-width:1.6;vector-effect:non-scaling-stroke}.fpa-assumed-house{fill:#b9b8ae;stroke:#6c7168;stroke-width:1.5;vector-effect:non-scaling-stroke}.fpa-candidate{fill:#caa47b99;stroke:#91462f;stroke-width:2;vector-effect:non-scaling-stroke}.fpa-candidate-outside{fill:#e7b6a877;stroke:#963c37}.fpa-assumed-tree{fill:#b2c5a499;stroke:#526d49;stroke-width:1.5;vector-effect:non-scaling-stroke}.fpa-assumed-flow{fill:none;stroke:#718ba2;stroke-width:3;stroke-dasharray:6 4;vector-effect:non-scaling-stroke}.fpa-sketch-label{fill:#58675b;font:12px 'Segoe UI',system-ui,sans-serif}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-sketch-legend{list-style:none;padding:0;margin:16px 0;display:flex;gap:8px 20px;flex-wrap:wrap;color:var(--fpa-muted);font-size:12px}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-sketch-legend li{display:flex;align-items:center;gap:8px}
+.fpa-key{display:inline-block;width:16px;height:12px;border:1px solid #7c887c;background:#b9b8ae;flex-shrink:0}.fpa-key-envelope{border-style:dashed;background:#dae7df77}.fpa-key-candidate{background:#caa47b99;border-color:#91462f}.fpa-key-tree{border-radius:50%;background:#b2c5a4;border-color:#526d49}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-fit-note{font-size:13px;color:var(--fpa-muted);margin-top:12px}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-costs,:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-timing,:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-comparables{margin-top:24px}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-cost-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.65fr);gap:4px 16px;border-top:1px solid var(--fpa-line);padding:14px 0;font-size:14px;align-items:start}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-cost-row>span{text-align:right}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-cost-row .fpa-fine{grid-column:1/-1;margin-top:4px}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-timing{padding:20px;background:var(--fpa-bg);border:1px solid var(--fpa-line);border-radius:6px}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-timing figcaption{font-size:16px;font-weight:600;margin-bottom:12px}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-notice{padding:12px 14px;border-left:2px solid #a67540;background:#f7f0e4;font-size:12px;color:#80542c;line-height:1.8}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-time-row{display:grid;grid-template-columns:1fr auto;gap:8px;margin-top:16px;font-size:13px}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-time-track{height:10px;background:#dedfd5;grid-column:1/-1;border-radius:3px;overflow:hidden}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-time-track>span{display:block;height:100%;background:#6a826c;border-radius:3px}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-time-counts{display:grid;grid-template-columns:1fr auto;gap:6px 20px;font-size:12px;margin:20px 0 0}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-comparables article{margin-top:12px;padding:16px;border:1px solid var(--fpa-line);border-radius:5px}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-comparables article>strong{margin-right:12px}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-next{padding:28px 32px;margin-top:28px;border-radius:8px;background:var(--fpa-soft)}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-next .fpa-button{margin-top:20px}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+@media(max-width:850px){:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-choice-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:600px){:is(.fpa-assessment,#council-map-root .fpa-assessment) :is(.fpa-selector,.fpa-section,.fpa-next){padding:22px 20px}:is(.fpa-assessment,#council-map-root .fpa-assessment) h2{font-size:28px}:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-choice-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-button{font-size:13px;padding:10px 12px}:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-section-heading{gap:10px}:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-section-heading h3{font-size:23px;min-width:180px}:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-example-choices{grid-template-columns:1fr;gap:0}:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-select-field select{font-size:16px}:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-mode-options .fpa-button{flex:1}:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-official-row dl{grid-template-columns:1fr;gap:4px}:is(.fpa-assessment,#council-map-root .fpa-assessment) :is(.fpa-official,.fpa-sketch,.fpa-timing){padding:16px}:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-cost-row{grid-template-columns:1fr}:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-cost-row>span{text-align:left}:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-inline-actions .fpa-button{width:100%}}
+
+/* Stage 05: readable native disclosures, shared tokens and fluid diagrams. */
+:is(.fpa-assessment,#council-map-root .fpa-assessment){--fpa-ink:var(--fp-ink,#263b32);--fpa-muted:var(--fp-muted,#58675b);--fpa-green:var(--fp-primary,#223c34);--fpa-paper:var(--fp-surface,#fffefa);--fpa-bg:var(--fp-background,#f4f2ec);--fpa-line:var(--fp-line,#dedfd5);font-size:16px;min-width:0}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-selector{padding:var(--fp-space-3,24px)}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-selector>h2{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-mode-group{margin:0}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-context{margin-top:16px;padding:0;border:1px solid var(--fpa-line);background:var(--fpa-paper);border-radius:6px}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-context>summary,:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-scope>summary{min-height:48px;padding:12px 16px;font-size:14px;line-height:1.7;cursor:pointer;color:var(--fpa-green);font-weight:600}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-context-body{padding:0 16px 16px}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-context-body .fpa-choice-group{margin:16px 0 24px}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-detail{margin-top:var(--fp-space-4,32px)}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-detail-heading h2{font-size:26px;line-height:1.4}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-detail-heading{margin-bottom:16px}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-assessment-status{margin-top:8px;gap:8px 16px}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-scope{margin-top:8px}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-scope>summary{padding:8px 0;font-weight:400}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-section{padding:0;margin-bottom:16px;min-width:0}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-section-heading{display:grid;grid-template-columns:24px minmax(0,1fr) 20px;align-items:start;gap:8px 16px;padding:24px;margin:0;min-height:64px;cursor:pointer;list-style:none;border-radius:8px}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-section-heading::-webkit-details-marker{display:none}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-section-heading::after{content:'+';grid-column:3;grid-row:1;font:400 24px/1.3 'Segoe UI',system-ui,sans-serif;color:var(--fpa-green);text-align:center}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-section[open]>.fpa-section-heading::after{content:'−'}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-section-heading h3{grid-column:2;min-width:0;font-size:clamp(19px,2vw,24px);line-height:1.4;flex:none;margin:0;overflow-wrap:anywhere}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-section-number{grid-column:1;font-size:15px;line-height:1.5;padding-top:2px}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-section-heading>.fpa-quality{grid-column:2/-1;justify-self:start}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-section-body{padding:0 24px 24px;min-width:0}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-copy{max-width:85ch;font-size:15px;line-height:1.75}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-fine{font-size:13px;line-height:1.7}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-button{min-height:48px;font-size:14px;white-space:normal}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-section-nav{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-bottom:24px}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-section-nav .fpa-button{font-size:13px;padding:12px 8px;justify-content:flex-start;text-align:left}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) :is(.fpa-sketch,.fpa-timing,.fpa-official){margin-top:24px;padding:16px;min-width:0}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) :is(.fpa-sketch svg,.fpa-time-bars){max-width:100%;min-width:0}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-source{min-height:44px;font-size:13px;overflow-wrap:anywhere}
+:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-select-field select{font-size:16px;min-height:48px}
+@media(min-width:768px){:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-section-nav{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(min-width:1100px){:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-section-nav{grid-template-columns:repeat(5,minmax(0,1fr))}}
+@media(max-width:559px){:is(.fpa-assessment,#council-map-root .fpa-assessment) :is(.fpa-selector,.fpa-next){padding:16px}:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-section-heading{padding:16px;column-gap:8px;grid-template-columns:20px minmax(0,1fr) 20px}:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-section-body{padding:0 16px 16px}:is(.fpa-assessment,#council-map-root .fpa-assessment) :is(.fpa-official,.fpa-sketch,.fpa-timing){padding:12px}:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-context-body{padding:0 12px 16px}:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-choice-grid{grid-template-columns:minmax(0,1fr)}:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-official-row dl{grid-template-columns:minmax(0,1fr);gap:4px}:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-time-row{grid-template-columns:minmax(0,1fr) auto}:is(.fpa-assessment,#council-map-root .fpa-assessment) .fpa-quality{font-size:11px}}

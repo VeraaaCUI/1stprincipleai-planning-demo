@@ -3,9 +3,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Find Australian street addresses, explore NSW council types and planning documents, and follow a project from question to specialist preparation.">
+  <meta name="description" content="Find a property, review available NSW planning attributes, then explore your intended development.">
   <meta name="theme-color" content="#223c34">
   <title>1stprincipleai · Places &amp; Planning · Early access</title>
+  <link rel="icon" type="image/svg+xml" href="./favicon.svg">
   <link rel="stylesheet" href="./styles.css">
   <link rel="stylesheet" href="./vendor/leaflet.css">
   <link rel="stylesheet" href="./customer-journey.css">
@@ -15,26 +16,57 @@
   <link rel="stylesheet" href="./project-progress.css">
   <link rel="stylesheet" href="./expert-contact.css">
   <link rel="stylesheet" href="./presentation.css">
+  <link rel="stylesheet" href="./site-navigation.css">
+  <link rel="stylesheet" href="./residential-pages.css">
+  <link rel="stylesheet" href="./planning-library.css">
+  <link rel="stylesheet" href="./platform-layout.css">
+  <link rel="stylesheet" href="./property-spatial-panel.css">
+  <link rel="stylesheet" href="./planning-assessment.css">
+  <link rel="stylesheet" href="./property-flow-view.css">
+  <link rel="stylesheet" href="./responsive-platform.css">
+  <link rel="stylesheet" href="./map-responsive.css">
+  <link rel="stylesheet" href="./selected-design.css">
+  <link rel="stylesheet" href="./selected-functional.css">
+  <link rel="stylesheet" href="./local-projects.css">
   <script src="./vendor/leaflet.js" defer></script>
   <script src="./council-map-guidance.js" defer></script>
   <script src="./planning-report.js" defer></script>
   <script src="./address-search.js" defer></script>
   <script src="./council-documents.js" defer></script>
+  <script src="./planning-library.js" defer></script>
+  <script src="./nsw-spatial.js" defer></script>
+  <script src="./progressive-cards.js" defer></script>
+  <script src="./property-spatial-panel.js" defer></script>
+  <script src="./prototype-examples.js" defer></script>
+  <script src="./planning-assessment-model.js" defer></script>
+  <script src="./planning-assessment.js" defer></script>
+  <script src="./property-flow-view.js" defer></script>
   <script src="./council-map.js" defer></script>
   <script src="./pdf-intake.js" defer></script>
   <script src="./project-progress.js" defer></script>
   <script src="./expert-contact.js" defer></script>
   <script src="./advanced-services.js" defer></script>
+  <script src="./site-navigation.js" defer></script>
+  <script src="./residential-pages.js" defer></script>
+  <script src="./project-repository.js" defer></script>
+  <script src="./runtime-config.js" defer></script>
+  <script src="./vendor/supabase.js" defer></script>
+  <script src="./auth-client.js" defer></script>
+  <script src="./cloud-project-repository.js" defer></script>
+  <script src="./local-projects-view.js" defer></script>
+  <script src="./local-projects.js" defer></script>
   <script src="./app.js" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#main-content">Skip to main content</a>
   <div class="app-shell">
-    <aside class="sidebar" aria-label="Demo navigation">
-      <a class="brand" href="#map" aria-label="1stprincipleai map home"><span>1stprincipleai<small>PLANNING WORKSPACE</small></span></a>
-      <div class="sidebar-rule"></div>
-      <p class="nav-heading">Plan your project <span>DEMO</span></p>
-      <nav id="main-nav" class="main-nav" aria-label="Case views">
+    <div id="site-navigation-root"></div>
+    <div class="page-shell">
+      <header class="topbar"><div class="breadcrumb">1stprincipleai / Planning workspace <span>/ <b id="breadcrumb-view">Places &amp; questions</b></span></div><div class="version"><span class="tiny-dot"></span>Early access · Demo</div></header>
+      <main id="main-content" tabindex="-1">
+        <section id="residential-content" hidden></section>
+        <section id="case-navigation" hidden><p class="eyebrow">Historical example · evidence explorer</p>
+      <nav id="main-nav" class="main-nav case-nav" aria-label="Example case evidence views">
         <button type="button" data-view="map" aria-current="page">Places &amp; questions<span class="nav-arrow" aria-hidden="true">↗</span></button>
         <button type="button" data-view="services" id="services-nav" hidden>Advanced services<span class="nav-arrow" aria-hidden="true">↗</span></button>
         <button type="button" data-view="workflow"><span class="nav-number">01</span>Workflow</button>
@@ -43,15 +75,9 @@
         <button type="button" data-view="evidence"><span class="nav-number">04</span>Evidence</button>
         <button type="button" data-view="results"><span class="nav-number">05</span>Progress</button>
       </nav>
-      <div class="sidebar-note"><span class="tiny-dot"></span><p>From information to traceable decisions.<small>Keep the unknowns visible.</small></p></div>
-      <div class="sidebar-bottom"><span class="sidebar-case">EARLY ACCESS</span><span>Client demo · Sample address shown</span></div>
-    </aside>
-    <div class="page-shell">
-      <header class="topbar"><div class="breadcrumb">1stprincipleai / Planning workspace <span>/ <b id="breadcrumb-view">Places &amp; questions</b></span></div><div class="version"><span class="tiny-dot"></span>Early access · Demo</div></header>
-      <main id="main-content" tabindex="-1">
+        </section>
         <section class="page-intro" aria-labelledby="page-title">
-          <div><h1 id="page-title">Explore Australia. Plan your next step.</h1><p class="intro-copy" id="page-description">Find a street address, explore NSW council controls and prepare a project brief.</p></div>
-          <button id="start-tour" class="button button-primary" type="button">Try the example project <span aria-hidden="true">↗</span></button>
+          <div><h1 id="page-title">Find your property.</h1><p class="intro-copy" id="page-description">Search an address or explore a council area, then confirm a property to continue.</p></div>
         </section>
         <section id="case-ribbon" class="case-ribbon" aria-label="Case overview" hidden>
           <div class="case-title"><span class="case-symbol" aria-hidden="true">01</span><div><strong>CASE-0001</strong><span>TRN-18 · DA0042/25</span></div></div>
@@ -63,11 +89,11 @@
           <div class="stage-metrics" aria-label="Current evidence stage counts"><div><strong id="metric-visible">—</strong><span>facts in view</span></div><div><strong id="metric-deferred">—</strong><span>later-stage facts hidden</span></div><div><strong id="metric-questions">—</strong><span>question nodes to resolve</span></div><p id="stage-caption">Loading case snapshot</p></div>
         </section>
         <section id="tour-panel" class="tour-panel" aria-labelledby="tour-title" hidden><div class="tour-top"><span id="tour-position" class="eyebrow"></span><button type="button" id="close-tour" class="text-button">End walkthrough ×</button></div><h2 id="tour-title"></h2><p id="tour-copy"></p><div class="tour-bottom"><div id="tour-dots" aria-hidden="true"></div><div><button type="button" id="tour-prev" class="button button-small">Previous</button><button type="button" id="tour-next" class="button button-small button-primary">Next →</button></div></div></section>
-        <section id="council-home" aria-label="Australian address map, NSW council documents and early planning questions"><div id="council-map-root"></div></section>
-        <section id="services-home" aria-label="Advanced project services" hidden><div id="advanced-services-root"></div></section>
+        <section id="council-home" aria-label="Property discovery, planning overview, development selection and assessment"><div id="council-map-root"></div></section>
+        <section id="services-home" aria-label="Advanced project services" hidden><p id="project-stale-notice" class="cm-stale-notice" role="status" hidden>Your question has changed. Your preparation is retained; return to the map and generate an updated preview before relying on the old report.</p><div id="advanced-services-root"></div></section>
         <div id="view-content" aria-live="polite" aria-atomic="false" hidden></div>
         <noscript><p class="error-message">Enable JavaScript to use this interactive demo. You can also use the <a href="https://www.olg.nsw.gov.au/public/find-your-local-council">official NSW council finder</a>.</p></noscript>
-        <footer class="page-footer"><span>1stprincipleai · Evidence for every next step.</span><span id="snapshot-date">Case snapshot 2026-10-29 · Sample address shown</span><span>Early access · Location matching is not planning approval</span></footer>
+        <footer class="page-footer"><button id="start-tour" class="button button-primary" type="button">Try the example project <span aria-hidden="true">↗</span></button><span>1stprincipleai · Evidence for every next step.</span><span id="snapshot-date">Case snapshot 2026-10-29 · Sample address shown</span><span>Early access · Location matching is not planning approval</span></footer>
       </main>
     </div>
   </div>

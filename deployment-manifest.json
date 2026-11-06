@@ -1,8 +1,12 @@
 {
   "files": {
     "index.html": {
-      "bytes": 137798,
-      "sha256": "96255cf841d711b4b7902f30e0b962e599cdf6cc26cec23344610e5224631b4b"
+      "bytes": 139298,
+      "sha256": "d2932edd3890a8164fc73c260b1436198e6675f34b4144567d733f7f45c9fe8b"
+    },
+    "favicon.svg": {
+      "bytes": 227,
+      "sha256": "962d2cf461645bf1858a24239e7077ba85301d8b3c67729f1904f2486e471a35"
     },
     "styles.css": {
       "bytes": 26346,
@@ -13,16 +17,196 @@
       "sha256": "7665939192a7cd690e1e1ac7ad53725962c56a86f7fcc355c6708450653779d3"
     },
     "app.js": {
-      "bytes": 40344,
-      "sha256": "da9310e79270aec96d7e43d2ee2582fd24457b5eec5ad82bd54bed75f8f34efb"
+      "bytes": 48995,
+      "sha256": "422343069f9776c6fe9fbf84b468b57b627888fb4e46e815c3088f9e588f50d4"
     },
     ".nojekyll": {
       "bytes": 1,
       "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
     },
+    "site-navigation.js": {
+      "bytes": 19445,
+      "sha256": "90ba605815fd1e42968ee129bc94155f78d88219dd886305724a71280233af8d"
+    },
+    "site-navigation.css": {
+      "bytes": 7796,
+      "sha256": "da4549f59f207ea15eaf7be76f766d9c8dafe6f1d44c96a6f73911a0450ce0c1"
+    },
+    "planning-library.js": {
+      "bytes": 21989,
+      "sha256": "2d1c458bbf6556a3df28c10ce8db2ec5ec6bb38aca443a2aac2f7e27ede6bc22"
+    },
+    "planning-library.css": {
+      "bytes": 8398,
+      "sha256": "56a42ae936fc7ce84fa48ad24550c9bdf14d62ae53c0e5711d5b19713f22d107"
+    },
+    "residential-pages.js": {
+      "bytes": 25954,
+      "sha256": "04fe465ac6acc2ee2a4378bbcda51277a5d617c5bc26313566abfc72998d02dd"
+    },
+    "residential-pages.css": {
+      "bytes": 15056,
+      "sha256": "098d02a22dbaf9429ec5780fae7096af5c419e6d6639396e956bdb6485de6fe7"
+    },
+    "platform-layout.css": {
+      "bytes": 5222,
+      "sha256": "98a05961a5bc1685e94829046575737c7fde73b742613d4305ea9df6659084da"
+    },
+    "nsw-spatial.js": {
+      "bytes": 15450,
+      "sha256": "03800c713a9dbdfca1913b9fb4bc5e9390995bc4723e0ea41c5ec18af86af1cb"
+    },
+    "property-spatial-panel.js": {
+      "bytes": 26721,
+      "sha256": "4256221d2ceaefb902f5f9827bc42407d9cbf660f050e3b0ade2c106755a69d6"
+    },
+    "property-spatial-panel.css": {
+      "bytes": 10872,
+      "sha256": "ce3f1e03038abc2adcaf7bcbb1331e5dff319cf08ab4701eee5c0b9545226f7b"
+    },
+    "property-flow-view.js": {
+      "bytes": 24068,
+      "sha256": "f6042dea94f6b420f0730e7ad9962ebe16d0515d2f63a9f01ad50476cb86b18e"
+    },
+    "property-flow-view.css": {
+      "bytes": 8835,
+      "sha256": "e71306697b9c77297ac84e3319e2b907ed9986f77fa6ff63d4a22600c73372be"
+    },
+    "progressive-cards.js": {
+      "bytes": 3943,
+      "sha256": "b0c6d27b6ad1fa4f73379dca1d30e4911953cd16c4e37a8f10d6899d6c0687b5"
+    },
+    "responsive-platform.css": {
+      "bytes": 5518,
+      "sha256": "dbca050b9c172136588ebe108b36857c249498ca06239624cf8395d3c543ba37"
+    },
+    "map-responsive.css": {
+      "bytes": 8073,
+      "sha256": "53744a2bd366627569a853b721607f5dc70f446abcb4e86845952a95b80ac0fc"
+    },
+    "selected-design.css": {
+      "bytes": 12527,
+      "sha256": "4d4db757902913bc87b9f09a6c09ebcce33e6b1c5902a495e30b7a958063a95e"
+    },
+    "selected-functional.css": {
+      "bytes": 39977,
+      "sha256": "46922a4da68bb830fcbf517f339e66be7dac5a16f58d51f264cea8636104b68c"
+    },
+    "project-repository.js": {
+      "bytes": 15492,
+      "sha256": "407587f4c9a151a5249ccfb6aafbfb7b80df552dc0f575b07868bd2178448e86"
+    },
+    "local-projects.js": {
+      "bytes": 15550,
+      "sha256": "e58667cab2e5df30b3552a0191b8f437402689c1f26f745186b158f432da6b7e"
+    },
+    "local-projects-view.js": {
+      "bytes": 15862,
+      "sha256": "e0b7575133a555a2c7083b57b33914abffea3cf344c0d76ca64ca4e44248e0d6"
+    },
+    "local-projects.css": {
+      "bytes": 7610,
+      "sha256": "95329bd3b8f40e3c7cb752ab6ddd373182b6975c8cd3b6a5531de99ada29ca0c"
+    },
+    "runtime-config.js": {
+      "bytes": 251,
+      "sha256": "3ad5888f0a8a12c8af25df8eaaa525b7ea33d81d965ac5b109a3ff18bd3273bc"
+    },
+    "auth-client.js": {
+      "bytes": 12543,
+      "sha256": "9b09b7d90119c78a92d39bd2362f6f16c67ccfd3fbdb44cf27ac8637cc596cd3"
+    },
+    "cloud-project-repository.js": {
+      "bytes": 8535,
+      "sha256": "c533d187d5326eee8ce28b06bd6ed8c93b3b2cd02f5b0517eba982d4420880c1"
+    },
+    "vendor/supabase.js": {
+      "bytes": 219856,
+      "sha256": "a867edbcfb029370aeec7223dd6180b560b621fbe3bc64c6584fb0369d1b7bce"
+    },
+    "vendor/SUPABASE-LICENSE.txt": {
+      "bytes": 1065,
+      "sha256": "334dd6820e2eaeab2064e7c59001b810566728a28a41a7c1dbf69bbee17d0936"
+    },
+    "vendor/SUPABASE-SOURCE.json": {
+      "bytes": 677,
+      "sha256": "4d495802fc1c2ee21301248bf34d9d2d965b041a8d5c389c1ecfe92c12767c00"
+    },
+    "assets/architectural-hero.jpg": {
+      "bytes": 554170,
+      "sha256": "a7c9ba19256ea1910a8e9687725b132d6ebbf258f21f83d5e2a7704e4fcc509b"
+    },
+    "assets/architectural-hero.provenance.json": {
+      "bytes": 1826,
+      "sha256": "f1ade8c293c4daa59ddb48d29c077d047a8bf9225d6c3d21aab1b3f3f11bd4ef"
+    },
+    "assets/LICENSE-architectural-hero.txt": {
+      "bytes": 1082,
+      "sha256": "32d4ee0e21cb9bc884de1903d3f1e8cd8bb73f8da8e09773f64951dafde33d43"
+    },
+    "assets/homepage-lavender-skyline.png": {
+      "bytes": 1830741,
+      "sha256": "1397c8539ed56f93327ed2ec2e18060c76b19f34091895e288494aee03ab09d9"
+    },
+    "assets/homepage-lavender-skyline.provenance.json": {
+      "bytes": 257,
+      "sha256": "5b1919d364efeaf90da020d22b15472351da78998603be60f270dc5d759d1983"
+    },
+    "assets/fonts/cormorant-garamond-normal-400.ttf": {
+      "bytes": 290236,
+      "sha256": "6d37a86241a25d63f8fe6018b4c083449886b7165c1acb15edd0f574f690ecf7"
+    },
+    "assets/fonts/cormorant-garamond-normal-500.ttf": {
+      "bytes": 290496,
+      "sha256": "1724047c8988ca5155bff667bc48fa52e97d57aabc6b42eebbf986f21a4be20b"
+    },
+    "assets/fonts/cormorant-garamond-italic-400.ttf": {
+      "bytes": 293036,
+      "sha256": "0b9a8a33cfaa624d30f70f9b6686da769b319b8c37a55af16e29fef690108bbf"
+    },
+    "assets/fonts/OFL.txt": {
+      "bytes": 4387,
+      "sha256": "60700d351cac4650c51f3f9db318d2a420f8b45052dba2715eb5fec41f0f6956"
+    },
+    "assets/fonts/SOURCE.json": {
+      "bytes": 495,
+      "sha256": "8e417efcb48c1bcae0ba64a0b9f2e796d2f1b41f27bcbcb3d60168d9b9779245"
+    },
+    "assets/icons/chevron-down.svg": {
+      "bytes": 289,
+      "sha256": "6c98af73d9cd64d0f4ae890c40566a436a1cc904af93c283e52111af2d4ba44c"
+    },
+    "assets/icons/check-circle-fill.svg": {
+      "bytes": 339,
+      "sha256": "f6f5d971091787219c4226c5bf68a6ebd4d976c91bd90fc52ba3b422589b2dc8"
+    },
+    "assets/icons/LICENSE.txt": {
+      "bytes": 1093,
+      "sha256": "0fb3e11bd57e896c5a512afd64864d28a37de45d19835016c87ca1ad19ead969"
+    },
+    "assets/icons/SOURCE.json": {
+      "bytes": 286,
+      "sha256": "31c77b18a1735e768cbca1f758e2218de5a23bba073e323ab01db33ccd4d327e"
+    },
+    "prototype-examples.js": {
+      "bytes": 50808,
+      "sha256": "206e98ec97f56aa35f93bc6593ac9641330c2f9ab5f3ef930ae043bd50a5121d"
+    },
+    "planning-assessment-model.js": {
+      "bytes": 19776,
+      "sha256": "b10dd4c07f1796fe9bff2b71c460c852639a6483d994d62da972b7dab3386e81"
+    },
+    "planning-assessment.js": {
+      "bytes": 31157,
+      "sha256": "3d9bd948b0bfa5dbd29f030052f7abca51bd77fb016bc435adf8640f34459bec"
+    },
+    "planning-assessment.css": {
+      "bytes": 21330,
+      "sha256": "8f3d2cd1d4e57cb08cdd9d9e4c66cb99d7a1bfed904fe91fe5edc43638e06e23"
+    },
     "council-map.js": {
-      "bytes": 49519,
-      "sha256": "3848495ebbe2e88e0ffd0535090ce7241f0919ba6e6b13765d16fae2e9145f39"
+      "bytes": 96861,
+      "sha256": "f06b5072500aa717768283cf5b99430c635a4bf2f0c23fdfc82acbb8677ed3da"
     },
     "council-map.css": {
       "bytes": 19191,
@@ -33,32 +217,32 @@
       "sha256": "e0dd30956f22213fa2e8b7402dd30ec0640df53b69b206b62758f767308b03a2"
     },
     "planning-report.js": {
-      "bytes": 8713,
-      "sha256": "acfa8c881a7c837b0036979e730fa10fafc7b824c87a7b037d3512321a260bc0"
+      "bytes": 8892,
+      "sha256": "46a47cdfc919d0dc46f142d8abb9cf5e07288bc6bc86f0bc36b9a71e215950e2"
     },
     "customer-journey.css": {
       "bytes": 4018,
       "sha256": "0c3f1a8805ff32b91f11824346732d5685fea858115550da2faf24a9a102c3a7"
     },
     "advanced-services.js": {
-      "bytes": 41518,
-      "sha256": "8891a2a311d7fcc934fc276de8bf461fbd63fcf61700131f830fe748f0e029d0"
+      "bytes": 44433,
+      "sha256": "98e20cb0508386c43f1f1c8fd282f852fe8763760b5da48be126b8bdf3cd765b"
     },
     "advanced-services.css": {
       "bytes": 18071,
       "sha256": "aa07b5461904b1f16c8b9db27a067a7733a16d74b0b9f08da6319df75030d3f4"
     },
     "address-search.js": {
-      "bytes": 15657,
-      "sha256": "88dd5ac3c6e17bc7b17addf231c29c0578ce81c9a02cd1557e60b2151a38d09a"
+      "bytes": 18640,
+      "sha256": "b09598a79fef4918c0850639fa1f971d8e18725779148ad4eba62e06eb2e82b9"
     },
     "council-documents.js": {
       "bytes": 29047,
       "sha256": "ff474701908adf69caeffa49344bc4552694bbe620d3860a0736ed6eb0a6a70b"
     },
     "pdf-intake.js": {
-      "bytes": 21349,
-      "sha256": "4fe7d18a692c8e047b00289f5c9b504d132acbe919cb02768abab13391c07231"
+      "bytes": 21722,
+      "sha256": "4e570221c87ec7c3d194a92d2808da6a1d2f01bae84550526d68c7133ffb94d0"
     },
     "pdf-intake.css": {
       "bytes": 7074,
@@ -178,7 +362,7 @@
     }
   },
   "case_id": "CASE-0001",
-  "public_asset_count": 44,
+  "public_asset_count": 90,
   "boundary_features": 132,
   "places": 4607,
   "case_snapshot_as_at": "2026-10-29",
