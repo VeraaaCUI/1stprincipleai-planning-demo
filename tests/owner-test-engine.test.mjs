@@ -92,6 +92,9 @@ test('B8/B9 uncertainty stays unresolved and all-options-out respects the select
   let state = ready('option-tie');
   state = answer(state, 'yes'); state = answer(state, 'yes'); state = answer(state, 'not_sure');
   assert.equal(state.result.reading, 'Possibly but needs further information');
+  state = ready('option-tie');
+  state = answer(state, 'yes'); state = answer(state, 'yes'); state = answer(state, 'clear_option');
+  assert.equal(state.result.reading, 'Possibly, depending on the design');
   state = ready('all-options-out');
   state = answer(state, 'yes'); state = answer(state, 'yes'); state = answer(state, 'tie');
   assert.equal(state.result.reading, 'Possibly, depending on the design');
