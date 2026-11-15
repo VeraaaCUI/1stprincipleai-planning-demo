@@ -28,6 +28,7 @@
   <link rel="stylesheet" href="./selected-design.css">
   <link rel="stylesheet" href="./selected-functional.css">
   <link rel="stylesheet" href="./local-projects.css">
+  <link rel="stylesheet" href="./owner-test.css">
   <script src="./vendor/leaflet.js" defer></script>
   <script src="./council-map-guidance.js" defer></script>
   <script src="./planning-report.js" defer></script>
@@ -55,6 +56,8 @@
   <script src="./cloud-project-repository.js" defer></script>
   <script src="./local-projects-view.js" defer></script>
   <script src="./local-projects.js" defer></script>
+  <script src="./owner-test-engine.js" defer></script>
+  <script src="./owner-test.js" defer></script>
   <script src="./app.js" defer></script>
 </head>
 <body>
@@ -91,6 +94,7 @@
         <section id="tour-panel" class="tour-panel" aria-labelledby="tour-title" hidden><div class="tour-top"><span id="tour-position" class="eyebrow"></span><button type="button" id="close-tour" class="text-button">End walkthrough ×</button></div><h2 id="tour-title"></h2><p id="tour-copy"></p><div class="tour-bottom"><div id="tour-dots" aria-hidden="true"></div><div><button type="button" id="tour-prev" class="button button-small">Previous</button><button type="button" id="tour-next" class="button button-small button-primary">Next →</button></div></div></section>
         <section id="council-home" aria-label="Property discovery, planning overview, development selection and assessment"><div id="council-map-root"></div></section>
         <section id="services-home" aria-label="Advanced project services" hidden><p id="project-stale-notice" class="cm-stale-notice" role="status" hidden>Your question has changed. Your preparation is retained; return to the map and generate an updated preview before relying on the old report.</p><div id="advanced-services-root"></div></section>
+        <section id="owner-test-home" aria-label="Owner-only synthetic assessment test" hidden><div id="owner-test-root"></div></section>
         <div id="view-content" aria-live="polite" aria-atomic="false" hidden></div>
         <noscript><p class="error-message">Enable JavaScript to use this interactive demo. You can also use the <a href="https://www.olg.nsw.gov.au/public/find-your-local-council">official NSW council finder</a>.</p></noscript>
         <footer class="page-footer"><button id="start-tour" class="button button-primary" type="button">Try the example project <span aria-hidden="true">↗</span></button><span>1stprincipleai · Evidence for every next step.</span><span id="snapshot-date">Case snapshot 2026-10-29 · Sample address shown</span><span>Early access · Location matching is not planning approval</span></footer>

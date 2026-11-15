@@ -90,7 +90,17 @@
         const result = await client.auth.getUser();
         if (result.error || !result.data?.user?.id) throw result.error || new Error('Invalid session.');
         if (result.data.user.id !== sessionResult.data.session.user?.id) throw new Error('The account changed while verifying the session.');
-        if (ticket === epoch) publish({status: 'authenticated', user: {id: result.data.user.id, email: result.data.user.email || ''}, recovery: Boolean(recovery), error: ''});
+        const appMetadata = result.data.user.app_metadata || {};
+        const ownerTest = appMetadata.owner_test === true
+          || (Array.isArray(appMetadata.roles) && appMetadata.roles.includes('owner_test'));
+        if (ticket === epoch) publish({status: 'authenticated', user: {
+          id: result.data.user.id,
+          email: result.data.user.email || '',
+          // This flag is derived from server-managed app_metadata returned by
+          // getUser(); user-editable metadata, URLs and browser storage do not
+          // grant access to the owner-only synthetic journey.
+          ownerTest
+        }, recovery: Boolean(recovery), error: ''});
       } catch (error) {
         if (ticket === epoch) publish({status: 'anonymous', user: null, recovery: false,
           error: safeError(error, 'Your session could not be verified. Please log in again.')});

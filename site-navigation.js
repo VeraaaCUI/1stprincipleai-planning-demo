@@ -148,6 +148,7 @@
     accountDialog.append(accountTitle, accountMessage, accountForm, accountActions);
     loginItem.append(loginButton);
     const projectsItem = node('li'); projectsItem.append(link('My Projects', 'my-projects')); projectsItem.hidden = true;
+    const ownerTestItem = node('li'); ownerTestItem.append(link('Owner test', 'owner-test')); ownerTestItem.hidden = true;
     let accountReturnFocus = null, accountReturnRoute = null;
     function resetFields() { passwordField.input.value = ''; confirmField.input.value = ''; }
     function renderAccount() {
@@ -239,12 +240,13 @@
     });
     const checkItem = node('li', null, 'fp-check-item');
     checkItem.append(link('Check a property', 'map', 'fp-nav-cta'));
-    list.append(exploreItem, howItem, projectsItem, loginItem, checkItem);
+    list.append(exploreItem, howItem, projectsItem, ownerTestItem, loginItem, checkItem);
     nav.append(list); inner.append(brand, mobileButton, nav); header.append(inner, accountDialog); root.replaceChildren(header);
     function refreshProject() {
       const authenticated = authState.status === 'authenticated';
       loginItem.hidden = false;
       projectsItem.hidden = !authenticated;
+      ownerTestItem.hidden = !(authenticated && authState.user?.ownerTest === true);
       loginButton.textContent = authenticated ? 'Account' : 'Log in';
       loginButton.setAttribute('aria-label', authenticated ? 'Account menu' : 'Log in');
       if (accountDialog.open && !authBusy) renderAccount();
