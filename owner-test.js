@@ -36,6 +36,7 @@
 
     function storageKey() { return ownerId ? 'firstprinciple.owner-test.' + ownerId + '.v1' : ''; }
     function hasAccess() { return Boolean(ownerId && authState.status === 'authenticated' && authState.user?.ownerTest === true); }
+    function resetPdfState() { pdfApi?.reset?.(); pdfApi = null; pdfSnapshot = {status: 'empty', document: null, facts: [], warnings: []}; }
     function announce(message) { live.textContent = text(message, 400); }
     function saveDraft() {
       if (!hasAccess()) { notice = 'The owner authorization is no longer valid. This draft remains in memory only.'; render(); return false; }
@@ -53,7 +54,7 @@
         state = value; notice = 'Restored the last synthetic journey for this owner account. Check the stage before continuing.'; return true;
       } catch (_) { return false; }
     }
-    function clearDraft() { try { if (storageKey()) scope.localStorage.removeItem(storageKey()); } catch (_) {} state = E().initialState('clear-pathway'); pdfSnapshot = {status: 'empty', document: null, facts: [], warnings: []}; notice = 'The synthetic draft was cleared.'; render(); }
+    function clearDraft() { try { if (storageKey()) scope.localStorage.removeItem(storageKey()); } catch (_) {} state = E().initialState('clear-pathway'); resetPdfState(); notice = 'The synthetic draft was cleared.'; render(); }
     function setState(next, message) { state = next; if (message) notice = message; saveDraft(); }
     function chooseScenario(id) {
       if (!E().SCENARIOS.some(item => item.id === id)) { scenarioNotice = 'That synthetic scenario is not available. The clear pathway remains selected.'; id = 'clear-pathway'; }
@@ -148,9 +149,24 @@
       const controls = el('div', null, 'ot-toolbar'); add(controls, el('span', 'Synthetic scenario: ' + scenario.title, 'ot-toolbar-label'), state.paused ? button('Resume', resume, 'ot-primary') : null, button('Save local draft', saveDraft, 'ot-secondary')); body.append(controls);
       const view = state.stage === 'property' ? propertyView() : state.stage === 'enquiry' ? enquiryView() : state.stage === 'evidence' ? evidenceView() : state.stage === 'result' ? resultView() : questionsView(); body.append(view);
     }
-    const unsubscribe = auth?.subscribe?.(next => { const was = ownerId; authState = next; ownerId = next.status === 'authenticated' && next.user?.ownerTest ? next.user.id : null; if (ownerId && ownerId !== was) { loadDraft(); } if (!ownerId && was) { state = E().initialState('clear-pathway'); pdfApi = null; } render(); });
+    const unsubscribe = auth?.subscribe?.(next => {
+      const was = ownerId;
+      const nextOwnerId = next.status === 'authenticated' && next.user?.ownerTest ? next.user.id : null;
+      authState = next;
+      ownerId = nextOwnerId;
+      if (was !== nextOwnerId) {
+        state = E().initialState('clear-pathway');
+        resetPdfState();
+        notice = '';
+        if (ownerId) loadDraft();
+      }
+      render();
+    });
     const ready = (async () => { try { await auth?.ready; authState = auth?.getState?.() || authState; ownerId = authState.status === 'authenticated' && authState.user?.ownerTest ? authState.user.id : null; if (ownerId) loadDraft(); } finally { render(); } })();
-    const api = Object.freeze({ready, getState: () => ({authorized: hasAccess(), state: E().toJSON(state), pdf: {...pdfSnapshot}}), render, dispose() { unsubscribe?.(); pdfApi?.reset?.(); root.replaceChildren(); }});
+    const api = Object.freeze({ready, getState: () => {
+      const authorized = hasAccess();
+      return {authorized, state: authorized ? E().toJSON(state) : E().initialState('clear-pathway'), pdf: authorized ? {...pdfSnapshot} : {status: 'empty', document: null, facts: [], warnings: []}};
+    }, render, dispose() { unsubscribe?.(); resetPdfState(); root.replaceChildren(); }});
     root._firstPrincipleOwnerTest = api; render(); return api;
   }
   scope.FirstPrincipleOwnerTest = Object.freeze({init});

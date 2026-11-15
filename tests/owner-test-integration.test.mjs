@@ -7,6 +7,7 @@ const html = read('index.html');
 const app = read('app.js');
 const journey = read('owner-test.js');
 const auth = read('auth-client.js');
+const engine = read('owner-test-engine.js');
 
 test('existing website owns the controlled route and loads the synthetic adapter', () => {
   assert.match(html, /owner-test\.css/);
@@ -33,4 +34,15 @@ test('PDF intake remains local and explicitly unverified', () => {
   assert.match(journey, /FirstPrinciplePDFIntake/);
   assert.match(journey, /does not upload, OCR, measure or verify/);
   assert.match(read('pdf-intake.js'), /No file upload or AI model request/);
+});
+
+test('owner changes clear and redact in-memory document state', () => {
+  assert.match(journey, /function resetPdfState\(\)/);
+  assert.match(journey, /was !== nextOwnerId/);
+  assert.match(journey, /authorized \? \{\.\.\.pdfSnapshot\} : \{status: 'empty'/);
+});
+
+test('synthetic adapter cannot be converted to a real property by caller fields', () => {
+  assert.match(engine, /next\.property = \{kind: 'synthetic'/);
+  assert.doesNotMatch(engine, /lot: 'Lot 1 \/ DP-SYNTHETIC', \.\.\.property/);
 });

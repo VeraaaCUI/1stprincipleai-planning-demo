@@ -58,7 +58,7 @@ The synthetic draft is namespaced by the verified owner UUID. Auth changes clear
 
 ## Verification
 
-The local Node suite passes 12/12 tests. `node --check` passes for all changed JavaScript files. A local static server served the current checkout on `http://127.0.0.1:4187`; the direct owner route visibly failed closed for an ordinary anonymous session and showed the synthetic-mode disclosure. Desktop and narrow responsive CSS paths are defined in `owner-test.css`; a claimed owner account is required to exercise the interactive panels in a browser.
+The local Node suite passes 18/18 tests. `node --check` passes for all changed JavaScript files. A local static server served the current checkout on `http://127.0.0.1:4187`; the direct owner route visibly failed closed for an ordinary anonymous session and showed the synthetic-mode disclosure. Desktop and narrow responsive CSS paths are defined in `owner-test.css`; a claimed owner account is required to exercise the interactive panels in a browser.
 
 The full real address flow, Supabase account project read/write, and PDF selection remain existing-site capabilities and were not redirected into the synthetic adapter. No private Runner invocation, real-property conclusion, database migration, hosted write, upload, GitHub push, merge or deployment was performed.
 

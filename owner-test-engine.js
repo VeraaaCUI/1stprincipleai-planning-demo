@@ -32,12 +32,15 @@
   const RESULT_TEMPLATES = Object.freeze({
     clear: {reading: 'Possibly, depending on the design', confidence: 'evidence_based', explanation: 'The synthetic B3 and B0 answers leave a preliminary pathway open for a secondary dwelling.', reasons: ['The scenario records a qualifying lot-area answer.', 'A principal dwelling answer is available for the tested pathway.'], limitations: ['This is a synthetic scenario; no real address, title, plan or live planning source was assessed.'], action: 'Have a planner or certifier check the real lot, controls and proposed design before relying on this pathway.', handoff: false},
     b1: {reading: 'Not likely under the tested pathway', confidence: 'evidence_based', explanation: 'The synthetic B1 answer stops this tested residential pathway at the zoning gate.', reasons: ['The scenario marks the tested zone as prohibited for a dwelling house.'], limitations: ['The synthetic zone is not a real property finding.'], action: 'Confirm the applicable zone and permitted uses with the responsible planning professional.', handoff: true},
+    b1_unknown: {reading: 'Possibly but needs further information', confidence: 'preliminary', explanation: 'The screening cannot treat the synthetic zoning fact as clear while the permitted-use answer is uncertain.', reasons: ['The B1 zoning answer remains unresolved.'], limitations: ['The applicable zone and permitted uses were not checked for a real property.'], action: 'Confirm the real zone and permitted dwelling-house uses with a planning professional.', handoff: true},
     b3: {reading: 'Not likely under the tested pathway', confidence: 'evidence_based', explanation: 'The synthetic B3 answer is below the tested 450 m² threshold.', reasons: ['The scenario lot-area answer is under 450 m².'], limitations: ['The threshold example is not a real lot-area determination.'], action: 'Obtain authoritative lot-area and lot-configuration evidence before choosing a design.', handoff: true},
     b3_unknown: {reading: 'Possibly but needs further information', confidence: 'preliminary', explanation: 'The screening can continue, but the lot-area fact remains unresolved.', reasons: ['The customer selected an uncertain B3 answer.'], limitations: ['Lot area and applicable standards are not checked.'], action: 'Provide authoritative lot-area evidence for professional review.', handoff: true},
     plan: {reading: 'Possibly but needs further information', confidence: 'preliminary', explanation: 'Independent screening steps remain open, but the tested geometry cannot be established without a site plan.', reasons: ['The required site plan is unavailable or uncertain.'], limitations: ['No site boundaries, setbacks or measured placement were verified.'], action: 'Provide a site plan showing boundaries, existing structures and dimensions.', handoff: false},
     structures: {reading: 'Possibly but needs further information', confidence: 'preliminary', explanation: 'The screening can continue, while other structures remain unresolved for the tested site.', reasons: ['GIS 7 opened a conditional follow-up.', 'The answer needs site evidence or professional confirmation.'], limitations: ['Other structures, approvals and setbacks are not verified.'], action: 'List the other structures on a current site plan and ask a planner or certifier to review them.', handoff: true},
     hazard: {reading: 'Possibly but needs further information', confidence: 'held', explanation: 'A material hazard remains unresolved, so the preliminary pathway is held for professional review.', reasons: ['HZ08 requires an independent hazard check before a stronger reading.'], limitations: ['Slope and protected-tree constraints are not checked in this synthetic journey.'], action: 'Arrange a professional hazard and site review before relying on the screening result.', handoff: true},
     tie: {reading: 'Possibly, depending on the design', confidence: 'preliminary', explanation: 'Two synthetic ground-level options remain equally ranked after the dimension-only comparison.', reasons: ['O2 and O4 remain open with the same rank.', 'The comparison does not choose a preferred design.'], limitations: ['The geometry is representative only and does not establish a buildable envelope.'], action: 'Compare the open items for both options with a measured site plan and professional review.', handoff: true},
+    geometry_clear: {reading: 'Possibly, depending on the design', confidence: 'preliminary', explanation: 'The synthetic geometry comparison leaves one tested option open.', reasons: ['The comparison marks one tested option as open.'], limitations: ['The geometry is representative only and does not establish a buildable envelope.'], action: 'Check the open option against a measured site plan and professional review.', handoff: true},
+    geometry_unknown: {reading: 'Possibly but needs further information', confidence: 'preliminary', explanation: 'The synthetic geometry comparison is unresolved, so the screening cannot select a clear option.', reasons: ['The B8/B9 geometry answer remains uncertain.'], limitations: ['The geometry and buildable envelope were not verified.'], action: 'Provide a measured site plan for a professional comparison of the available options.', handoff: true},
     all_out: {reading: 'Not likely under the tested options', confidence: 'evidence_based', explanation: 'All synthetic ground-level options tested in this scenario are ruled out by the supplied constraints.', reasons: ['The B9 comparison marks every tested option as ruled out.'], limitations: ['Only the named synthetic options were tested; this is not a determination about all designs.'], action: 'Ask a professional to test a revised design or confirm whether another pathway is available.', handoff: true}
   });
 
@@ -51,7 +54,10 @@
   function questionFor(state) {
     if (!state || state.paused || state.result || state.stage === 'property' || state.stage === 'enquiry' || state.stage === 'evidence') return null;
     const id = state.scenarioId;
-    if (id === 'b1-prohibited-zone') return state.answers.b1_zone ? null : QUESTIONS.b1_zone;
+    if (id === 'b1-prohibited-zone') {
+      if (!state.answers.b1_zone) return QUESTIONS.b1_zone;
+      if (state.answers.b1_zone === 'prohibited' || state.answers.b1_zone === 'not_sure') return null;
+    }
     if (!state.answers.b3_area) return QUESTIONS.b3_area;
     if (state.answers.b3_area === 'no') return null;
     if (state.answers.b3_area === 'not_sure') return null;
@@ -70,14 +76,21 @@
   }
   function resultFor(state) {
     const id = state.scenarioId;
-    if (id === 'b1-prohibited-zone') return state.answers.b1_zone === 'prohibited' ? RESULT_TEMPLATES.b1 : RESULT_TEMPLATES.clear;
-    if (state.answers.b3_area === 'no' || id === 'b3-under-450') return RESULT_TEMPLATES.b3;
+    if (id === 'b1-prohibited-zone') {
+      if (state.answers.b1_zone === 'prohibited') return RESULT_TEMPLATES.b1;
+      if (state.answers.b1_zone === 'not_sure') return RESULT_TEMPLATES.b1_unknown;
+    }
+    if (state.answers.b3_area === 'no') return RESULT_TEMPLATES.b3;
     if (state.answers.b3_area === 'not_sure') return RESULT_TEMPLATES.b3_unknown;
     if (id === 'missing-site-plan' && state.answers.site_plan !== 'yes') return RESULT_TEMPLATES.plan;
     if (id === 'other-structures' && ['yes', 'not_sure', 'not_that_i_know'].includes(state.answers.gis7_other)) return RESULT_TEMPLATES.structures;
     if (id === 'protected-trees-slope') return RESULT_TEMPLATES.hazard;
-    if (id === 'option-tie') return state.answers.b8_geometry === 'all_out' ? RESULT_TEMPLATES.all_out : RESULT_TEMPLATES.tie;
-    if (id === 'all-options-out') return RESULT_TEMPLATES.all_out;
+    if (['option-tie', 'all-options-out'].includes(id)) {
+      if (state.answers.b8_geometry === 'all_out') return RESULT_TEMPLATES.all_out;
+      if (state.answers.b8_geometry === 'tie') return RESULT_TEMPLATES.tie;
+      if (state.answers.b8_geometry === 'clear_option') return RESULT_TEMPLATES.geometry_clear;
+      return RESULT_TEMPLATES.geometry_unknown;
+    }
     if (state.answers.b0_principal === 'not_that_i_know' || state.answers.b0_principal === 'not_sure') return RESULT_TEMPLATES.plan;
     return RESULT_TEMPLATES.clear;
   }
@@ -103,7 +116,15 @@
   }
   function pause(state) { const next = clone(state); next.paused = true; next.stage = 'paused'; return next; }
   function resume(state) { const next = clone(state); next.paused = false; next.stage = next.result ? 'result' : 'questions'; return next; }
-  function setProperty(state, property) { const next = clone(state); next.property = {kind: 'synthetic', id: 'OWNER-SYNTHETIC-001', label: 'Synthetic owner test property', address: 'Synthetic property · Hawkesbury (no real address)', lot: 'Lot 1 / DP-SYNTHETIC', ...property}; next.stage = 'enquiry'; return next; }
+  function setProperty(state, property = {}) {
+    const next = clone(state);
+    const requestedScenario = typeof property.scenarioId === 'string' && SCENARIOS.some(item => item.id === property.scenarioId)
+      ? property.scenarioId : next.scenarioId;
+    next.scenarioId = requestedScenario;
+    next.property = {kind: 'synthetic', id: 'OWNER-SYNTHETIC-001', label: 'Synthetic owner test property', address: 'Synthetic property · Hawkesbury (no real address)', lot: 'Lot 1 / DP-SYNTHETIC', scenarioId: requestedScenario};
+    next.stage = 'enquiry';
+    return next;
+  }
   function toJSON(state) { return clone(state); }
 
   const api = Object.freeze({ANSWERS, QUESTIONS, RESULT_TEMPLATES, SCENARIOS, initialState, scenario, questionFor, resultFor, beginQuestions, applyAnswer, editQuestion, pause, resume, setProperty, toJSON});

@@ -27,11 +27,27 @@ test('B1 prohibited zone exits without asking later B0 questions', () => {
   assert.equal(state.result.handoff, true);
 });
 
+test('B1 uncertainty remains unresolved and residential answers continue to B3', () => {
+  let state = ready('b1-prohibited-zone');
+  state = answer(state, 'not_sure');
+  assert.equal(state.result.reading, 'Possibly but needs further information');
+  state = ready('b1-prohibited-zone');
+  state = answer(state, 'residential');
+  assert.equal(engine.questionFor(state).id, 'b3_area');
+});
+
 test('B3 under 450 exits before B0', () => {
   let state = ready('b3-under-450');
   state = answer(state, 'no');
   assert.equal(state.result.reading, 'Not likely under the tested pathway');
   assert.equal(state.history.length, 1);
+});
+
+test('synthetic B3 scenario respects a contradictory yes answer', () => {
+  let state = ready('b3-under-450');
+  state = answer(state, 'yes');
+  state = answer(state, 'yes');
+  assert.equal(state.result.reading, 'Possibly, depending on the design');
 });
 
 test('not_that_i_know remains unresolved and does not become clear', () => {
@@ -70,6 +86,22 @@ test('B8/B9 tie and all-options-out produce distinct readings', () => {
   state = ready('all-options-out');
   state = answer(state, 'yes'); state = answer(state, 'yes'); state = answer(state, 'all_out');
   assert.equal(state.result.reading, 'Not likely under the tested options');
+});
+
+test('B8/B9 uncertainty stays unresolved and all-options-out respects the selected geometry', () => {
+  let state = ready('option-tie');
+  state = answer(state, 'yes'); state = answer(state, 'yes'); state = answer(state, 'not_sure');
+  assert.equal(state.result.reading, 'Possibly but needs further information');
+  state = ready('all-options-out');
+  state = answer(state, 'yes'); state = answer(state, 'yes'); state = answer(state, 'tie');
+  assert.equal(state.result.reading, 'Possibly, depending on the design');
+});
+
+test('setProperty keeps the adapter synthetic even when callers provide real-looking fields', () => {
+  const state = engine.setProperty(engine.initialState(), {kind: 'real', id: 'REAL-1', address: '123 Real Street'});
+  assert.equal(state.property.kind, 'synthetic');
+  assert.equal(state.property.id, 'OWNER-SYNTHETIC-001');
+  assert.match(state.property.address, /no real address/);
 });
 
 test('editing an earlier answer clears later transitions and pause/resume preserves state', () => {
