@@ -1,4 +1,4 @@
-# Website Stage 07 local completion
+# Website Stage 07.2 local release readiness
 
 This document records the local implementation of the owner-only synthetic customer journey inside the existing customer flow. It is a preparation and QA record; it does not authorise a public deployment or private Runner release.
 
@@ -58,6 +58,9 @@ The synthetic draft is namespaced by the verified owner UUID. Auth changes clear
 - `tests/auth-client-recovery.test.mjs`: 11 PKCE recovery regressions.
 - `tests/local-projects.test.mjs`: six no-save, cancellation, save, failure, persistence-contract and account-switch regressions.
 - `vendor/images/`: five missing Leaflet 1.9.4 control and marker images referenced by the existing CSS and runtime.
+- `scripts/build-site.mjs`: allow-listed public artifact build from verified manifest entries.
+- `.gitignore`: keep generated `dist/` output out of the source repository.
+- `tests/build-site.test.mjs`: verify the public build contains only the manifest resources.
 - `deployment-manifest.json`: regenerated hashes and public asset count (98).
 - `tests/owner-test-engine.test.mjs`: transition and result regression cases.
 - `tests/owner-test-integration.test.mjs`: static integration, access-gate and isolation checks.
@@ -66,11 +69,13 @@ The named `property-fact-model.js` and `hawkesbury-property-facts-client.js` fil
 
 ## Verification
 
-`node --test` passes 39 tests with zero failures. `node --check` passes for all 38 JavaScript and module files. All 98 manifest entries match their recorded sizes and SHA-256 hashes. The 60 local HTML/CSS references resolve to files in the manifest. Credential/private-key scanning found no matches, and the website tree contains no private Runner files or release flags. A claimed owner account is required for interactive Owner UAT, which remains pending.
+`node --test tests/*.test.mjs` passes 39 tests with zero failures; full `node --test` passes 40 including the root owner-module smoke discovery. `node --check` passes for all 40 JavaScript and module files. The local `node scripts/build-site.mjs` artifact contains exactly the 98 manifest resources, with matching sizes and SHA-256 hashes. All 60 local HTML/CSS references resolve into that allow-listed set. Credential/private-key scanning found no matches, and the website tree contains no private Runner files or release flags. A claimed owner account is required for interactive Owner UAT, which remains pending.
 
-The Pages project uses the website root as static output. Six repository files outside the asset manifest (`README.md`, `docs/website-stage07-owner-test.md`, and the four `tests/*.mjs` files), plus the manifest itself, are therefore also routable by path. They contain no credentials or sealed Blind Test fixtures but are not part of the 98 application-resource count.
+The currently saved Pages configuration uses the website root as static output. The source tree has 108 tracked files; 10 engineering and audit files are outside the public runtime manifest and would be routable under that root configuration: `.gitignore`, `README.md`, this release note, five tests, `scripts/build-site.mjs`, and `deployment-manifest.json`. They contain no credentials or sealed Blind Test fixtures. The local build now excludes them from `dist/`; the hosted Pages setting was not changed.
 
-The full real address flow, Supabase account project read/write, and PDF selection remain existing-site capabilities and were not redirected into the synthetic adapter. No private Runner invocation, real-property conclusion, database migration, hosted write, upload, GitHub push, merge or deployment was performed.
+Before publishing this branch, the existing Pages project must be configured with build command `node scripts/build-site.mjs` and output directory `dist`. This keeps the existing project, production branch, domain, and customer URLs. No push should occur while the project still builds the repository root, because a branch push may create a preview containing the engineering files. The build-setting change requires separate owner approval and was not applied.
+
+The existing production-ready flow for property search/confirmation, overview, development selection, Granny Flat assessment, embedded owner-only synthetic questions, Reading and optional Project v1 save does not reference either property-fact overlay. The model and client remain excluded intentionally; neither is needed by the approved Stage 07.2 journey. The full real address flow, Supabase account project read/write, and PDF selection remain existing-site capabilities and were not redirected into the synthetic adapter. No private Runner invocation, real-property conclusion, database migration, hosted write, upload, GitHub push, merge or deployment was performed.
 
 ## Rollback and future controlled deployment
 
@@ -78,10 +83,11 @@ Known-good rollback commit is `e6b12f07ee8e9a67292b61078ceabedfb9367a7f`. To dis
 
 The future controlled test should be approved separately and then:
 
-1. Review this branch and run the Node suite plus desktop/tablet/mobile smoke checks.
-2. Configure a server-managed Supabase `app_metadata.owner_test=true` or `owner_test` role for the named owner test account; do not use an email allowlist in browser code.
-3. Deploy this branch to the existing domain with the feature route still synthetic-only and no Runner endpoint configured.
-4. Verify anonymous, ordinary-user and invalid-session direct access fail closed; verify the claimed owner can complete, pause, resume and clear all listed scenarios.
-5. Monitor static asset and Auth errors, then use the known-good commit to roll back if any existing public route regresses.
+1. Approve the existing Pages project's build command `node scripts/build-site.mjs` and output directory `dist`.
+2. Rebuild and verify the 98-resource artifact, then approve pushing this branch for review.
+3. Review and merge to `main` only after separate approval; the existing Git integration will deploy the production branch.
+4. Configure a server-managed Supabase `app_metadata.owner_test=true` or `owner_test` role separately for the named owner test account; do not use an email allowlist in browser code.
+5. Verify anonymous, ordinary-user and invalid-session direct access fail closed; verify the claimed owner can complete, pause, resume and clear all listed scenarios.
+6. Monitor static asset and Auth errors, then use the known-good commit to roll back if any existing public route regresses.
 
 This report stops before GitHub push, merge, production deployment, private Runner hosting, real-address evaluation and customer release.
