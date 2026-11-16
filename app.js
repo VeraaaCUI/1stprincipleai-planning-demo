@@ -11,7 +11,7 @@
     outlet.textContent = 'This page requires a customer demo snapshot.'; return;
   }
   const stageLabels = { enquiry: 'Enquiry', lodgement: 'Lodgement', after_lodgement: 'After lodgement' };
-  const viewLabels = { map: 'Property discovery', services:'Advanced services', ownerTest: 'Owner test', workflow: 'Workflow', facts: 'Case facts', tree: 'Decision questions', evidence: 'Evidence trail', results: 'Progress' };
+  const viewLabels = { map: 'Property discovery', services:'Advanced services', workflow: 'Workflow', facts: 'Case facts', tree: 'Decision questions', evidence: 'Evidence trail', results: 'Progress' };
   const propertyPages = Object.freeze({
     discovery: { route:'property',title:'Find your property.',description:'Search an address or explore a council area, then confirm a specific property.' },
     overview: { route:'property/overview',title:'Property planning overview.',description:'Mapped property data, sources and checks still needed.' },
@@ -66,7 +66,7 @@
   const unresolved = new Set(['unknown', 'not_checked', 'source_unavailable', 'conflict']);
   const allFeatureKeys = [...new Set(stages.flatMap(stage => [...data.stages[stage].facts.map(fact => fact.feature_key), ...data.stages[stage].deferred_features.map(fact => fact.feature_key)]))];
   const ui = { view: 'map', stage: 'enquiry', workflowStep: '1', fact: 'sd.form', tree: 'A', node: 'A0', evidence: data.evidence[0]?.evidence_id || '', tour: null };
-  let mapApi = null, servicesApi = null, serviceContext = null, navigationApi = null, pagesApi = null, projectsApi = null, ownerTestApi = null, serviceStale = false;
+  let mapApi = null, servicesApi = null, serviceContext = null, navigationApi = null, pagesApi = null, projectsApi = null, serviceStale = false;
   let authApi = null;
   ui.route = 'home'; ui.view = 'content';
   const nameOf = key => featureNames[key] || vocabulary.get(key)?.label || key;
@@ -105,7 +105,8 @@
     // Old council-library URLs are geographic entry points now. They must not
     // reopen regulation categories or imply a selected property.
     if(/^councils\/LGA-\d+\/categories\/[a-z-]+$/.test(route))route='property';
-    const valid=['home','explore','how-it-works','property','project','enquiry','my-projects','owner-test'].includes(route)||/^property\/(overview|development|assessment)$/.test(route)||/^explore\/goals\/(build-new-home|add-another-dwelling|develop-my-land|renovate-or-extend|explore-my-options)$/.test(route)||/^explore\/types\/(apartments|multi-dwelling|manor-houses|dual-occupancy|secondary-dwellings)$/.test(route)||/^example\/(workflow|facts|tree|evidence|results)$/.test(route);
+    if(route==='owner-test')route='property';
+    const valid=['home','explore','how-it-works','property','project','enquiry','my-projects'].includes(route)||/^property\/(overview|development|assessment)$/.test(route)||/^explore\/goals\/(build-new-home|add-another-dwelling|develop-my-land|renovate-or-extend|explore-my-options)$/.test(route)||/^explore\/types\/(apartments|multi-dwelling|manor-houses|dual-occupancy|secondary-dwellings)$/.test(route)||/^example\/(workflow|facts|tree|evidence|results)$/.test(route);
     return valid?route:'home';
   }
   function navigate(raw,{replace=false,focus=true}={}){
@@ -122,13 +123,13 @@
     const hash='#/'+route;
     if(location.hash!==hash)history[replace?'replaceState':'pushState'](null,'',hash);
     ui.route=route;ui.tour=null;
-    ui.view=propertyStage(route)?'map':route==='project'?'services':route==='my-projects'?'projects':route==='owner-test'?'ownerTest':route.startsWith('example/')?route.split('/')[1]:'content';
+    ui.view=propertyStage(route)?'map':route==='project'?'services':route==='my-projects'?'projects':route.startsWith('example/')?route.split('/')[1]:'content';
     if(ui.view==='services'&&serviceContext)servicesApi?.show(serviceContext,{preserveProject:true});
     render();
     if(route==='my-projects')projectsApi?.refresh();
     navigationApi?.setRoute(ui.view==='map'?'map':ui.view==='services'?'services':route.replace(/^explore\//,''));
-    if(focus){const target=(ui.view==='projects'?document.querySelector('#my-projects-root h1'):ui.view==='ownerTest'?document.querySelector('#owner-test-root h1'):document.querySelector('#residential-content:not([hidden]) h1'))||document.getElementById('page-title');target.tabIndex=-1;target.focus({preventScroll:true});document.getElementById('main-content').scrollIntoView({block:'start',behavior:'instant'});}
-    document.title=(ui.view==='projects'?'My Projects':ui.view==='ownerTest'?'Owner test':ui.view==='content'?document.querySelector('#residential-content h1')?.textContent:propertyPages[propertyStage(route)]?.title||viewLabels[ui.view])+' · 1stprincipleai';
+    if(focus){const target=(ui.view==='projects'?document.querySelector('#my-projects-root h1'):document.querySelector('#residential-content:not([hidden]) h1'))||document.getElementById('page-title');if(target){target.tabIndex=-1;target.focus({preventScroll:true});}document.getElementById('main-content').scrollIntoView({block:'start',behavior:'instant'});}
+    document.title=(ui.view==='projects'?'My Projects':ui.view==='content'?document.querySelector('#residential-content h1')?.textContent:propertyPages[propertyStage(route)]?.title||viewLabels[ui.view])+' · 1stprincipleai';
   }
   function safeValue(fact) {
     if (fact.customer_value_review_required) return 'Measurement basis needs review';
@@ -335,29 +336,26 @@
   function render() {
     const isMap = ui.view === 'map';
     const isServices = ui.view === 'services';
-    const isOwnerTest = ui.view === 'ownerTest';
     const isContent = ui.view === 'content';
     const isProjects = ui.view === 'projects';
-    const isCase = !isMap && !isServices && !isOwnerTest && !isContent && !isProjects;
+    const isCase = !isMap && !isServices && !isContent && !isProjects;
     document.getElementById('residential-content').hidden = !isContent;
     document.getElementById('case-navigation').hidden = !isCase;
-    document.querySelector('.page-intro').hidden = isContent||isProjects||isOwnerTest;
+    document.querySelector('.page-intro').hidden = isContent||isProjects;
     const projectsRoot=document.getElementById('my-projects-root');if(projectsRoot)projectsRoot.hidden=!isProjects;
-    const ownerRoot=document.getElementById('owner-test-home');if(ownerRoot)ownerRoot.hidden=!isOwnerTest;
     if(isContent)pagesApi?.show(ui.route.replace(/^explore\/(goals|types)\//,'$1/'));
     document.getElementById('project-stale-notice').hidden = !serviceStale;
     document.body.dataset.view=ui.view;
     document.body.dataset.route=ui.route;
     document.getElementById('council-home').hidden = !isMap;
     document.getElementById('services-home').hidden = !isServices;
-    document.getElementById('owner-test-home').hidden = !isOwnerTest;
     document.getElementById('case-ribbon').hidden = !isCase;
     document.getElementById('case-stage-section').hidden = !isCase;
     outlet.hidden = !isCase;
     const propertyPage=propertyPages[propertyStage(ui.route)]||propertyPages.discovery;
     document.getElementById('start-tour').hidden=!isMap||propertyStage(ui.route)!=='discovery';
-    document.getElementById('page-title').textContent = isMap ? propertyPage.title : isServices ? 'Your project, from drawings to delivery.' : isOwnerTest ? 'Owner customer journey test.' : 'The evidence behind the example project.';
-    document.getElementById('page-description').textContent = isMap ? propertyPage.description : isServices ? 'Review your information, track the next steps and prepare a conversation with the right expert.' : isOwnerTest ? 'Controlled synthetic assessment testing on the existing website.' : 'Inspect the historical records, decision questions and evidence behind CASE-0001. This audit trail supports the customer journey.';
+    document.getElementById('page-title').textContent = isMap ? propertyPage.title : isServices ? 'Your project, from drawings to delivery.' : 'The evidence behind the example project.';
+    document.getElementById('page-description').textContent = isMap ? propertyPage.description : isServices ? 'Review your information, track the next steps and prepare a conversation with the right expert.' : 'Inspect the historical records, decision questions and evidence behind CASE-0001. This audit trail supports the customer journey.';
     document.querySelectorAll('[data-view]').forEach(control => {
       if (control.dataset.view === ui.view) control.setAttribute('aria-current', 'page'); else control.removeAttribute('aria-current');
     });
@@ -373,7 +371,6 @@
       const content = { workflow: renderWorkflow, facts: renderFacts, tree: renderTree, evidence: renderEvidence, results: renderResults }[ui.view]();
       content.classList.add('fade-in'); outlet.replaceChildren(content);
     }
-    if (isOwnerTest) ownerTestApi?.render();
     renderTour();
     if (isMap) window.requestAnimationFrame(() => mapApi?.refresh());
   }
@@ -427,13 +424,7 @@
   document.getElementById('residential-content').after(projectsRoot);
   if(window.FirstPrincipleMyProjects)projectsApi=window.FirstPrincipleMyProjects.init({root:projectsRoot,mapApi,navigate,toolbarHost:mapRoot,auth:authApi,cloudRepository,onAccountRequired:()=>navigationApi?.openAccount({intent:'save'})});
   else projectsRoot.append(element('h1','My Projects'),element('p','Account project services could not load. Refresh to retry.'));
-  const ownerTestRoot = document.getElementById('owner-test-root');
-  if (window.FirstPrincipleOwnerTest && ownerTestRoot) ownerTestApi = window.FirstPrincipleOwnerTest.init(ownerTestRoot, {
-    auth: authApi,
-    navigate,
-    onLogin: () => navigationApi?.openAccount({intent: 'login'})
-  });
-  else if (ownerTestRoot) ownerTestRoot.append(element('h1', 'Owner test unavailable'), element('p', 'Refresh the page to load the controlled synthetic assessment module.'));
+  mapApi?.configureSyntheticJourney?.({auth: authApi});
   window.addEventListener('hashchange',()=>navigate(location.hash,{replace:true}));
   document.querySelector('.skip-link[href="#main-content"]')?.addEventListener('click',event=>{
     if(event.metaKey||event.ctrlKey||event.shiftKey||event.altKey)return;
@@ -444,12 +435,12 @@
   navigate(location.hash||'home',{replace:true,focus:false});
   authApi?.ready.then(async state=>{
     if(!authApi.callbackPending)return;
-    if(state.recovery||state.error)navigationApi?.openAccount({intent:state.recovery?'recovery':'login'});
+    if(state.recovery||state.recoveryError||state.error)navigationApi?.openAccount({intent:state.recovery||state.recoveryError?'recovery':'login'});
     else if(state.status==='authenticated'){
       await projectsApi?.ready;
       await projectsApi?.resumePendingSave?.();
       navigate('my-projects');
     }
   }).catch(()=>navigationApi?.openAccount());
-  window.FirstPrincipleApplication={navigate,projects:projectsApi,auth:authApi,ownerTest:ownerTestApi,getState:()=>({route:ui.route,view:ui.view,propertyPage:propertyStage(ui.route),hasReport:Boolean(serviceContext),serviceStale})};
+  window.FirstPrincipleApplication={navigate,projects:projectsApi,auth:authApi,getState:()=>({route:ui.route,view:ui.view,propertyPage:propertyStage(ui.route),hasReport:Boolean(serviceContext),serviceStale})};
 })();

@@ -60,7 +60,7 @@
     const spatialClient=S?.createClient();
     let spatialPanel=null,spatialContainer=null,spatialState=S?.initial()||null,spatialRequest=null,spatialEpoch=0;
     let propertyLayer=null,lotLayer=null,zoningLayer=null,spatialGeometryKeys={};
-    let assessmentView=null,assessmentModel=null,assessmentSelection={mode:'property',projectId:'other',sampleId:'A',optionId:''};
+    let assessmentView=null,assessmentModel=null,syntheticJourney=null,syntheticConfig=null,syntheticRoot=null,assessmentSelection={mode:'property',projectId:'other',sampleId:'A',optionId:''};
     let propertyProjectId='other',exampleProjectId='granny',projectChosen=false,overviewVisited=false,assessmentVisited=false;
     let flowView=null,flowPage='discovery',confirmedKey=null,chosenCandidateId=null,confirmedPropertyId=null,restoring=true,pendingCouncilFit=false,lastMapView=null;
     const previewMedia=scope.matchMedia?.('(max-width:1000px)');
@@ -256,7 +256,10 @@
       const followUpBody=node('div',null,'cm-assistance-body');followUpBody.id='cm-assistance-body';
       followUpBody.append(questionForm,guidancePanel);followUp.append(followUpToggle,followUpBody);
       followUp.addEventListener('toggle',()=>{if(!followUp.open&&followUpBody.contains(document.activeElement))followUpToggle.focus({preventScroll:true});});
-      flowView.slots.assessmentContent.append(assessmentRoot,followUp);
+      syntheticRoot=node('section',null,'cm-synthetic-assessment');
+      syntheticRoot.hidden=true;
+      syntheticRoot.setAttribute('aria-label','Synthetic Granny Flat assessment');
+      flowView.slots.assessmentContent.append(assessmentRoot,syntheticRoot,followUp);
     }else{
       previewBody.append(node('p','Property navigation could not load. Refresh to retry. The map and address search remain available.','cm-error'));
     }
@@ -352,10 +355,26 @@
       categories=classification;categoryById=Object.fromEntries(categories.categories.map(c=>[c.id,c]));renderLegend();updateMapContext();
     },'Council type colours');
 
+    function syntheticOwnerEnabled(){
+      const auth=syntheticConfig?.auth?.getState?.();
+      return Boolean(auth?.status==='authenticated'&&auth.user?.ownerTest===true);
+    }
+    function syncSyntheticJourney(){
+      if(!syntheticRoot)return;
+      const active=Boolean(flowPage==='assessment'&&propertyProjectId==='granny'&&projectChosen&&isConfirmed()&&syntheticOwnerEnabled());
+      assessmentRoot.hidden=active;
+      syntheticRoot.hidden=!active;
+      if(active&&!syntheticJourney&&scope.FirstPrincipleOwnerTest?.init){
+        syntheticJourney=scope.FirstPrincipleOwnerTest.init(syntheticRoot,{auth:syntheticConfig.auth,embedded:true,onLogin:syntheticConfig.onLogin});
+      }
+      syntheticJourney?.render?.();
+      root.dataset.syntheticAssessment=active?'owner':'standard';
+    }
     function refreshAssessment(){
       if(!assessmentView||!isConfirmed()||!projectChosen){assessmentModel=null;return;}
       assessmentModel=scope.FirstPrincipleAssessmentModel.build({...assessmentSelection,location:selection,spatial:spatialState},scope.FirstPrinciplePrototypeExamples);
       assessmentSelection={...assessmentModel.selection};assessmentView.update(assessmentModel);
+      syncSyntheticJourney();
     }
     function selectionKey(value=selection){
       return value?.kind==='address'?[value.name,value.propertyId||chosenCandidateId||'',...(value.center||[])].join('|'):null;
@@ -1054,6 +1073,12 @@
       },
       resetProject:startNewSearch,
       showPage,confirmProperty,chooseProject,
+      configureSyntheticJourney(config={}){
+        syntheticConfig=config;
+        syntheticConfig.auth?.subscribe?.(()=>syncSyntheticJourney());
+        syncSyntheticJourney();
+        return syntheticJourney;
+      },
       getReport(){return lastReport;},
       focusReport(){if(flowPage==='assessment'){const assistance=question.closest('details[data-assessment-assistance]');if(assistance)assistance.open=true;if(!guidancePanel.hidden)guidancePanel.scrollIntoView({behavior:'instant',block:'start'});else question.focus({preventScroll:true});}else navigatePage(isConfirmed()?'overview':'discovery');},
       searchAddress(query){pendingCase=false;cancelRequest();closeSuggestions();search.value=String(query||'').slice(0,180);performSearch(true);search.focus();},

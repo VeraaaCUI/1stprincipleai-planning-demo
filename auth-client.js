@@ -6,7 +6,7 @@
   function create(options = {}) {
     const config = options.config || scope.FirstPrincipleRuntimeConfig || {};
     const listeners = new Set();
-    let state = {status: 'loading', user: null, error: '', recovery: false};
+    let state = {status: 'loading', user: null, error: '', recovery: false, recoveryError: false};
     let disposed = false, epoch = 0, subscription = null, client = options.client || null;
     let initializing = true, activeActions = 0;
     const location = options.location || scope.location;
@@ -37,6 +37,7 @@
     }
     const callbackPending = Boolean(callback || callbackError || recoveryRequested);
     const unavailable = 'Account services are not configured. You can continue exploring properties; sign in to create and manage account projects.';
+    const recoveryFailure = 'This password reset link could not be verified. It may be expired, already used, or opened in another browser. Request a fresh link and open it in the browser where you requested it.';
     if (!client) {
       try {
         const url = new URL(config.supabaseUrl || '');
@@ -83,7 +84,7 @@
         const sessionResult = await client.auth.getSession();
         if (sessionResult.error) throw sessionResult.error;
         if (!sessionResult.data?.session) {
-          if (ticket === epoch) publish({status: 'anonymous', user: null, recovery: false, error: ''});
+          if (ticket === epoch) publish({status: 'anonymous', user: null, recovery: false, recoveryError: Boolean(recovery), error: recovery ? recoveryFailure : ''});
           return getState();
         }
         // A locally cached user/JWT is not sufficient for restored UI identity.
@@ -100,10 +101,10 @@
           // getUser(); user-editable metadata, URLs and browser storage do not
           // grant access to the owner-only synthetic journey.
           ownerTest
-        }, recovery: Boolean(recovery), error: ''});
+        }, recovery: Boolean(recovery), recoveryError: false, error: ''});
       } catch (error) {
-        if (ticket === epoch) publish({status: 'anonymous', user: null, recovery: false,
-          error: safeError(error, 'Your session could not be verified. Please log in again.')});
+        if (ticket === epoch) publish({status: 'anonymous', user: null, recovery: false, recoveryError: Boolean(recovery),
+          error: recovery ? recoveryFailure : safeError(error, 'Your session could not be verified. Please log in again.')});
       }
       return getState();
     }
@@ -112,12 +113,12 @@
         if (disposed || event === 'INITIAL_SESSION') return;
         // Startup validation owns restored-session identity while the SDK hydrates storage.
         if (initializing && event === 'SIGNED_IN') return;
-        if (event === 'SIGNED_OUT') { epoch++; publish({status: 'anonymous', user: null, recovery: false, error: ''}); return; }
+        if (event === 'SIGNED_OUT') { epoch++; recoveryRequested = false; publish({status: 'anonymous', user: null, recovery: false, recoveryError: false, error: ''}); return; }
         if (session?.user?.id !== state.user?.id) {
           // Clear the old principal synchronously, before views or repositories
           // can pair that identity with a newly switched SDK token.
           epoch++; recoveryRequested = event === 'PASSWORD_RECOVERY';
-          publish({status:'loading', user:null, recovery:false, error:''});
+          publish({status:'loading', user:null, recovery:false, recoveryError:false, error:''});
         }
         if (event === 'PASSWORD_RECOVERY') recoveryRequested = true;
         // Explicit SDK actions perform their own verification after completion.
@@ -133,8 +134,8 @@
     }
     const ready = (async () => {
       if (!client) return getState();
-      if (callbackError) return publish({status: 'anonymous', user: null, recovery: false,
-        error: 'This account link is invalid or expired. Request a new link and open it in the browser where you started.'});
+      if (callbackError) return publish({status: 'anonymous', user: null, recovery: false, recoveryError: recoveryRequested,
+        error: recoveryRequested ? recoveryFailure : 'This account link is invalid or expired. Request a new link and open it in the browser where you started.'});
       if (callback) {
         try {
           const result = await client.auth.exchangeCodeForSession(callback);
@@ -142,14 +143,14 @@
           if (result.error || !result.data?.session) throw result.error || new Error('No session returned.');
         } catch (_) {
           cleanCallback(false);
-          return publish({status: 'anonymous', user: null, recovery: false,
-            error: 'This account link could not be verified. Request a new link and open it in the same browser where you started.'});
+          return publish({status: 'anonymous', user: null, recovery: false, recoveryError: recoveryRequested,
+            error: recoveryRequested ? recoveryFailure : 'This account link could not be verified. Request a new link and open it in the same browser where you started.'});
         }
       }
       const result = await validate({recovery: recoveryRequested});
       if (recoveryRequested && result.status !== 'authenticated') {
         cleanCallback(false);
-        return publish({error: result.error || 'Request a new password reset link before changing your password.'});
+        return publish({recoveryError: true, error: result.error || recoveryFailure});
       }
       return result;
     })().finally(() => { initializing = false; });
@@ -182,7 +183,7 @@
       const result = await client.auth.signOut();
       if (result.error) throw new Error(safeError(result.error, 'Log out could not be completed. Please try again.'));
       epoch++; recoveryRequested = false; cleanCallback(false);
-      return publish({status: 'anonymous', user: null, recovery: false, error: ''});
+      return publish({status: 'anonymous', user: null, recovery: false, recoveryError: false, error: ''});
     }); }
     async function requestPasswordReset(input = {}) {
       required(); const result = await client.auth.resetPasswordForEmail(email(input.email), {redirectTo: redirect('recovery')});
@@ -194,7 +195,7 @@
       const result = await client.auth.updateUser({password: password(input.password, true)});
       if (result.error) throw new Error(safeError(result.error, 'Your password could not be updated. Request a new reset link or try again.'));
       recoveryRequested = false; cleanCallback(false);
-      publish({recovery: false}); return {updated: true};
+      publish({recovery: false, recoveryError: false, error: ''}); return {updated: true};
     }); }
     return Object.freeze({ready, client, callbackPending, getState, signIn, signUp, signOut, requestPasswordReset, updatePassword,
       revalidate: () => validate(),

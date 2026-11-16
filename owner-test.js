@@ -17,9 +17,14 @@
     if (!root) throw new Error('An owner test container is required.');
     if (root._firstPrincipleOwnerTest) return root._firstPrincipleOwnerTest;
     const id = 'owner-test-' + (++mountCount), auth = options.auth;
+    const embedded = options.embedded === true;
     let authState = auth?.getState?.() || {status: 'unavailable', user: null};
     let ownerId = authState.status === 'authenticated' && authState.user?.ownerTest ? authState.user.id : null;
-    let state = E()?.initialState('clear-pathway') || null;
+    function freshState(scenarioId = 'clear-pathway') {
+      const next = E()?.initialState(scenarioId) || null;
+      return embedded && next ? E().setProperty(next, {scenarioId}) : next;
+    }
+    let state = freshState();
     let pdfApi = null, pdfSnapshot = {status: 'empty', document: null, facts: [], warnings: []};
     let notice = '', diagnostics = false, scenarioNotice = '';
     const shell = el('section', null, 'ot-shell'); shell.id = id; shell.setAttribute('aria-labelledby', id + '-title');
@@ -54,11 +59,11 @@
         state = value; notice = 'Restored the last synthetic journey for this owner account. Check the stage before continuing.'; return true;
       } catch (_) { return false; }
     }
-    function clearDraft() { try { if (storageKey()) scope.localStorage.removeItem(storageKey()); } catch (_) {} state = E().initialState('clear-pathway'); resetPdfState(); notice = 'The synthetic draft was cleared.'; render(); }
+    function clearDraft() { try { if (storageKey()) scope.localStorage.removeItem(storageKey()); } catch (_) {} state = freshState(); resetPdfState(); notice = 'The synthetic draft was cleared.'; render(); }
     function setState(next, message) { state = next; if (message) notice = message; saveDraft(); }
     function chooseScenario(id) {
       if (!E().SCENARIOS.some(item => item.id === id)) { scenarioNotice = 'That synthetic scenario is not available. The clear pathway remains selected.'; id = 'clear-pathway'; }
-      state = E().initialState(id); state.sessionId = uid(); state = E().setProperty(state, {scenarioId: id}); state.scenarioId = id; notice = ''; scenarioNotice = ''; announce('Synthetic property selected.'); render();
+      state = freshState(id); state.sessionId = uid(); notice = ''; scenarioNotice = ''; announce('Synthetic scenario selected.'); render();
     }
     function beginQuestions() { const next = E().beginQuestions(state); state = next; notice = ''; announce('Question sequence started.'); render(); }
     function answer(value) {
@@ -99,8 +104,9 @@
     }
     function enquiryView() {
       const section = el('section', null, 'ot-panel');
-      add(section, el('p', 'STEP 2 · GRANNY FLAT ENQUIRY', 'ot-kicker'), el('h2', 'Review the available information'), el('p', 'This card separates supplied synthetic facts from items that remain unverified.'), el('div', 'Granny Flat / Secondary Dwelling', 'ot-project-pill'));
+      add(section, el('p', 'STEP 2 · GRANNY FLAT ENQUIRY', 'ot-kicker'), el('h2', 'Review the available information'), el('p', embedded ? 'You arrived here through the existing property search and Granny Flat enquiry. This owner-only test uses a synthetic scenario and does not attach its result to the selected address.' : 'This card separates supplied synthetic facts from items that remain unverified.'), el('div', 'Granny Flat / Secondary Dwelling', 'ot-project-pill'));
       const facts = el('dl', null, 'ot-facts'); add(facts, labelValue('Project', 'Detached secondary dwelling for family use', 'Synthetic enquiry'), labelValue('Known', 'Scenario-specific lot and pathway facts', 'Synthetic only'), labelValue('Not checked', 'Title restrictions, live zoning, measured setbacks, hazards and approvals', 'Not checked'), labelValue('Evidence', 'No real property documents are attached', 'Not provided')); section.append(facts);
+      if (embedded) { add(section, el('h3', 'Select a synthetic scenario'), scenarioPicker()); add(section, el('p', 'The existing Save Project action remains optional. It saves only the approved property/workflow context; answers, this synthetic Reading and PDF details remain temporary.', 'ot-disclaimer')); }
       const actions = el('div', null, 'ot-actions'); add(actions, button('Back to property', () => step('property'), 'ot-secondary'), button('Start required questions', beginQuestions, 'ot-primary')); section.append(actions); add(section, el('p', 'Screening may continue while independent rules are evaluated. Unchecked facts are not treated as clear.', 'ot-disclaimer')); return section;
     }
     function optionLabel(value) { return ({yes: 'Yes', no: 'No', not_sure: 'Not sure', not_that_i_know: 'Not that I know', residential: 'Residential zone', prohibited: 'Prohibited zone', clear_option: 'One clear option', tie: 'Two options tie', all_out: 'All tested options out'}[value] || value); }
@@ -138,13 +144,13 @@
       const action = el('div', null, 'ot-next-action'); add(action, el('p', 'NEXT ACTION', 'ot-kicker'), el('strong', result.action)); if (result.handoff) action.append(el('p', 'Professional handoff recommended before relying on this screening.', 'ot-handoff')); section.append(action);
       const actions = el('div', null, 'ot-actions'); add(actions, button('Review answers', () => { state = {...state, stage: 'questions'}; render(); }, 'ot-secondary'), button('Save local draft', saveDraft, 'ot-primary'), options.navigate ? button('Open My Projects', () => options.navigate('my-projects'), 'ot-secondary') : null, button('Clear synthetic draft', clearDraft, 'ot-danger')); section.append(actions);
       const details = document.createElement('details'); const summary = el('summary', 'Diagnostic view for owner testing'); const pre = el('pre', JSON.stringify({scenarioId: state.scenarioId, sessionId: state.sessionId, stage: state.stage, history: state.history, pdfStatus: pdfSnapshot.status, result}, null, 2), 'ot-diagnostic'); details.append(summary, pre); section.append(details);
-      add(section, el('p', 'This is a preliminary synthetic screening result. It is not Council advice, a professional planning assessment or a conclusion about the selected address.', 'ot-disclaimer')); return section;
+      add(section, el('p', embedded ? 'This is a preliminary synthetic screening result. It is not Council advice, a professional planning assessment or a conclusion about the selected address. Saving is optional; the current Project v1 contract does not persist synthetic answers, this Reading or PDF details.' : 'This is a preliminary synthetic screening result. It is not Council advice, a professional planning assessment or a conclusion about the selected address.', 'ot-disclaimer')); return section;
     }
     function render() {
       renderProgress(); body.replaceChildren();
       if (!hasAccess()) { renderAccessDenied(); return; }
       access.textContent = 'Authorized owner test account · ' + text(authState.user?.email || 'signed-in owner', 120) + ' · server claim verified';
-      const scenario = E().scenario(state); if (state.scenarioId !== scenario.id) state = E().initialState('clear-pathway');
+      const scenario = E().scenario(state); if (state.scenarioId !== scenario.id) state = freshState();
       if (notice) body.append(el('p', notice, 'ot-notice'));
       const controls = el('div', null, 'ot-toolbar'); add(controls, el('span', 'Synthetic scenario: ' + scenario.title, 'ot-toolbar-label'), state.paused ? button('Resume', resume, 'ot-primary') : null, button('Save local draft', saveDraft, 'ot-secondary')); body.append(controls);
       const view = state.stage === 'property' ? propertyView() : state.stage === 'enquiry' ? enquiryView() : state.stage === 'evidence' ? evidenceView() : state.stage === 'result' ? resultView() : questionsView(); body.append(view);
@@ -155,7 +161,7 @@
       authState = next;
       ownerId = nextOwnerId;
       if (was !== nextOwnerId) {
-        state = E().initialState('clear-pathway');
+        state = freshState();
         resetPdfState();
         notice = '';
         if (ownerId) loadDraft();
@@ -165,7 +171,7 @@
     const ready = (async () => { try { await auth?.ready; authState = auth?.getState?.() || authState; ownerId = authState.status === 'authenticated' && authState.user?.ownerTest ? authState.user.id : null; if (ownerId) loadDraft(); } finally { render(); } })();
     const api = Object.freeze({ready, getState: () => {
       const authorized = hasAccess();
-      return {authorized, state: authorized ? E().toJSON(state) : E().initialState('clear-pathway'), pdf: authorized ? {...pdfSnapshot} : {status: 'empty', document: null, facts: [], warnings: []}};
+      return {authorized, state: authorized ? E().toJSON(state) : freshState(), pdf: authorized ? {...pdfSnapshot} : {status: 'empty', document: null, facts: [], warnings: []}};
     }, render, dispose() { unsubscribe?.(); resetPdfState(); root.replaceChildren(); }});
     root._firstPrincipleOwnerTest = api; render(); return api;
   }

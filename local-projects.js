@@ -72,7 +72,7 @@
       }
       if(requestedId&&existing?.requestId!==requestedId)throw new Error('The pending save no longer matches this enquiry. Review My Projects and try again.');
       if(!scope.crypto?.randomUUID)throw new Error('Secure account saving is unavailable in this browser. Your enquiry remains open.');
-      return writePending({requestId:scope.crypto.randomUUID(),fingerprint:key,projectName});
+      const pending={requestId:scope.crypto.randomUUID(),fingerprint:key,projectName};writePending(pending);return pending;
     }
     function clearPending(requestId){try{const value=readPending();if(!requestId||value?.requestId===requestId)scope.sessionStorage.removeItem(PENDING_KEY);}catch(_){}}
     function cancelPendingSave(){clearPending();if(status==='authentication_required')setStatus('draft',draftMessage());}
@@ -158,13 +158,14 @@
       if(active?.id===id&&activeOwner===token.ownerId){active=null;activeOwner=null;remember();setStatus('draft','Project deleted. The current enquiry remains temporary.');}
       await refreshList('Account project deleted.');visibility();
     });}
-    function clearAccountContext(){suppressed=true;try{mapApi?.restoreProjectContext?.({version:1,selection:null});}finally{suppressed=false;}}
+    function clearAccountContext(){suppressed=true;try{if(mapApi?.resetProject)mapApi.resetProject();else mapApi?.restoreProjectContext?.({version:1,selection:null});}finally{suppressed=false;}}
     function authChanged(){
-      const next=owner();view?.setAuthentication?.({authenticated:Boolean(next),email:authState().user?.email||''});
+      const previous=previousOwner,next=owner();view?.setAuthentication?.({authenticated:Boolean(next),email:authState().user?.email||''});
       if(initializing){if(next!==previousOwner)identityEpoch++;previousOwner=next;return;}
       if(next===previousOwner)return;
       identityEpoch++;listEpoch++;previousOwner=next;projects=[];listMessage='';
-      if(active){active=null;activeOwner=null;remember();clearAccountContext();}
+      if(active){active=null;activeOwner=null;remember();}
+      if(previous){clearPending();clearAccountContext();}
       setStatus('draft',draftMessage());refreshList().catch(()=>{});
       if(next)void resumePendingSave();
     }
