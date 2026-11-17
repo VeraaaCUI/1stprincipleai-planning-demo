@@ -20,10 +20,33 @@
   function caseMatches(selection) {
     if (!selection || selection.kind !== 'address' || !Array.isArray(selection.center)) return false;
     const near = Math.abs(selection.center[0] - CASE.center[0]) < 0.0003 && Math.abs(selection.center[1] - CASE.center[1]) < 0.0003;
-    const named = /\b58\b.*mitchell\s+(?:drive|dr)\b.*glossodia/i.test(selection.name || '');
+    const named = /^\s*58\s+mitchell\s+(?:drive|dr)\b.*\bglossodia\b.*\bnsw\b\s*2756\s*$/i.test(selection.name || '');
     return near && named;
   }
-  function buildReport(question, selection, byId) {
+  function associatedSpatial(selection, spatial) {
+    if (!selection || selection.kind !== 'address' || !spatial || spatial.address !== selection.name) return null;
+    const property = spatial.property;
+    if (!property || (selection.propertyId && String(selection.propertyId) !== String(property.id))) return null;
+    return spatial;
+  }
+  function mappedPropertyContext(selection, spatial) {
+    const associated = associatedSpatial(selection, spatial);
+    if (!associated?.property) return {
+      status: spatial && spatial.address === selection?.name ? 'unresolved' : 'not_checked',
+      propertyId: null, lotLabels: [], zones: [], queriedAt: null, sourceUrl: null
+    };
+    const zoning = associated.layers?.zoning?.features || [];
+    const zones = [...new Set(zoning.map(feature => feature.properties?.SYM_CODE).filter(Boolean).map(String))];
+    return {
+      status: 'mapped_attributes_available',
+      propertyId: String(associated.property.id),
+      lotLabels: Array.isArray(associated.property.lotLabels) ? [...associated.property.lotLabels] : [],
+      zones,
+      queriedAt: associated.retrievedAt || null,
+      sourceUrl: associated.property.sourceUrl || associated.layers?.zoning?.sourceUrl || null
+    };
+  }
+  function buildReport(question, selection, byId, spatial) {
     const G = scope.LynnCouncilGuidance;
     const guidance = G.buildGuidance(question, selection, byId);
     const isCase = caseMatches(selection);
@@ -32,6 +55,7 @@
     const confirmedCaseAuthority = ids.length === 1 && G.isPilot(byId[ids[0]]);
     const outsideCoverage=G.isOutsideCoverage(selection);
     const contextualCase = !outsideCoverage && isCase && secondary && confirmedCaseAuthority && (selection.exact || selection.origin === 'saved_case_point');
+    const propertyContext = mappedPropertyContext(selection, spatial);
     const councilNames = outsideCoverage?[]:ids.map(id => byId[id]).filter(Boolean).map(feature => feature.properties.council_name || feature.properties.name);
     let summary;
     if(outsideCoverage){
@@ -39,7 +63,7 @@
     } else if (contextualCase) {
       summary = 'The NSW Housing SEPP 2021 provides a pathway for secondary dwellings on qualifying residential land, subject to the applicable requirements; it does not establish that this proposal is permitted at this address. Historical CASE-0001 records indicate R2 zoning, bushfire and biodiversity constraints, so a planner or certifier should check current controls and obtain bushfire and tree advice where triggered. Current planning certificates, title restrictions, specialist reports and key design measurements remain unverified, so DA or CDC eligibility cannot yet be confirmed.';
     } else if (secondary && ids.length === 1) {
-      summary = 'NSW guidance on the Housing SEPP 2021 allows secondary dwellings to be considered on qualifying residential land, with DA or CDC depending on all applicable requirements. Confirm this property’s current zoning, existing dwelling, full works, floor area and title, then screen bushfire, flood, biodiversity and tree constraints. A planner or certifier should confirm the pathway and any specialist assessments before detailed pricing or application preparation.';
+      summary = 'General NSW guidance on the Housing SEPP 2021 allows secondary dwellings to be considered on qualifying residential land, with DA or CDC depending on all applicable requirements. This is general guidance, not a property-specific planning determination. Confirm this property’s current zoning, existing dwelling, full works, floor area and title, then screen bushfire, flood, biodiversity and tree constraints. A planner or certifier should confirm the pathway and any specialist assessments before detailed pricing or application preparation.';
     } else {
       summary = 'This enquiry needs a property-specific check before a planning conclusion can be made. ' + guidance.steps.slice(0, 2).join(' ') + ' The connected information does not establish permission or rule out site risks.';
     }
@@ -62,11 +86,14 @@
       confidenceLabel:outsideCoverage?'Low · Local planning content not connected':'Low · Site and proposal evidence incomplete',
       confidenceReason:'Location confidence identifies a place. Planning confidence remains Low because current controls, original evidence and professional review are incomplete; it is not an approval probability.',
       mode:contextualCase ? 'AI-prepared case preview' : 'Prepared guidance preview',
-      modeNote:'This demo uses a prepared evidence summary and local topic matching. Live AI analysis and professional sign-off are not connected.',
-      preparedOn:'2026-10-29', location:{name:selection?.name || 'Location not confirmed',kind:selection?.kind || 'none',councilNames,address:selection?.kind === 'address' ? selection.name : null,state:selection?.state||null,coverage:selection?.coverage||'unconfirmed',precision:selection?.precision||selection?.kind||null,source:selection?.source||null,council_ids:[...ids]},
+      modeNote:contextualCase ? 'This report includes a historical CASE-0001 example for the exact example address only. It is not a live property determination.' : 'This report separates general NSW guidance from the selected property’s mapped context. Live AI analysis and professional sign-off are not connected.',
+      preparedOn:contextualCase ? '2026-10-29' : null,
+      preparedLabel:contextualCase ? 'Historical source snapshot 2026-10-29' : 'Prepared during this session',
+      propertyContext,
+      location:{name:selection?.name || 'Location not confirmed',kind:selection?.kind || 'none',councilNames,address:selection?.kind === 'address' ? selection.name : null,state:selection?.state||null,coverage:selection?.coverage||'unconfirmed',precision:selection?.precision||selection?.kind||null,source:selection?.source||null,council_ids:[...ids]},
       question:String(question || '').trim(), missing, risks,
       sources:outsideCoverage?[]:secondary ? (contextualCase ? SOURCES : SOURCES.slice(0,4)) : guidance.sources,
-      evidenceNote:contextualCase ? 'Historical case indications are shown as later-file context, not facts verified at the initial enquiry. Evidence IDs refer to the supplied index; original documents have not been independently checked.' : guidance.scopeNote,
+      evidenceNote:contextualCase ? 'Historical case indications are shown as later-file context for this exact CASE-0001 example address, not facts verified at the initial enquiry. Evidence IDs refer to the supplied index; original documents have not been independently checked.' : 'General planning guidance is not a finding about this property. Any mapped property context is shown separately and remains subject to current-source, boundary and professional review; missing or unavailable data stays unresolved.',
       canAuthorizeProgression:false, professionalVerificationCompleted:false
     };
   }

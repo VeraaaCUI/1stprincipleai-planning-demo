@@ -940,7 +940,7 @@
     function renderGuidance() {
       if(!isConfirmed()||!projectChosen)return;
       if (!R) { searchStatus.textContent = 'The preview component could not load. Refresh to try again.'; return; }
-      const result = R.buildReport(question.value, selection, byId);
+      const result = R.buildReport(question.value, selection, byId, spatialState);
       const project=scope.FirstPrincipleAssessmentModel?.PROJECTS.find(p=>p.id===propertyProjectId);
       if(project)result.projectIntent={id:project.id,label:project.label,status:'user_selected_intent',legalApplicabilityAssessed:false};
       const assessment=scope.FirstPrincipleAssessmentModel?.build({...assessmentSelection,mode:'property',projectId:propertyProjectId,location:selection,spatial:spatialState},scope.FirstPrinciplePrototypeExamples);
@@ -949,8 +949,18 @@
       guidancePanel.hidden = false; guidancePanel.replaceChildren();
       const titleRow = node('div', null, 'cm-guidance-title');
       titleRow.append(node('div'), node('span', result.confidenceLabel, 'cm-confidence cm-confidence-low'));
-      titleRow.firstChild.append(node('p', result.mode + ' · Prepared ' + result.preparedOn, 'cm-kicker'), node('h3', 'Your preliminary planning report'));
+      titleRow.firstChild.append(node('p', result.mode + ' · ' + (result.preparedLabel || ('Prepared ' + result.preparedOn)), 'cm-kicker'), node('h3', 'Your preliminary planning report'));
       guidancePanel.append(titleRow, node('p', result.location.name + ' · ' + (result.location.councilNames.join(', ') || 'Council not confirmed'), 'cm-report-location'), node('p', result.summary, 'cm-report-summary'), node('p', result.confidenceReason, 'cm-guidance-reason'));
+      const propertyContext = result.propertyContext || {status:'not_checked'};
+      const provenance = node('p', null, 'cm-report-provenance');
+      if (propertyContext.status === 'mapped_attributes_available') {
+        provenance.textContent = 'Current property context · NSW Property ID ' + propertyContext.propertyId + (propertyContext.lotLabels.length ? ' · ' + propertyContext.lotLabels.join(' · ') : '') + (propertyContext.zones.length ? ' · mapped zone ' + propertyContext.zones.join(' / ') : ' · zoning unresolved') + (propertyContext.queriedAt ? ' · queried ' + propertyContext.queriedAt : '') + '. Mapped attributes supplement the guidance; they do not establish permission.';
+      } else if (propertyContext.status === 'unresolved') {
+        provenance.textContent = 'Current property context · address selected, but associated mapped property data is unresolved. No property-specific planning conclusion is provided.';
+      } else {
+        provenance.textContent = 'Current property context · address selection only. Mapped property attributes have not been checked.';
+      }
+      guidancePanel.append(provenance);
       if(spatialState?.property&&spatialState.address===selection.name){
         const zones=[...new Set((spatialState.layers.zoning?.features||[]).map(f=>f.properties.SYM_CODE).filter(Boolean))];
         result.spatialEvidence={propertyId:spatialState.property.id,lotLabels:[...spatialState.property.lotLabels],zones,retrievedAt:spatialState.retrievedAt,status:spatialState.status,sourceUrl:spatialState.layers.zoning?.sourceUrl||spatialState.property.sourceUrl,legalApplicabilityAssessed:false};

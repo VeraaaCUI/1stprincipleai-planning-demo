@@ -220,7 +220,7 @@
     toolsArea.append(routeTasks,scopeSection,tabList,...TOOLS.map(item=>panels[item.id]),briefSection);
     shell.append(top, hero, contextDetails,routeSection,progressRoot,toolsArea,finalNote); root.append(shell);
     if(scope.FirstPrincipleProjectProgress)progressApi=scope.FirstPrincipleProjectProgress.mount(progressRoot,{onStep:openTask});
-    if(scope.FirstPrinciplePDFIntake)pdfApi=scope.FirstPrinciplePDFIntake.mount(pdfRoot,{onChange:snapshot=>{pdfState=snapshot;markChanged();}});
+    if(scope.FirstPrinciplePDFIntake)pdfApi=scope.FirstPrinciplePDFIntake.mount(pdfRoot,{onChange:snapshot=>{pdfState=snapshot;markChanged();},onContinueToBrief:()=>{briefSection.scrollIntoView({block:'start',behavior:'instant'});aimInput.focus();}});
     else pdfRoot.append(el('p','The drawing reader could not load. Refresh to try again.','fps-muted'));
     if(scope.FirstPrincipleExpertContact)emailApi=scope.FirstPrincipleExpertContact.mount(emailRoot,{onChange:snapshot=>{emailState=snapshot;if(!syncing)markChanged();}});
     else emailRoot.append(el('p','The email draft interface could not load. Refresh to try again.','fps-muted'));

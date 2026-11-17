@@ -70,6 +70,10 @@
     const progress=el('progress');progress.max=1;progress.value=0;progress.hidden=true;progress.setAttribute('aria-label','Pages read from PDF');
     const result=el('div',null,'fpi-result');result.hidden=true;
     const metadata=el('div',null,'fpi-metadata'),warnings=el('ul',null,'fpi-warnings');
+    const reviewSummary=el('div',null,'fpi-review-summary');reviewSummary.setAttribute('role','status');reviewSummary.setAttribute('aria-live','polite');
+    const reviewSummaryActions=el('div',null,'fpi-review-summary-actions');
+    const continueBrief=button('Continue to project brief',()=>{if(typeof options.onContinueToBrief==='function')options.onContinueToBrief(getState());},'fpi-button fpi-primary');
+    reviewSummaryActions.append(continueBrief);
     const reviewLayout=el('div',null,'fpi-review-layout'),previewColumn=el('div',null,'fpi-preview-column'),factColumn=el('div',null,'fpi-fact-column');
     const previewHeading=el('div',null,'fpi-preview-heading'),pageLabel=el('label','Inspect page');pageLabel.htmlFor=prefix+'page';
     const pageSelect=el('select');pageSelect.id=pageLabel.htmlFor;pageSelect.addEventListener('change',()=>showPage(Number(pageSelect.value)));
@@ -84,11 +88,11 @@
     const factCount=el('p','','fpi-fact-count');factCount.setAttribute('aria-live','polite');
     const facts=el('div',null,'fpi-facts');
     factColumn.append(factHeading,factNote,factCount,facts);
-    reviewLayout.append(previewColumn,factColumn);result.append(metadata,warnings,reviewLayout);
+    reviewLayout.append(previewColumn,factColumn);result.append(metadata,warnings,reviewSummary,reviewLayout,reviewSummaryActions);
     shell.append(header,upload,status,progress,result);root.append(shell);
     let chosenFile=null;
     fileInput.addEventListener('change',()=>{const next=fileInput.files?.[0]||null;cancel();chosenFile=next;state=blank();state.status=next?'ready':'empty';chosen.textContent=next?clean(next.name,180)+' · '+(next.size/1024/1024).toFixed(2)+' MB':'No drawing selected.';const error=next?validateFile(next):null;if(error){state.status='error';state.warnings=[error];status.textContent=error;}else status.textContent=next?'Ready to read the selected PDF. It has not been uploaded.':'Choose a drawing PDF.';result.hidden=true;progress.hidden=true;submit.textContent='Read drawing PDF';sample.disabled=false;submit.disabled=!next||Boolean(error);remove.hidden=!next;notify();});
-    function notify(){state.confirmedCount=state.facts.filter(fact=>fact.status==='confirmed').length;state.reviewComplete=state.status==='review'&&state.facts.length>0&&state.confirmedCount===state.facts.length&&!state.needsOCR;state.needsReview=!state.reviewComplete;if(typeof options.onChange==='function')options.onChange(getState());shell.dataset.status=state.status;}
+    function notify(){state.confirmedCount=state.facts.filter(fact=>fact.status==='confirmed').length;state.reviewComplete=state.status==='review'&&state.facts.length>0&&state.confirmedCount===state.facts.length&&!state.needsOCR;state.needsReview=!state.reviewComplete;renderReviewSummary();if(typeof options.onChange==='function')options.onChange(getState());shell.dataset.status=state.status;}
     function getState(){return copy(state);}
     function cancel(){run++;previewRun++;if(activeTask){activeTask.destroy().catch(()=>{});activeTask=null;}pdfDocument=null;pages=[];canvasWrap.replaceChildren();thumbnails.replaceChildren();}
     function reset(){cancel();state=blank();chosenFile=null;fileInput.value='';chosen.textContent='No drawing selected.';result.hidden=true;progress.hidden=true;submit.disabled=true;submit.textContent='Read drawing PDF';sample.disabled=false;remove.hidden=true;status.textContent='Select a PDF, then read its text layer. Scanned image-only pages need OCR or manual review.';notify();}
@@ -156,6 +160,17 @@
       });
     }
     function reviewCountText(){return state.confirmedCount+' of '+state.facts.length+' notes checked by you.'+(state.needsOCR?' '+state.unreadablePageCount+' pages still need OCR or manual review.':'')+' Professional review is still required.';}
+    function renderReviewSummary(){
+      const unresolved=Math.max(0,state.facts.length-state.confirmedCount),unreadable=state.unreadablePageCount||0;
+      reviewSummary.replaceChildren();
+      if(!state.document||state.status==='empty'||state.status==='ready'||state.status==='extracting'){reviewSummary.hidden=true;continueBrief.hidden=true;return;}
+      reviewSummary.hidden=false;continueBrief.hidden=false;
+      reviewSummary.append(el('strong','PDF review summary'));
+      reviewSummary.append(el('span',state.confirmedCount+' confirmed transcription'+(state.confirmedCount===1?'':'s')));
+      reviewSummary.append(el('span',unresolved+' unresolved note'+(unresolved===1?'':'s')));
+      reviewSummary.append(el('span',unreadable+' unreadable page'+(unreadable===1?'':'s')));
+      reviewSummary.append(el('p','Checking a note confirms only that its transcription matches the cited PDF page. It does not verify dimensions, design, legal compliance, approvals or site conditions. Unresolved and unreadable items remain unverified.','fpi-review-summary-note'));
+    }
     async function renderPage(number,width){
       const page=await pdfDocument.getPage(number),base=page.getViewport({scale:1}),scale=Math.min(2,width/base.width),viewport=page.getViewport({scale});
       const canvas=el('canvas');canvas.width=Math.ceil(viewport.width);canvas.height=Math.ceil(viewport.height);canvas.setAttribute('role','img');canvas.setAttribute('aria-label','PDF drawing page '+number);await page.render({canvas,canvasContext:canvas.getContext('2d'),viewport}).promise;return canvas;
