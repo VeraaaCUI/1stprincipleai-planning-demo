@@ -33,8 +33,8 @@ test('PDF review keeps the existing explicit brief action and local-only boundar
   assert.match(services, /activateRoute\('review',false\)/);
   assert.match(services, /specialistSupport\.hidden = false/);
   assert.match(services, /specialistSupport\.hidden = true/);
-  assert.match(services, /prepared brief remains local; no service or contact has started/);
-  assert.match(services, /expertsHeading\.focus\(\)/);
+  assert.match(services, /Your edited brief remains current locally; no service or contact has started/);
+  assert.match(services, /focusSpecialistPanel\(\)/);
   assert.match(services, /Nothing is sent to an expert, booked, paid or lodged/);
 
   const routeBlock = services.slice(services.indexOf('function activateRoute'), services.indexOf('function chooseRoute'));

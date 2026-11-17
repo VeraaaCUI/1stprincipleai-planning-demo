@@ -139,6 +139,9 @@
     drawingActions.append(button('Continue reviewing',openDrawingReview,'fps-button'),button('Replace PDF',replaceDrawingPDF,'fps-button'));
     drawingSummary.append(el('h4','Drawing in this workspace'),drawingName,drawingStatus,drawingActions);
     routeSection.append(routeTitle,directActions,drawingSummary,routeOptions,routeStatus);
+    const drawingIntake=el('section',null,'fps-primary-drawing-intake');drawingIntake.setAttribute('aria-labelledby',prefix+'drawing-intake-title');
+    const drawingIntakeTitle=el('h3','Drawing intake');drawingIntakeTitle.id=prefix+'drawing-intake-title';
+    drawingIntake.append(el('p','START WITH YOUR DRAWINGS','fps-eyebrow'),drawingIntakeTitle,el('p','Choose a PDF to read its text layer and review page-cited notes in this browser. The file is not uploaded, interpreted by AI or treated as professional evidence.','fps-muted'));
     const progressRoot=el('div');progressRoot.id=prefix+'progress';
     const toolsArea=el('section',null,'fps-tools-area');toolsArea.hidden=true;toolsArea.setAttribute('aria-label','Project preparation tools');
     const routeTasks=el('section',null,'fps-route-tasks');routeTasks.setAttribute('aria-label','Suggested next tasks');
@@ -169,7 +172,8 @@
       const panel = el('section', null, 'fps-tool-panel'); panel.id = prefix + 'panel-' + track.id; panel.setAttribute('role', 'tabpanel'); panel.setAttribute('aria-labelledby', tab.id);
       tabs[track.id] = tab; panels[track.id] = panel; tabList.append(tab);
     });
-    const pdfRoot=el('div');pdfRoot.id=prefix+'pdf-intake';panels.drawings.append(pdfRoot);
+    const pdfRoot=el('div');pdfRoot.id=prefix+'pdf-intake';pdfRoot.className='fps-primary-pdf-intake';drawingIntake.append(pdfRoot);
+    panels.drawings.append(el('p','Drawing intake is available above. Use this panel to return to the review status and extracted notes.','fps-muted'));
     const emailRoot=el('div');emailRoot.id=prefix+'expert-contact';panels.email.append(emailRoot);
     const costLayout = el('div', null, 'fps-cost-layout');
     const costForm = el('div', null, 'fps-cost-form');
@@ -212,8 +216,8 @@
       materialSelects[item.id] = select; selectWrap.append(label, select); row.append(copy, selectWrap); materialList.append(row);
     });
     panels.application.append(materialList);
-    const expertsHeading = el('h3', 'Put each question in the right hands.'); expertsHeading.tabIndex = -1;
-    panels.experts.append(el('p', 'AI-ASSISTED WORK + HUMAN ACCOUNTABILITY', 'fps-eyebrow'), expertsHeading, el('p', 'Select the roles you want included in the service brief. A planner can confirm which specialists are actually needed and coordinate their review.', 'fps-muted'));
+    const expertsHeading = el('h3', 'Specialist Support preparation'); expertsHeading.tabIndex = -1;
+    panels.experts.append(el('p', 'AI-ASSISTED WORK + HUMAN ACCOUNTABILITY', 'fps-eyebrow'), expertsHeading, el('p', 'Your brief is prepared. Select the specialist roles to discuss, then review questions and handover preparation. No specialist contact or service has started.', 'fps-muted'));
     const agentCard = el('div', null, 'fps-agent-card');
     agentCard.append(el('span', 'AI AGENT WORK PLAN', 'fps-role'), el('h4', 'Organise. Draft. Reconcile. Escalate.'), el('p', 'Requested agent support: organise evidence, draft material checklists, track unanswered questions and prepare focused briefs for human review.'), el('small', 'Demo: no live AI Agent run or professional engagement is started here.'));
     panels.experts.append(agentCard);
@@ -239,6 +243,7 @@
     const briefActions = el('div', null, 'fps-brief-actions'); briefActions.append(prepare, briefStatus);
     const briefPreview = el('div', null, 'fps-brief-preview'); briefPreview.hidden = true;
     const previewLabel = el('label', 'Review and revise your brief'); previewLabel.htmlFor = prefix + 'brief-text'; const briefEditor = el('textarea'); briefEditor.id = previewLabel.htmlFor; briefEditor.rows = 18; briefEditor.maxLength = 30000; briefEditor.spellcheck = true;
+    briefEditor.addEventListener('input', () => { if (!briefPrepared) return; briefStatus.textContent = 'Your edited brief is current for local handover preparation. Review it before continuing.'; syncProject(); });
     const downloadText = button('Download brief (.txt)', () => download('txt'), 'fps-button fps-primary');
     const downloadJson = button('Download project data (.json)', () => download('json'));
     const specialistSupport = button('Continue to specialist support', continueToSpecialistSupport, 'fps-button'); specialistSupport.hidden = true; specialistSupport.setAttribute('aria-controls', prefix + 'panel-experts');
@@ -247,8 +252,8 @@
     briefSection.append(briefHeader, briefForm, briefActions, briefPreview);
     const finalNote = el('p', 'Your entries stay in this page until you leave or reload it. Professional scope, fees, availability and responsibility must be agreed before a real service starts.', 'fps-final-note');
     const contextDetails=el('details',null,'fps-context-details');contextDetails.append(el('summary','Project address, preliminary report and evidence gaps'),contextPanel);
-    toolsArea.append(routeTasks,tabList,...TOOLS.map(item=>panels[item.id]),briefSection,scopeSection);
-    shell.append(top, hero, routeSection, contextDetails, progressRoot, toolsArea, finalNote); root.append(shell);
+    toolsArea.append(tabList,...TOOLS.map(item=>panels[item.id]),routeTasks,briefSection,scopeSection);
+    shell.append(top, hero, routeSection, drawingIntake, contextDetails, toolsArea, progressRoot, finalNote); root.append(shell);
     if(scope.FirstPrincipleProjectProgress)progressApi=scope.FirstPrincipleProjectProgress.mount(progressRoot,{onStep:openTask});
     if(scope.FirstPrinciplePDFIntake)pdfApi=scope.FirstPrinciplePDFIntake.mount(pdfRoot,{onChange:snapshot=>{pdfState=snapshot;updateDrawingSummary();markChanged();if(pdfState.status==='ready'){pdfRoot.scrollIntoView({block:'start',behavior:'instant'});pdfApi?.focusReview();}},onContinueToBrief:()=>{if(activateRoute('brief',false)){syncProject();briefSection.scrollIntoView({block:'start',behavior:'instant'});aimInput.focus();}}});
     else pdfRoot.append(el('p','The drawing reader could not load. Refresh to try again.','fps-muted'));
@@ -265,7 +270,7 @@
       Object.entries(routeButtons).forEach(([key,action])=>action.setAttribute('aria-pressed',String(key===route)));
       routeStatus.textContent=choice.title+'. Your drawings and preparation work remain available when you switch starting points.';
       setTrack(choice.track);
-      if(focus)toolsArea.scrollIntoView({block:'start',behavior:'instant'});
+      if(focus){if(choice.track==='experts')focusSpecialistPanel();else if(choice.track==='drawings')focusDrawingReview();else toolsArea.scrollIntoView({block:'start',behavior:'instant'});}
       return true;
     }
     function startWithDrawingPDF(){
@@ -285,11 +290,11 @@
     function startSpecialistSupport(){
       if(!activateRoute('review',false))return;
       syncProject();
-      routeStatus.textContent='Specialist support options are open. Your preparation remains local; no service or contact has started.';
-      toolsArea.scrollIntoView({block:'start',behavior:'instant'});
-      expertsHeading.focus();
+      routeStatus.textContent='Specialist support options are open. Select roles, review questions and prepare the handover locally; no service or contact has started.';
+      focusSpecialistPanel();
     }
     function focusDrawingReview(){pdfRoot.scrollIntoView({block:'start',behavior:'instant'});pdfApi?.focusReview();}
+    function focusSpecialistPanel(){panels.experts.scrollIntoView({block:'start',behavior:'instant'});expertsHeading.focus({preventScroll:true});}
     function openDrawingReview(){if(!activateRoute('drawings',false))return;syncProject();focusDrawingReview();}
     function replaceDrawingPDF(){if(!activateRoute('drawings',false))return;syncProject();pdfApi?.selectFile();}
     function updateDrawingSummary(){
@@ -307,12 +312,13 @@
       if(!hasContext)return;
       if(!route)chooseRoute(target==='drawings'?'drawings':target==='experts'||target==='email'?'review':'brief',false);
       if(target==='brief'){briefSection.scrollIntoView({block:'start',behavior:'instant'});aimInput.focus();return;}
+      if(target==='drawings'||target==='documents'){openDrawingReview();return;}
       const track=target==='documents'?'drawings':target==='collaboration'?'email':target;
-      if(TOOLS.some(item=>item.id===track)){setTrack(track);toolsArea.scrollIntoView({block:'start',behavior:'instant'});tabs[track].focus();}
+      if(TOOLS.some(item=>item.id===track)){setTrack(track);if(track==='experts')focusSpecialistPanel();else{toolsArea.scrollIntoView({block:'start',behavior:'instant'});tabs[track].focus();}}
     }
     function continueToSpecialistSupport(){
       if(!hasContext||!briefPrepared)return;
-      activateRoute('review',false);syncProject();briefStatus.textContent='Specialist support options are open. Your prepared brief remains local; no service or contact has started.';toolsArea.scrollIntoView({block:'start',behavior:'instant'});expertsHeading.focus();
+      activateRoute('review',false);setTrack('experts');syncProject();briefStatus.textContent='Brief prepared. Select specialist roles, then review questions and handover preparation. Your edited brief remains current locally; no service or contact has started.';focusSpecialistPanel();
     }
     function openTarget(target){
       if(!hasContext)return false;
@@ -323,7 +329,7 @@
     function syncProject(){
       if(syncing)return;syncing=true;
       try{
-        const project={hasContext,route,pdf:pdfState,drawingSummary:pdfState,confirmedFacts:(pdfState.facts||[]).filter(fact=>fact.status==='confirmed'),materialStatus:{...materialStatus},budget:budgetResult(),briefPrepared,specialists:[...expertSelection],supportedNSW:context.location.state==='NSW'&&context.location.coverage==='nsw',email:emailState};
+        const project={hasContext,route,pdf:pdfState,drawingSummary:pdfState,confirmedFacts:(pdfState.facts||[]).filter(fact=>fact.status==='confirmed'),materialStatus:{...materialStatus},budget:budgetResult(),briefPrepared,reviewedBriefText:clip(briefEditor.value,30000),specialists:[...expertSelection],supportedNSW:context.location.state==='NSW'&&context.location.coverage==='nsw',email:emailState};
         emailApi?.updateProject(project);emailState=emailApi?.getState()||emailState;project.email=emailState;progressApi?.update(project);
         renderNextTasks();
       }finally{syncing=false;}
@@ -370,7 +376,7 @@
       syncProject();
     }
     function briefData() {
-      return { brand: '1stprincipleai', mode: 'demonstration_service_brief', preparedOn: new Date().toISOString().slice(0, 10), location: context.location, question: context.question, preliminaryReport: context.report, projectRoute:route, projectAim: aim.trim(), preferredTiming: timing.trim(), requestedServices: TRACKS.filter(item => selected.has(item.id)).map(item => ({ id: item.id, title: item.title })), budget: budgetResult(), materials: MATERIALS.map(item => ({ id: item.id, title: item.title, preparationStatus: materialStatus[item.id] || 'not_started', responsibleRoleToConfirm: item.owner })), requestedSpecialists: SPECIALISTS.filter(item => expertSelection.has(item.id)).map(item => ({ id: item.id, title: item.title, scopeToDiscuss: item.copy })), preferredFirstDiscussion: meeting,drawingReview:pdfState,progress:progressApi?.getState()||null,emailPreparation:emailState, professionalReviewCompleted: false, liveAgentStarted: false, expertContacted: false, applicationSubmitted: false, notes: 'User-entered allowances are assumptions, not a market estimate or quote. Drawing notes are local extraction candidates, not verified site facts. Service scope, fees, availability and professional responsibility remain to be agreed.' };
+      return { brand: '1stprincipleai', mode: 'demonstration_service_brief', preparedOn: new Date().toISOString().slice(0, 10), location: context.location, question: context.question, preliminaryReport: context.report, projectRoute:route, projectAim: aim.trim(), preferredTiming: timing.trim(), requestedServices: TRACKS.filter(item => selected.has(item.id)).map(item => ({ id: item.id, title: item.title })), budget: budgetResult(), materials: MATERIALS.map(item => ({ id: item.id, title: item.title, preparationStatus: materialStatus[item.id] || 'not_started', responsibleRoleToConfirm: item.owner })), requestedSpecialists: SPECIALISTS.filter(item => expertSelection.has(item.id)).map(item => ({ id: item.id, title: item.title, scopeToDiscuss: item.copy })), preferredFirstDiscussion: meeting,drawingReview:pdfState,reviewedBriefText:clip(briefEditor.value,30000),progress:progressApi?.getState()||null,emailPreparation:emailState, professionalReviewCompleted: false, liveAgentStarted: false, expertContacted: false, applicationSubmitted: false, notes: 'User-entered allowances are assumptions, not a market estimate or quote. Drawing notes are local extraction candidates, not verified site facts. Service scope, fees, availability and professional responsibility remain to be agreed.' };
     }
     function prepareBrief() {
       if (!hasContext) { briefStatus.textContent = 'Return to the location report before preparing a service brief.'; return; }
