@@ -4,7 +4,7 @@
   const ACTIVE_KEY='firstprinciple.active-project.v1';
   const PENDING_KEY='firstprinciple.pending-account-save.v1';
   const UUID=/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-  function init({root,mapApi,navigate,toolbarHost,cloudRepository,auth,onAccountRequired}){
+  function init({root,mapApi,navigate,toolbarHost,cloudRepository,auth,onAccountRequired,onDashboardOpen}){
     let active=null,activeOwner=null,suppressed=false,initializing=true,revision=0,lastSignature='',status='draft',message='';
     let projects=[],listEpoch=0,listMessage='',disposed=false,operationTail=Promise.resolve(),identityEpoch=0,pendingSavePromise=null;
     const authState=()=>auth?.getState?.()||{status:'unavailable',user:null};
@@ -138,14 +138,28 @@
         projects=found;listMessage=text;view?.showProjects({status:'ready',projects,message:text,...details()});return found;
       }catch(error){if(epoch===listEpoch&&identity===identityEpoch&&owner())view?.showProjects({status:'error',projects:[],message:error.message,...details()});throw error;}
     }
-    function open(id){const token=capture();return mutate(async()=>{
-      assertCurrent(token);const project=await token.repository.getProject(id);assertCurrent(token);if(!project)throw new Error('This saved project is unavailable. Refresh My Projects.');
-      suppressed=true;active=project;activeOwner=token.ownerId;remember();
+    function restoreProject(project){
+      if(!project||typeof project!=='object')throw new Error('This saved project is unavailable. Refresh My Projects.');
+      suppressed=true;active=project;activeOwner=owner();remember();
       try{
         mapApi?.restoreProjectContext?.(project.workflowContext||{version:1,selection:null});
         navigate(project.currentWorkflowStep==='discovery'?'property':'property/'+project.currentWorkflowStep);
         lastSignature=signature();setStatus('draft','Opened an account project. Planning data is being rechecked; new changes require Save project.');visibility();
       }finally{suppressed=false;}
+      return project;
+    }
+    function continueWorking(project=active){
+      const token=capture();
+      assertCurrent(token);
+      if(!project||project.id!==active?.id||activeOwner!==token.ownerId)throw new Error('This saved project is no longer active in the current account.');
+      return restoreProject(project);
+    }
+    function open(id){const token=capture();return mutate(async()=>{
+      assertCurrent(token);const project=await token.repository.getProject(id);assertCurrent(token);if(!project)throw new Error('This saved project is unavailable. Refresh My Projects.');
+       active=project;activeOwner=token.ownerId;remember();
+       setStatus('draft','Opened an account project. Review the saved context below; continue working only when you want to restore the property workflow.');
+       if(typeof onDashboardOpen==='function')onDashboardOpen(project);
+       else restoreProject(project);
       return project;
     });}
     function rename(id,name){const token=capture();return mutate(async()=>{
@@ -191,7 +205,7 @@
     operationTail=ready.then(()=>{});
     ready.then(()=>{if(owner())void resumePendingSave();});
     scope.addEventListener('firstprinciple:workflow-context',listener);
-    return Object.freeze({ready,repository:cloudRepository,cloudRepository,create,save,open,rename,remove,list:refreshList,resumePendingSave,cancelPendingSave,
+    return Object.freeze({ready,repository:cloudRepository,cloudRepository,create,save,open,continueWorking,restoreProject,rename,remove,list:refreshList,resumePendingSave,cancelPendingSave,
       refresh:()=>refreshList().catch(()=>{}),
       getState:()=>({activeId:active?.id||null,activeSource:active?'account':null,scope:'account',status,message,revision,activeProject:active?JSON.parse(JSON.stringify(active)):null,currentDraft:current().selection?snapshot():null,authentication:{status:authState().status,canSaveToAccount:Boolean(owner())}}),
       dispose(){disposed=true;identityEpoch++;unsubscribe?.();scope.removeEventListener('firstprinciple:workflow-context',listener);}

@@ -162,7 +162,7 @@
           const field = el('div'); field.append(el('dt', label), el('dd', value)); facts.append(field);
         }); meta.append(facts);
         const actions = el('div', null, 'lp-project-actions');
-        const open = button('Open project', () => invoke('onOpen', [id], open), 'lp-primary'); open.dataset.projectOpen = id;
+        const open = button('Open Dashboard', () => invoke('onOpen', [id], open), 'lp-primary'); open.dataset.projectOpen = id;
         const rename = button('Rename', () => { editingId = id; deletingId = null; renderList(); requestAnimationFrame(() => list.querySelector('[data-project-rename-input]')?.focus()); }); rename.dataset.projectRename = id;
         const remove = button('Delete', () => { deletingId = id; editingId = null; renderList(); requestAnimationFrame(() => list.querySelector('[data-project-confirm-delete]')?.focus()); }, 'lp-danger'); remove.dataset.projectDelete = id;
         actions.append(open, rename, remove); item.append(meta, actions);
