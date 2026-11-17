@@ -154,13 +154,16 @@
     header.append(titleCopy, count);
     const scopeNote = node('p', '', 'fpp-scope-note');
     const milestoneList = node('ul', null, 'fpp-milestones'); milestoneList.setAttribute('aria-label', 'Local preparation milestones');
+    const roadmapDetails = node('details', null, 'fpp-roadmap-details');
+    roadmapDetails.append(node('summary', 'View roadmap'));
     const roadmapHint = node('p', 'Scroll to browse all 10 stages. Select a stage for details.', 'fpp-mobile-roadmap-hint');
     const roadmap = node('ol', null, 'fpp-roadmap'); roadmap.setAttribute('aria-label', 'Project stages. Select a stage to see its status.');
     const detail = node('div', null, 'fpp-stage-detail'); detail.setAttribute('role', 'region'); detail.setAttribute('aria-label', 'Selected project stage');
     const next = node('div', null, 'fpp-next-tasks');
     const loops = node('details', null, 'fpp-external-loops'); const loopList = node('ul');
     loops.append(node('summary', 'External return and information-request loops'), loopList);
-    shell.append(header, scopeNote, milestoneList, roadmapHint, roadmap, detail, next, loops, node('p', 'Local checkmarks show preparation activity only. They do not record approval, professional sign-off, email delivery or portal submission.', 'fpp-boundary-note'));
+    roadmapDetails.append(roadmapHint, roadmap, detail, next, loops);
+    shell.append(header, scopeNote, milestoneList, roadmapDetails, node('p', 'Local checkmarks show preparation activity only. They do not record approval, professional sign-off, email delivery or portal submission.', 'fpp-boundary-note'));
     root.append(shell);
 
     function action(label, target) {

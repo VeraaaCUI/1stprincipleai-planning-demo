@@ -59,7 +59,8 @@
     header.append(copyBlock,el('span','Local PDF extraction','fpi-mode'));
     const upload=el('div',null,'fpi-upload');
     const fileInput=el('input');fileInput.id=prefix+'file';fileInput.type='file';fileInput.accept='.pdf,application/pdf';fileInput.dataset.pdfUpload='true';fileInput.className='fpi-file-input';fileInput.tabIndex=-1;fileInput.setAttribute('aria-label','Drawing PDF file');
-    const uploadLabel=button('Choose a drawing PDF',()=>fileInput.click(),'fpi-button fpi-file-select');uploadLabel.setAttribute('aria-controls',fileInput.id);
+    const selectFile=()=>fileInput.click();
+    const uploadLabel=button('Choose a drawing PDF',selectFile,'fpi-button fpi-file-select');uploadLabel.setAttribute('aria-controls',fileInput.id);
     const submit=button('Read drawing PDF',()=>readChosen(),'fpi-button fpi-primary');submit.disabled=true;
     const sample=button('Try an illustrative PDF',()=>loadDemo(),'fpi-button');
     const remove=button('Clear drawing',()=>reset(),'fpi-button');remove.hidden=true;
@@ -91,7 +92,7 @@
     reviewLayout.append(previewColumn,factColumn);result.append(metadata,warnings,reviewSummary,reviewLayout,reviewSummaryActions);
     shell.append(header,upload,status,progress,result);root.append(shell);
     let chosenFile=null;
-    fileInput.addEventListener('change',()=>{const next=fileInput.files?.[0]||null;cancel();chosenFile=next;state=blank();state.status=next?'ready':'empty';chosen.textContent=next?clean(next.name,180)+' · '+(next.size/1024/1024).toFixed(2)+' MB':'No drawing selected.';const error=next?validateFile(next):null;if(error){state.status='error';state.warnings=[error];status.textContent=error;}else status.textContent=next?'Ready to read the selected PDF. It has not been uploaded.':'Choose a drawing PDF.';result.hidden=true;progress.hidden=true;submit.textContent='Read drawing PDF';sample.disabled=false;submit.disabled=!next||Boolean(error);remove.hidden=!next;notify();});
+    fileInput.addEventListener('change',()=>{const next=fileInput.files?.[0]||null;cancel();chosenFile=next;state=blank();state.status=next?'ready':'empty';state.document=next?{name:clean(next.name,180),bytes:next.size,pages:0,illustrative:false,demo:false}:null;chosen.textContent=next?clean(next.name,180)+' · '+(next.size/1024/1024).toFixed(2)+' MB':'No drawing selected.';const error=next?validateFile(next):null;if(error){state.status='error';state.warnings=[error];status.textContent=error;}else status.textContent=next?'Ready to read the selected PDF. It has not been uploaded.':'Choose a drawing PDF.';result.hidden=true;progress.hidden=true;submit.textContent='Read drawing PDF';sample.disabled=false;submit.disabled=!next||Boolean(error);remove.hidden=!next;notify();});
     function notify(){state.confirmedCount=state.facts.filter(fact=>fact.status==='confirmed').length;state.reviewComplete=state.status==='review'&&state.facts.length>0&&state.confirmedCount===state.facts.length&&!state.needsOCR;state.needsReview=!state.reviewComplete;renderReviewSummary();if(typeof options.onChange==='function')options.onChange(getState());shell.dataset.status=state.status;}
     function getState(){return copy(state);}
     function cancel(){run++;previewRun++;if(activeTask){activeTask.destroy().catch(()=>{});activeTask=null;}pdfDocument=null;pages=[];canvasWrap.replaceChildren();thumbnails.replaceChildren();}
@@ -190,7 +191,7 @@
         action.append(el('span','Page '+number));thumbnails.append(action);
       }
     }
-    const api={setContext,reset,getState,loadDemo};root._firstPrinciplePDFIntake=api;notify();return api;
+    const api={setContext,reset,getState,loadDemo,selectFile,focusReview(){copyBlock.querySelector('h3')?.focus();}};copyBlock.querySelector('h3').tabIndex=-1;root._firstPrinciplePDFIntake=api;notify();return api;
   }
   const api={mount,LIMITS,extractFacts,classification,validateFile};scope.FirstPrinciplePDFIntake=api;if(typeof module!=='undefined'&&module.exports)module.exports=api;
 })(typeof window!=='undefined'?window:globalThis);
