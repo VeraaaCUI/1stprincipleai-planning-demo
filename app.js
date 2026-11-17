@@ -110,6 +110,23 @@
     return valid?route:'home';
   }
   function dashboardProjectId(route){const match=String(route||'').match(/^my-projects\/([A-Za-z0-9_-]+)$/);return match?.[1]||null;}
+  function dashboardTargetAvailable(project){
+    if(serviceStale||!serviceContext?.location||!serviceContext?.report||!mapApi?.getReport)return false;
+    const saved=project?.workflowContext?.selection, current=mapApi?.exportProjectContext?.()?.selection;
+    if(!saved?.name||!current?.name||saved.name!==current.name)return false;
+    const savedId=String(saved.propertyId||project?.propertyReference?.propertyId||''), currentId=String(current.propertyId||'');
+    if(savedId!==currentId&&(savedId||currentId))return false;
+    const reportLocation=serviceContext.location;
+    if(reportLocation.name&&reportLocation.name!==saved.name)return false;
+    const report=mapApi.getReport();
+    return Boolean(report&&(report===serviceContext.report||report.caseId&&report.caseId===serviceContext.report.caseId));
+  }
+  function dashboardTargetLabel(project,target){
+    if(target!=='drawings'&&target!=='specialists')return '';
+    return dashboardTargetAvailable(project)
+      ? target==='drawings'?'Continue to drawing preparation':'Continue to specialist preparation'
+      : 'Return to property assessment';
+  }
   function navigate(raw,{replace=false,focus=true}={}){
     const oldCouncil=String(raw||'').replace(/^#\/?/,'').match(/^councils\/(LGA-\d+)\/categories\/[a-z-]+\/?$/);
     let route=normalizeRoute(raw);
@@ -366,7 +383,7 @@
     const propertyPage=propertyPages[propertyStage(ui.route)]||propertyPages.discovery;
     document.getElementById('start-tour').hidden=!isMap||propertyStage(ui.route)!=='discovery';
     document.getElementById('page-title').textContent = isMap ? propertyPage.title : isServices ? 'Your project, from drawings to delivery.' : isDashboard ? 'Project Dashboard' : 'The evidence behind the example project.';
-    document.getElementById('page-description').textContent = isMap ? propertyPage.description : isServices ? 'Review your information, track the next steps and prepare a conversation with the right expert.' : isDashboard ? 'Review saved Project v1 context and continue working when you are ready.' : 'Inspect the historical records, decision questions and evidence behind CASE-0001. This audit trail supports the customer journey.';
+    document.getElementById('page-description').textContent = isMap ? propertyPage.description : isServices ? 'Review your information, track the next steps and prepare a conversation with the right expert.' : isDashboard ? 'Review saved project information and continue working when you are ready.' : 'Inspect the historical records, decision questions and evidence behind CASE-0001. This audit trail supports the customer journey.';
     document.querySelectorAll('[data-view]').forEach(control => {
       if (control.dataset.view === ui.view) control.setAttribute('aria-current', 'page'); else control.removeAttribute('aria-current');
     });
@@ -433,11 +450,19 @@
   navigationApi=window.FirstPrincipleSiteNavigation?.init(document.getElementById('site-navigation-root'),{onNavigate:navigate,auth:authApi,onAuthenticated:()=>projectsApi?.resumePendingSave?.(),onCancelSaveIntent:()=>projectsApi?.cancelPendingSave?.()});
   dashboardApi=window.FirstPrincipleProjectDashboard?.init(document.getElementById('project-dashboard-root'),{
     onBack:()=>{dashboardLoadedId=null;dashboardLoadingId=null;dashboardOwnerId=null;navigate('my-projects');},
-    onContinueWorking:(id)=>{
+    getContinuationLabel:(project,target)=>dashboardTargetLabel(project,target),
+    onContinueWorking:(id,target)=>{
       const active=projectsApi?.getState?.().activeProject;
       if(!active||active.id!==id){dashboardApi?.showError?.('This saved project is no longer available in the current account.');return;}
+      if(target&&dashboardTargetAvailable(active)){
+        servicesApi?.show?.(serviceContext,{preserveProject:true});
+        navigate('project',{focus:false});
+        const targetOpened=servicesApi?.openTarget?.(target);
+        if(targetOpened){dashboardLoadedId=null;dashboardLoadingId=null;dashboardApi?.clear?.();return;}
+      }
       try{
         projectsApi?.continueWorking?.(active);
+        if(target)navigate('property/assessment');
         dashboardLoadedId=null;dashboardLoadingId=null;dashboardApi?.clear?.();
       }catch(error){dashboardApi?.showError?.(error?.message||'This saved project could not be restored.');}
     }

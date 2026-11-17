@@ -41,3 +41,11 @@ test('workspace keeps service selection optional and opens the picker only from 
   assert.match(services, /function updateDrawingSummary/);
   assert.doesNotMatch(services, /startWithDrawingPDF\(\)[\s\S]*?fileInput\.click\(\)/);
 });
+
+test('dashboard continuation targets expose local drawing and specialist entries without external actions', () => {
+  assert.match(services, /function openTarget\(target\)/);
+  assert.match(services, /if\(target==='drawings'\)\{openDrawingReview\(\);return true;\}/);
+  assert.match(services, /if\(target==='specialists'\)\{startSpecialistSupport\(\);return true;\}/);
+  assert.match(services, /openTarget/);
+  assert.match(services, /no service or contact has started/i);
+});

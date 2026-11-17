@@ -17,8 +17,8 @@
       "sha256": "7665939192a7cd690e1e1ac7ad53725962c56a86f7fcc355c6708450653779d3"
     },
     "app.js": {
-      "bytes": 52534,
-      "sha256": "cb29282d7acffdb6b322b68dce2457c72f7c1d81d2f2d596c7c25fca90b462de"
+      "bytes": 54129,
+      "sha256": "4c1ba080bb543334cd4e116b4344e61ae0a4edbcfa2db4b4492fd091266c4e1e"
     },
     ".nojekyll": {
       "bytes": 1,
@@ -237,8 +237,8 @@
       "sha256": "0c3f1a8805ff32b91f11824346732d5685fea858115550da2faf24a9a102c3a7"
     },
     "advanced-services.js": {
-      "bytes": 50803,
-      "sha256": "b4cf4024b736cc218ead8331c563907cc71b774c56cb372e2d94eb3528c39e1a"
+      "bytes": 51045,
+      "sha256": "a3a502d778f6f1e28a31f3e8c13e948f23f80adc86ce51cb23d684a86c0de211"
     },
     "advanced-services.css": {
       "bytes": 19481,
@@ -393,12 +393,12 @@
       "sha256": "264f5c640339f042dd729062cfc04c17f8ea0f29882b538e3848ed8f10edb4da"
     },
     "project-dashboard.css": {
-      "bytes": 4807,
-      "sha256": "dc28566c4a5ef7f14265fa915a68719a605fd007f1ec9a1725433edf3287b062"
+      "bytes": 5561,
+      "sha256": "bf36e3eb1ebfce859d716aa3cf10f57774b0c9afc7dedfd8659af858260c5abe"
     },
     "project-dashboard-view.js": {
-      "bytes": 12338,
-      "sha256": "cfa81535c298f304ffed00acae5d7b192c2fe68dfe5bededb0141e45c4de4237"
+      "bytes": 14933,
+      "sha256": "ca8085d317faf01e63c57109f9471cb304b43b8ab36d828cbc9354b0c6c3ef9f"
     }
   },
   "case_id": "CASE-0001",

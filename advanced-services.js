@@ -314,6 +314,12 @@
       if(!hasContext||!briefPrepared)return;
       activateRoute('review',false);syncProject();briefStatus.textContent='Specialist support options are open. Your prepared brief remains local; no service or contact has started.';toolsArea.scrollIntoView({block:'start',behavior:'instant'});expertsHeading.focus();
     }
+    function openTarget(target){
+      if(!hasContext)return false;
+      if(target==='drawings'){openDrawingReview();return true;}
+      if(target==='specialists'){startSpecialistSupport();return true;}
+      return false;
+    }
     function syncProject(){
       if(syncing)return;syncing=true;
       try{
@@ -443,7 +449,7 @@
       renderBudget();syncProject();
       return api;
     }
-    const api = { show, refresh() {}, getState() { return { hasContext,route, activeTrack, selectedServices: [...selected], budget: budgetResult(), materialStatus: { ...materialStatus }, requestedSpecialists: [...expertSelection], briefPrepared,pdf:pdfState,progress:progressApi?.getState()||null,email:emailState }; } };
+    const api = { show, openTarget, refresh() {}, getState() { return { hasContext,route, activeTrack, selectedServices: [...selected], budget: budgetResult(), materialStatus: { ...materialStatus }, requestedSpecialists: [...expertSelection], briefPrepared,pdf:pdfState,progress:progressApi?.getState()||null,email:emailState }; } };
     root._firstPrincipleServices = api;
     show(null);
     return api;

@@ -12,9 +12,9 @@ test('Project Dashboard renders the supported Project v1 sections', () => {
   for (const section of ['Overview', 'Roadmap', 'Tasks', 'Documents', 'AI Assistant', 'Specialists', 'Activity History']) assert.match(source, new RegExp(section.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
   assert.match(source, /FirstPrincipleProjectDashboard/);
   assert.match(source, /onContinueWorking/);
-  assert.match(source, /No project documents are saved/);
+  assert.match(source, /Documents are not yet saved/);
   assert.match(source, /No live AI Agent is connected/);
-  assert.match(source, /Specialist engagement has not started/);
+  assert.match(source, /Specialist support has not yet been requested/);
 });
 
 test('Dashboard excludes unsupported local-only fields and has responsive focusable controls', () => {
@@ -23,7 +23,10 @@ test('Dashboard excludes unsupported local-only fields and has responsive focusa
   assert.match(source, /propertyReference/);
   assert.match(source, /dataVerificationStatus/);
   assert.match(source, /Continue Working/);
+  assert.match(source, /tab\.id = idPrefix \+ 'tab-' \+ key/);
+  assert.match(source, /panel\.setAttribute\('aria-labelledby', tab\.id\)/);
   assert.match(styles, /@media\(max-width:600px\)/);
   assert.match(styles, /focus-visible/);
+  assert.match(styles, /\[role=tabpanel\]:focus-visible/);
   assert.match(styles, /min-height:44px/);
 });
