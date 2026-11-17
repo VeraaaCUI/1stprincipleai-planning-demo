@@ -23,6 +23,20 @@ test('PDF review keeps the existing explicit brief action and local-only boundar
   assert.match(intake, /No file upload or AI model request is being made/);
   assert.match(intake, /Unresolved and unreadable items remain unverified/);
   assert.match(services, /onContinueToBrief/);
+  assert.match(services, /activateRoute\('brief',false\)/);
+  assert.match(services, /function activateRoute/);
   assert.match(services, /Prepare service brief/);
+  assert.match(services, /Continue to specialist support/);
+  assert.match(services, /specialistSupport\.hidden = false/);
+  assert.match(services, /specialistSupport\.hidden = true/);
+  assert.match(services, /function continueToSpecialistSupport/);
+  assert.match(services, /activateRoute\('review',false\)/);
+  assert.match(services, /specialistSupport\.hidden = false/);
+  assert.match(services, /specialistSupport\.hidden = true/);
+  assert.match(services, /prepared brief remains local; no service or contact has started/);
+  assert.match(services, /expertsHeading\.focus\(\)/);
   assert.match(services, /Nothing is sent to an expert, booked, paid or lodged/);
+
+  const routeBlock = services.slice(services.indexOf('function activateRoute'), services.indexOf('function chooseRoute'));
+  assert.doesNotMatch(routeBlock, /markChanged\(\)/);
 });

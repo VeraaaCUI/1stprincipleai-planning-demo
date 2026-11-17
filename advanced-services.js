@@ -61,13 +61,28 @@
     const names = Array.isArray(location.councilNames) ? location.councilNames.map(name => clip(name, 180)).filter(Boolean) : [];
     const summary = Array.isArray(report.summary) ? report.summary.map(item => clip(item)).filter(Boolean).join('\n\n') : clip(report.summary, 6000);
     const spatial=report.spatialEvidence;
-    const spatialEvidence=spatial&&Number.isSafeInteger(spatial.propertyId)&&spatial.propertyId>0?{propertyId:spatial.propertyId,lotLabels:Array.isArray(spatial.lotLabels)?spatial.lotLabels.map(item=>clip(item,180)).filter(Boolean).slice(0,100):[],zones:Array.isArray(spatial.zones)?spatial.zones.map(item=>clip(item,30)).filter(Boolean).slice(0,100):[],retrievedAt:clip(spatial.retrievedAt,60),status:clip(spatial.status,30),sourceUrl:/^https:\/\//.test(spatial.sourceUrl||'')?clip(spatial.sourceUrl,1200):'',legalApplicabilityAssessed:false}:null;
+    const property=report.propertyContext||{};
+    const propertyId=property.propertyId??spatial?.propertyId;
+    const hasPropertyId=/^\d+$/.test(String(propertyId||''))&&Number.isSafeInteger(Number(propertyId))&&Number(propertyId)>0;
+    const lotLabels=Array.isArray(property.lotLabels)?property.lotLabels:Array.isArray(spatial?.lotLabels)?spatial.lotLabels:[];
+    const zones=Array.isArray(property.zones)?property.zones:Array.isArray(spatial?.zones)?spatial.zones:[];
+    const propertyContext={status:clip(property.status,40)|| (hasPropertyId?'mapped_attributes_available':'not_checked'),propertyId:hasPropertyId?String(propertyId):'',lotLabels:lotLabels.map(item=>clip(item,180)).filter(Boolean).slice(0,100),zones:zones.map(item=>clip(item,30)).filter(Boolean).slice(0,100),queriedAt:clip(property.queriedAt||spatial?.retrievedAt,60),sourceUrl:/^https:\/\//.test(property.sourceUrl||spatial?.sourceUrl||'')?clip(property.sourceUrl||spatial.sourceUrl,1200):''};
+    const spatialEvidence=spatial&&hasPropertyId?{propertyId:Number(propertyId),lotLabels:propertyContext.lotLabels,zones:propertyContext.zones,retrievedAt:propertyContext.queriedAt,status:clip(spatial.status||property.status,30),sourceUrl:propertyContext.sourceUrl,legalApplicabilityAssessed:false}:null;
     const projectIntent=report.projectIntent?{id:clip(report.projectIntent.id,80),label:clip(report.projectIntent.label,180),status:'user_selected_intent',legalApplicabilityAssessed:false}:null;
     return {
       location: { name: clip(location.name, 250) || clip(location.address, 250) || 'Location not provided', address: clip(location.address, 250), councilNames: names, kind: clip(location.kind, 30),state:clip(location.state,30),coverage:clip(location.coverage,30),precision:clip(location.precision,60),source:clip(location.source,250),council_ids:Array.isArray(location.council_ids)?location.council_ids.map(id=>clip(id,60)):[] },
       question: clip(input?.question, 1600),
-      report: { summary, spatialEvidence, projectIntent, confidence: /^(high|medium|low)$/i.test(report.confidence || '') ? report.confidence.toLowerCase() : 'low', missing: Array.isArray(report.missing) ? report.missing.map(item => clip(item, 500)).filter(Boolean).slice(0, 30) : [], caseId: clip(report.caseId || input?.caseId, 80), sources: Array.isArray(report.sources) ? report.sources.filter(source => /^https:\/\//.test(source?.url || '')).map(source => ({ title: clip(source.title, 250), url: clip(source.url, 1200) })).slice(0, 20) : [] }
+      report: { summary, spatialEvidence, propertyContext, projectIntent, confidence: /^(high|medium|low)$/i.test(report.confidence || '') ? report.confidence.toLowerCase() : 'low', missing: Array.isArray(report.missing) ? report.missing.map(item => clip(item, 500)).filter(Boolean).slice(0, 30) : [], caseId: clip(report.caseId || input?.caseId, 80), sources: Array.isArray(report.sources) ? report.sources.filter(source => /^https:\/\//.test(source?.url || '')).map(source => ({ title: clip(source.title, 250), url: clip(source.url, 1200) })).slice(0, 20) : [] }
     };
+  }
+  function propertyIdentity(value) {
+    const location=value?.location||{}, report=value?.report||{}, property=report.propertyContext||{}, spatial=report.spatialEvidence||{};
+    return JSON.stringify([
+      location.kind||'', location.name||'', location.state||'', location.precision||'',
+      property.propertyId||spatial.propertyId||'',
+      Array.isArray(property.lotLabels)?property.lotLabels:spatial.lotLabels||[],
+      property.status||spatial.status||'not_checked'
+    ]);
   }
   function mount(root) {
     if (!root) return { show() {}, refresh() {}, getState() { return { hasContext: false }; } };
@@ -184,7 +199,8 @@
       materialSelects[item.id] = select; selectWrap.append(label, select); row.append(copy, selectWrap); materialList.append(row);
     });
     panels.application.append(materialList);
-    panels.experts.append(el('p', 'AI-ASSISTED WORK + HUMAN ACCOUNTABILITY', 'fps-eyebrow'), el('h3', 'Put each question in the right hands.'), el('p', 'Select the roles you want included in the service brief. A planner can confirm which specialists are actually needed and coordinate their review.', 'fps-muted'));
+    const expertsHeading = el('h3', 'Put each question in the right hands.'); expertsHeading.tabIndex = -1;
+    panels.experts.append(el('p', 'AI-ASSISTED WORK + HUMAN ACCOUNTABILITY', 'fps-eyebrow'), expertsHeading, el('p', 'Select the roles you want included in the service brief. A planner can confirm which specialists are actually needed and coordinate their review.', 'fps-muted'));
     const agentCard = el('div', null, 'fps-agent-card');
     agentCard.append(el('span', 'AI AGENT WORK PLAN', 'fps-role'), el('h4', 'Organise. Draft. Reconcile. Escalate.'), el('p', 'Requested agent support: organise evidence, draft material checklists, track unanswered questions and prepare focused briefs for human review.'), el('small', 'Demo: no live AI Agent run or professional engagement is started here.'));
     panels.experts.append(agentCard);
@@ -212,7 +228,8 @@
     const previewLabel = el('label', 'Review and revise your brief'); previewLabel.htmlFor = prefix + 'brief-text'; const briefEditor = el('textarea'); briefEditor.id = previewLabel.htmlFor; briefEditor.rows = 18; briefEditor.maxLength = 30000; briefEditor.spellcheck = true;
     const downloadText = button('Download brief (.txt)', () => download('txt'), 'fps-button fps-primary');
     const downloadJson = button('Download project data (.json)', () => download('json'));
-    const downloadActions = el('div', null, 'fps-download-actions'); downloadActions.append(downloadText, downloadJson);
+    const specialistSupport = button('Continue to specialist support', continueToSpecialistSupport, 'fps-button'); specialistSupport.hidden = true; specialistSupport.setAttribute('aria-controls', prefix + 'panel-experts');
+    const downloadActions = el('div', null, 'fps-download-actions'); downloadActions.append(downloadText, downloadJson, specialistSupport);
     briefPreview.append(previewLabel, briefEditor, downloadActions, el('p', 'The downloads stay on your device. Nothing is sent to an expert, booked, paid or lodged by this demo.', 'fps-small-note'));
     briefSection.append(briefHeader, briefForm, briefActions, briefPreview);
     const finalNote = el('p', 'Your entries stay in this page until you leave or reload it. Professional scope, fees, availability and responsibility must be agreed before a real service starts.', 'fps-final-note');
@@ -220,7 +237,7 @@
     toolsArea.append(routeTasks,scopeSection,tabList,...TOOLS.map(item=>panels[item.id]),briefSection);
     shell.append(top, hero, contextDetails,routeSection,progressRoot,toolsArea,finalNote); root.append(shell);
     if(scope.FirstPrincipleProjectProgress)progressApi=scope.FirstPrincipleProjectProgress.mount(progressRoot,{onStep:openTask});
-    if(scope.FirstPrinciplePDFIntake)pdfApi=scope.FirstPrinciplePDFIntake.mount(pdfRoot,{onChange:snapshot=>{pdfState=snapshot;markChanged();},onContinueToBrief:()=>{briefSection.scrollIntoView({block:'start',behavior:'instant'});aimInput.focus();}});
+    if(scope.FirstPrinciplePDFIntake)pdfApi=scope.FirstPrinciplePDFIntake.mount(pdfRoot,{onChange:snapshot=>{pdfState=snapshot;markChanged();},onContinueToBrief:()=>{if(activateRoute('brief',false)){syncProject();briefSection.scrollIntoView({block:'start',behavior:'instant'});aimInput.focus();}}});
     else pdfRoot.append(el('p','The drawing reader could not load. Refresh to try again.','fps-muted'));
     if(scope.FirstPrincipleExpertContact)emailApi=scope.FirstPrincipleExpertContact.mount(emailRoot,{onChange:snapshot=>{emailState=snapshot;if(!syncing)markChanged();}});
     else emailRoot.append(el('p','The email draft interface could not load. Refresh to try again.','fps-muted'));
@@ -228,21 +245,27 @@
       activeTrack = TOOLS.some(item => item.id === track) ? track : 'cost';
       TOOLS.forEach(item => { const active = item.id === activeTrack; tabs[item.id].setAttribute('aria-selected', String(active)); tabs[item.id].tabIndex = active ? 0 : -1; panels[item.id].hidden = !active; });
     }
-    function chooseRoute(id,focus=true){
-      if(!hasContext){routeStatus.textContent='Return to your address report before starting a project workspace.';return;}
-      const choice=ROUTES.find(item=>item.id===id);if(!choice)return;
+    function activateRoute(id,focus=true){
+      if(!hasContext){routeStatus.textContent='Return to your address report before starting a project workspace.';return false;}
+      const choice=ROUTES.find(item=>item.id===id);if(!choice)return false;
       route=id;toolsArea.hidden=false;
       Object.entries(routeButtons).forEach(([key,action])=>action.setAttribute('aria-pressed',String(key===route)));
       routeStatus.textContent=choice.title+'. Your drawings and preparation work remain available when you switch starting points.';
-      setTrack(choice.track);markChanged();
+      setTrack(choice.track);
       if(focus)toolsArea.scrollIntoView({block:'start',behavior:'instant'});
+      return true;
     }
+    function chooseRoute(id,focus=true){if(activateRoute(id,focus))markChanged();}
     function openTask(target){
       if(!hasContext)return;
       if(!route)chooseRoute(target==='drawings'?'drawings':target==='experts'||target==='email'?'review':'brief',false);
       if(target==='brief'){briefSection.scrollIntoView({block:'start',behavior:'instant'});aimInput.focus();return;}
       const track=target==='documents'?'drawings':target==='collaboration'?'email':target;
       if(TOOLS.some(item=>item.id===track)){setTrack(track);toolsArea.scrollIntoView({block:'start',behavior:'instant'});tabs[track].focus();}
+    }
+    function continueToSpecialistSupport(){
+      if(!hasContext||!briefPrepared)return;
+      activateRoute('review',false);syncProject();briefStatus.textContent='Specialist support options are open. Your prepared brief remains local; no service or contact has started.';toolsArea.scrollIntoView({block:'start',behavior:'instant'});expertsHeading.focus();
     }
     function syncProject(){
       if(syncing)return;syncing=true;
@@ -290,7 +313,7 @@
       materialCounter.textContent = `${values.filter(value => value === 'draft').length} draft available · ${values.filter(value => value === 'review').length} marked for professional review · ${values.filter(value => value === 'not_started').length} not started`;
     }
     function markChanged() {
-      if (briefPrepared) { briefPrepared = false; briefStatus.textContent = 'Your plan changed. Prepare an updated brief before downloading.'; downloadText.disabled = true; downloadJson.disabled = true; }
+      if (briefPrepared) { briefPrepared = false; specialistSupport.hidden = true; briefStatus.textContent = 'Your plan changed. Prepare an updated brief before downloading.'; downloadText.disabled = true; downloadJson.disabled = true; }
       syncProject();
     }
     function briefData() {
@@ -308,7 +331,7 @@
         section('PRELIMINARY REPORT', ['Confidence: ' + data.preliminaryReport.confidence.toUpperCase(), data.preliminaryReport.summary || 'Report not provided.']),
         section('EVIDENCE TO RESOLVE', data.preliminaryReport.missing.length ? data.preliminaryReport.missing.map(item => '• ' + item) : ['Confirm the site evidence, applicable controls and professional review requirements.']),
         section('REQUESTED SUPPORT', data.requestedServices.map(item => '• ' + item.title)),
-        section('DRAWING REVIEW', [data.drawingReview.document?data.drawingReview.document.name+' — '+(data.drawingReview.document.pages||data.drawingReview.pageCount||'Unconfirmed')+' page(s)':'No drawing PDF has been read.',data.drawingReview.illustrative||data.drawingReview.document?.demo?'ILLUSTRATIVE SAMPLE — not a project record.':'Document evidence remains subject to professional review.',...(data.drawingReview.facts||[]).filter(item=>item.status==='confirmed').map(item=>'• '+item.label+': '+item.value+' (page '+item.page+', user-reviewed note)'), 'Local extraction does not verify dimensions, compliance or approval.']),
+        section('DRAWING REVIEW', [data.drawingReview.document?data.drawingReview.document.name+' — '+(data.drawingReview.document.pages||data.drawingReview.pageCount||'Unconfirmed')+' page(s)':'No drawing PDF has been read.',data.drawingReview.illustrative||data.drawingReview.document?.demo?'ILLUSTRATIVE SAMPLE — not a project record.':'Document evidence remains subject to professional review.','Review status: '+(data.drawingReview.confirmedCount||0)+' confirmed transcription(s); '+Math.max(0,(data.drawingReview.facts||[]).length-(data.drawingReview.confirmedCount||0))+' unresolved note(s); '+(data.drawingReview.unreadablePageCount||0)+' unreadable page(s).',...(data.drawingReview.facts||[]).filter(item=>item.status==='confirmed').map(item=>'• '+item.label+': '+item.value+' (page '+item.page+', user-reviewed note)'), 'Local extraction does not verify dimensions, compliance or approval.']),
         section('USER-ENTERED BUDGET ASSUMPTIONS · AUD', [...data.budget.lines.map(item => item.label + ': ' + (item.amount === null ? 'Not entered' : money(item.amount))), 'Contingency: ' + data.budget.contingencyPercent + '%', 'Working total: ' + (data.budget.total === null ? 'Not entered' : money(data.budget.total)), 'GST basis: ' + data.budget.gstBasis, 'Blank items are excluded. This is not a market estimate or a quote.']),
         section('MATERIALS', data.materials.map(item => '• ' + item.title + ' — ' + MATERIAL_STATES.find(([id]) => id === item.preparationStatus)[1] + ' · ' + item.responsibleRoleToConfirm)),
         section('SPECIALIST REVIEW TO DISCUSS', data.requestedSpecialists.length ? data.requestedSpecialists.map(item => '• ' + item.title + ': ' + item.scopeToDiscuss) : ['Specialist requirements to be confirmed with the planner.']),
@@ -316,7 +339,7 @@
         section('REPORT SOURCES', data.preliminaryReport.sources.length ? data.preliminaryReport.sources.map(item => (item.title || 'Official source') + ': ' + item.url) : ['Source review remains to be completed.']),
         'Demo only. No live AI Agent, professional engagement, payment or application submission has been started. Agree scope, fees, responsibility and required evidence before progressing.'
       ];
-      briefEditor.value = lines.join('\n'); briefPrepared = true; briefPreview.hidden = false; briefStatus.textContent = 'Draft ready. Review or revise the text, then download it for your own use.'; downloadText.disabled = false; downloadJson.disabled = false;syncProject(); briefEditor.focus();
+      briefEditor.value = lines.join('\n'); briefPrepared = true; briefPreview.hidden = false; specialistSupport.hidden = false; briefStatus.textContent = 'Draft ready. Review or revise the text, then download it for your own use.'; downloadText.disabled = false; downloadJson.disabled = false;syncProject(); briefEditor.focus();
     }
     function download(format) {
       if (!briefPrepared) return;
@@ -343,9 +366,9 @@
       const next = normalize(input); const nextSignature = JSON.stringify(next);
       const wasContext=hasContext;
       hasContext = Boolean(input?.location && input?.report);
-      const sameProperty=wasContext&&hasContext&&context.location.kind===next.location.kind&&context.location.name===next.location.name&&context.location.state===next.location.state;
+      const sameProperty=wasContext&&hasContext&&propertyIdentity(context)===propertyIdentity(next);
       if(nextSignature!==signature&&options.preserveProject&&sameProperty){
-        context=next;signature=nextSignature;renderContext();briefPrepared=false;briefPreview.hidden=true;
+        context=next;signature=nextSignature;renderContext();briefPrepared=false;specialistSupport.hidden=true;briefPreview.hidden=true;
         briefStatus.textContent='Your updated preview is attached. Review your existing assumptions and prepare a fresh brief.';
         syncing=true;
         try{pdfApi?.setContext(context,{preserveProject:true});pdfState=pdfApi?.getState()||pdfState;emailApi?.setContext(context,{reset:true});emailState=emailApi?.getState()||emailState;}finally{syncing=false;}
@@ -365,7 +388,7 @@
         Object.values(scopeInputs).forEach(item => { item.input.checked = true; item.card.classList.add('is-selected'); });
         Object.entries(expertInputs).forEach(([id, item]) => { item.input.checked = expertSelection.has(id); item.card.classList.toggle('is-selected', item.input.checked); });
         aimInput.value = ''; timingInput.value = ''; meetingSelect.value = meeting;
-        briefPrepared = false; briefPreview.hidden = true; briefEditor.value = ''; briefStatus.textContent = 'Choose support and add any assumptions, then prepare your brief.';
+        briefPrepared = false; specialistSupport.hidden = true; briefPreview.hidden = true; briefEditor.value = ''; briefStatus.textContent = 'Choose support and add any assumptions, then prepare your brief.';
         renderBudget(); renderMaterialCount(); setTrack('drawings');
         syncing=true;
         try{pdfApi?.setContext(hasContext?context:null,{reset:true});pdfState=pdfApi?.getState()||{status:'empty',facts:[],confirmedCount:0};emailApi?.setContext(hasContext?context:null,{reset:true});emailState=emailApi?.getState()||{draftPrepared:false,emailSent:false,emailDeliveryConnected:false};progressApi?.reset();}finally{syncing=false;}
