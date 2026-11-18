@@ -148,9 +148,9 @@
     let context = normalizeContext(null), project = normalizeProject(null), contextSignature = '', projectSignature = '';
     let draftPrepared = false, includeDrawingNotes = false, revision = 0;
     const contacts = { clientName: '', clientEmail: '', expertName: '', expertEmail: '', role: ROLES[0] }, fields = {};
-    const shell = el('section', null, 'fpc-workspace'); shell.setAttribute('aria-label', 'Client and expert email preparation');
+    const shell = el('section', null, 'fpc-workspace'); shell.setAttribute('aria-label', 'Expert Handover Draft preparation');
     const heading = el('div', null, 'fpc-heading'); const headingCopy = el('div');
-    headingCopy.append(el('p', 'Specialist collaboration', 'fpc-kicker'), el('h3', 'Prepare a focused introduction.'), el('p', 'Keep your project context together and draft a message to the specialist you choose.', 'fpc-lead'));
+    headingCopy.append(el('p', 'EXPERT HANDOVER DRAFT', 'fpc-kicker'), el('h3', 'Prepare an expert handover draft.'), el('p', 'Review your project context and current Brief before preparing a message to the specialist you choose.', 'fpc-lead'));
     heading.append(headingCopy, el('span', 'Email draft · delivery not connected', 'fpc-status-pill'));
     const projectLine = el('p', 'Return to a planning report to bring its location and question here.', 'fpc-project-line');
     const form = el('form', null, 'fpc-form'); form.noValidate = true;
@@ -172,7 +172,7 @@
     shareInput.addEventListener('change', () => { includeDrawingNotes = shareInput.checked; invalidate('Drawing-note sharing changed. Prepare an updated draft.'); });
     share.append(shareInput, shareCopy);
     const drawingHint = el('p', 'No confirmed drawing notes are available yet.', 'fpc-drawing-hint');
-    const prepare = el('button', 'Prepare email draft', 'fpc-button fpc-primary'); prepare.type = 'button'; prepare.dataset.contactAction = 'prepare-draft';
+    const prepare = el('button', 'Prepare expert handover draft', 'fpc-button fpc-primary'); prepare.type = 'button'; prepare.dataset.contactAction = 'prepare-draft';
     const status = el('p', 'Add the addresses of the client and their chosen expert. No message will be sent.', 'fpc-feedback'); status.setAttribute('role', 'status');
     const prepareRow = el('div', null, 'fpc-prepare-row'); prepareRow.append(prepare, status);
     form.append(grid, share, drawingHint, prepareRow);

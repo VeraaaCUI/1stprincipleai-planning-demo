@@ -21,6 +21,7 @@ test('specialist support cards expose a visible keyboard focus state', () => {
 
 test('task navigation and secondary roadmap controls remain visible and keyboard usable', () => {
   assert.match(servicesCss, /\.fps-direct-action\[aria-pressed=true\]\{[^}]*background:var\(--fps-green\)/);
+  assert.match(servicesCss, /\.fps-workspace \.fps-journey\{grid-template-columns:repeat\(3,minmax\(0,1fr\)\)\}/);
   assert.match(servicesCss, /\.fps-secondary-tools>summary,\.fps-workspace \.fps-workspace-roadmap>summary\{[^}]*cursor:pointer/);
   assert.match(servicesCss, /\.fps-task-content\{scroll-margin-top:72px\}/);
   assert.doesNotMatch(servicesCss, /\.fps-primary-pdf-intake \.fpi-file-select\{display:none/);

@@ -6,7 +6,7 @@
     { id: 'application', title: 'Application preparation', short: 'Prepare the evidence', copy: 'Track draft materials and identify what needs a planner or specialist to review.' },
     { id: 'experts', title: 'AI Agent + experts', short: 'Plan the right review', copy: 'Prepare a handover for an AI-assisted service and the relevant human specialists.' }
   ];
-  const TOOLS = [{id:'drawings',title:'Drawing review'},...TRACKS,{id:'email',title:'Client + expert email'}];
+  const TOOLS = [{id:'drawings',title:'Drawing review'},...TRACKS,{id:'email',title:'Expert Handover Draft'}];
   const ROUTES = [
     {id:'drawings',title:'I have PDF drawings',copy:'Read the drawing pages, check the extracted notes and prepare a focused review.',action:'Start with my drawings',track:'drawings'},
     {id:'brief',title:'I need plans or a clearer brief',copy:'Describe the proposal, organise a working budget and identify the material to prepare.',action:'Build my project brief',track:'cost'},
@@ -100,11 +100,10 @@
     top.append(back, el('span', 'Demo workspace', 'fps-demo-badge'));
     const hero = el('div', null, 'fps-hero');
     hero.append(el('p', 'Your project workspace', 'fps-eyebrow'), el('h2', 'Project Workspace'), el('p', 'Choose a drawing PDF or start a project brief. Your preparation stays in this browser until you choose to save it.', 'fps-lead'));
-    const journey = el('ol', null, 'fps-journey'); journey.setAttribute('aria-label', 'Customer journey');
-    [['01', 'Locate the property'], ['02', 'Read the preliminary report'], ['03', 'Plan the service'], ['04', 'Arrange professional review']].forEach(([number, title], index) => {
-      const item = el('li', null, index === 2 ? 'is-current' : '');
-      if (index === 2) item.setAttribute('aria-current', 'step');
-      item.append(el('span', number), el('strong', title)); journey.append(item);
+    const journey = el('ol', null, 'fps-journey'); journey.setAttribute('aria-label', 'Local project preparation stages');
+    const journeyItems={};
+    [['drawings','01','Gather project information'],['brief','02','Prepare project brief'],['review','03','Prepare specialist handover']].forEach(([id,number,title])=>{
+      const item=el('li');item.append(el('span',number),el('strong',title));journey.append(item);journeyItems[id]=item;
     });
     const contextPanel = el('section', null, 'fps-context'); contextPanel.setAttribute('aria-label', 'Your report context');
     const contextTop = el('div', null, 'fps-context-top');
@@ -143,7 +142,7 @@
     drawingIntake.append(el('p','START WITH YOUR DRAWINGS','fps-eyebrow'),drawingIntakeTitle,el('p','Choose a PDF to read its text layer and review page-cited notes in this browser. The file is not uploaded, interpreted by AI or treated as professional evidence.','fps-muted'));
     const progressRoot=el('div');progressRoot.id=prefix+'progress';
     const toolsArea=el('section',null,'fps-tools-area');toolsArea.hidden=true;toolsArea.setAttribute('aria-label','Project preparation tools');
-    const routeTasks=el('section',null,'fps-route-tasks');routeTasks.setAttribute('aria-label','Suggested next tasks');
+    const routeTasks=el('section',null,'fps-route-tasks');routeTasks.setAttribute('aria-label','Suggested Next Actions');
     const scopeSection = el('section', null, 'fps-scope'); scopeSection.setAttribute('aria-labelledby', prefix + 'scope-title');
     const scopeTitle = el('h3', 'What would you like help with?'); scopeTitle.id = prefix + 'scope-title';
     const scopeCards = el('div', null, 'fps-scope-cards');
@@ -216,7 +215,7 @@
       materialSelects[item.id] = select; selectWrap.append(label, select); row.append(copy, selectWrap); materialList.append(row);
     });
     panels.application.append(materialList);
-    const expertsHeading = el('h3', 'Specialist Support preparation'); expertsHeading.tabIndex = -1;
+    const expertsHeading = el('h3', 'Specialist Support Preparation'); expertsHeading.tabIndex = -1;
     panels.experts.append(el('p', 'AI-ASSISTED WORK + HUMAN ACCOUNTABILITY', 'fps-eyebrow'), expertsHeading, el('p', 'Select the specialist roles to discuss, review the questions and prepare a local handover. No specialist contact or service has started.', 'fps-muted'));
     const agentCard = el('div', null, 'fps-agent-card');
     agentCard.append(el('span', 'AI AGENT WORK PLAN', 'fps-role'), el('h4', 'Organise. Draft. Reconcile. Escalate.'), el('p', 'Requested agent support: organise evidence, draft material checklists, track unanswered questions and prepare focused briefs for human review.'), el('small', 'Demo: no live AI Agent run or professional engagement is started here.'));
@@ -292,8 +291,9 @@
       secondaryTools.hidden=!hasContext||!active||visibleToolIds().length===0;
       roadmapDetails.hidden=!hasContext;
       Object.entries(taskActions).forEach(([key,action])=>action.setAttribute('aria-pressed',String(key===active)));
+      Object.entries(journeyItems).forEach(([key,item])=>{const current=key===active;item.className=current?'is-current':'';if(current)item.setAttribute('aria-current','step');else item.removeAttribute('aria-current');});
       const status=active==='drawings'?'Drawing review selected':active==='brief'?'Project brief selected':active==='review'?'Specialist support selected':'Choose one task to begin';
-      localStatus.textContent='Local preparation · '+status+'. This browser state is not saved until you choose Save Project.';
+      localStatus.textContent='Local Project Preparation · '+status+'. This browser state is not saved until you choose Save Project.';
     }
     function activateRoute(id,focus=true){
       if(!hasContext){routeStatus.textContent='Return to your address report before starting a project workspace.';return false;}
@@ -385,12 +385,12 @@
     }
     function renderNextTasks(){
       routeTasks.replaceChildren();if(!route)return;
-      routeTasks.append(el('p','Recommended next steps · local only','fps-eyebrow'));
+      routeTasks.append(el('p','Suggested Next Actions · local only','fps-eyebrow'));
       let tasks;
       if(route==='drawings'){
         tasks=pdfState.status==='needs_ocr'||pdfState.needsOCR?[['drawings','Review the remaining pages manually'],['brief','Prepare a project brief'],['experts','Discuss drawing quality and missing information']]:pdfState.status==='error'?[['drawings','Replace the unreadable PDF or request manual review'],['brief','Prepare a project brief'],['experts','Discuss the drawing information to provide']]:pdfState.status==='review'?[['drawings','Review unresolved drawing notes'],['brief','Continue to project brief'],['experts','Prepare specialist support']]:[['brief','Prepare a project brief'],['experts','Prepare specialist support']];
       }else if(route==='brief')tasks=[['cost','Record your own cost allowances'],['application','Identify the drawings and records to prepare'],...(briefPrepared?[['experts','Continue to specialist support']]:[])];
-      else tasks=briefPrepared?[['experts','Review the specialist roles to discuss'],['email','Prepare an email draft for your chosen expert']]:[['brief','Prepare a project brief before final handover'],['experts','Choose the specialist roles to discuss']];
+      else tasks=briefPrepared?[['experts','Review the specialist roles to discuss'],['email',emailState.draftPrepared?'Review Handover Draft':'Prepare Expert Handover Draft']]:[['brief','Prepare a project brief before final handover'],['experts','Choose the specialist roles to discuss']];
       const actions=el('div',null,'fps-next-task-actions');tasks.forEach(([target,label])=>actions.append(button(label,()=>openTask(target),'fps-next-task')));routeTasks.append(actions);
       if(pdfState.illustrative||pdfState.document?.demo)routeTasks.append(el('p','The loaded example is an illustrative drawing. Its notes are not evidence for the historical case.','fps-illustrative-note'));
     }

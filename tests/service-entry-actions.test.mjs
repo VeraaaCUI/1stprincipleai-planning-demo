@@ -17,6 +17,13 @@ test('service workspace exposes one compact set of alternative entry actions', (
   assert.match(services, /I have PDF drawings/);
   assert.match(services, /Start a Project Brief without drawings/);
   assert.match(services, /I need specialist advice/);
+  assert.match(services, /Local project preparation stages/);
+  assert.match(services, /Gather project information/);
+  assert.match(services, /Prepare project brief/);
+  assert.match(services, /Prepare specialist handover/);
+  assert.match(services, /Expert Handover Draft/);
+  assert.match(expertContact, /Expert Handover Draft preparation/);
+  assert.match(expertContact, /Prepare expert handover draft/);
   assert.match(services, /el\('div',null,'fps-direct-actions'\)/);
   assert.match(services, /Object\.entries\(taskActions\)/);
   assert.doesNotMatch(services, /fps-route-options|fps-route-cards|routeButtons/);
@@ -72,7 +79,7 @@ test('workspace exposes one active task at a time and keeps roadmap secondary', 
   assert.match(services, /Object\.entries\(taskActions\)/);
   assert.match(services, /const roadmapDetails=el\('details',null,'fps-workspace-roadmap'\)/);
   assert.match(services, /roadmapDetails\.append\(el\('summary','View project roadmap'\),progressRoot\)/);
-  assert.match(services, /localStatus\.textContent='Local preparation · '\+status/);
+  assert.match(services, /localStatus\.textContent='Local Project Preparation · '\+status/);
   assert.doesNotMatch(services, /function chooseRoute\(id,focus=true\)\{if\(activateRoute\(id,focus\)\)markChanged\(\);\}/);
 });
 
@@ -83,7 +90,9 @@ test('secondary preparation tools follow the active route and suggested actions 
   assert.match(services, /if\(route==='drawings'\)return \[\]/);
   assert.match(services, /tabs\[item\.id\]\.hidden=!visible/);
   assert.match(services, /secondaryTools\.hidden=!hasContext\|\|!active\|\|visibleToolIds\(\)\.length===0/);
-  assert.match(services, /Recommended next steps · local only/);
+  assert.match(services, /Suggested Next Actions · local only/);
+  assert.match(services, /Object\.entries\(journeyItems\)/);
+  assert.match(services, /item\.removeAttribute\('aria-current'\)/);
   assert.doesNotMatch(services, /Choose a drawing PDF and extract its pages/);
   assert.match(services, /activateRoute\(targetRoute,false\)/);
 });
