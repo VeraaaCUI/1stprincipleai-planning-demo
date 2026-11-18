@@ -16,7 +16,7 @@ test('contextual assessment transition stays readable on narrow screens', () => 
 test('specialist support cards expose a visible keyboard focus state', () => {
   assert.match(servicesCss, /\.fps-scope-card:focus-within,\.fps-workspace \.fps-expert-card:focus-within\{outline:3px solid #b78059;outline-offset:3px\}/);
   assert.match(servicesCss, /\.fps-agent-card\{overflow-wrap:anywhere\}/);
-  assert.match(servicesCss, /@media\(max-width:700px\)[^}]*\.fps-route-cards\{grid-template-columns:1fr/);
+  assert.match(servicesCss, /\.fps-local-status\{[^}]*line-height:1\.8/);
 });
 
 test('task navigation and secondary roadmap controls remain visible and keyboard usable', () => {

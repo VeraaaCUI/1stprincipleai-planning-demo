@@ -8,14 +8,18 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const services = fs.readFileSync(path.join(root, 'advanced-services.js'), 'utf8');
 const expertContact = fs.readFileSync(path.join(root, 'expert-contact.js'), 'utf8');
 
-test('service workspace exposes direct entry actions alongside optional route cards', () => {
+test('service workspace exposes one compact set of alternative entry actions', () => {
   assert.match(services, /Project Workspace/);
   assert.match(services, /Choose a drawing PDF/);
   assert.match(services, /Review drawings/);
   assert.match(services, /Prepare project brief/);
   assert.match(services, /Prepare specialist support/);
+  assert.match(services, /I have PDF drawings/);
+  assert.match(services, /Start a Project Brief without drawings/);
+  assert.match(services, /I need specialist advice/);
   assert.match(services, /el\('div',null,'fps-direct-actions'\)/);
-  assert.match(services, /el\('details',null,'fps-route-options'\)/);
+  assert.match(services, /Object\.entries\(taskActions\)/);
+  assert.doesNotMatch(services, /fps-route-options|fps-route-cards|routeButtons/);
   assert.match(services, /function chooseRoute/);
 });
 
@@ -53,7 +57,7 @@ test('workspace presents one primary drawing intake before roadmap and suggested
   assert.match(services, /const briefTaskContent=el\('section',null,'fps-task-content fps-task-brief'\)/);
   assert.match(services, /const specialistTaskContent=el\('section',null,'fps-task-content fps-task-specialist'\)/);
   assert.match(services, /const secondaryTools=el\('details',null,'fps-secondary-tools'\)/);
-  assert.match(services, /toolsArea\.append\(briefTaskContent,specialistTaskContent,secondaryTools,routeTasks\)/);
+  assert.match(services, /toolsArea\.append\(briefTaskContent,specialistTaskContent,routeTasks,secondaryTools\)/);
   assert.match(services, /choice\.track==='drawings'\)focusDrawingReview\(\)/);
   assert.match(services, /if\(target==='drawings'\|\|target==='documents'\)\{openDrawingReview\(\);return;\}/);
   assert.doesNotMatch(services, /drawingIntake\.append\(pdfRoot\)[\s\S]*fileInput\.click\(\)/);
@@ -68,7 +72,20 @@ test('workspace exposes one active task at a time and keeps roadmap secondary', 
   assert.match(services, /Object\.entries\(taskActions\)/);
   assert.match(services, /const roadmapDetails=el\('details',null,'fps-workspace-roadmap'\)/);
   assert.match(services, /roadmapDetails\.append\(el\('summary','View project roadmap'\),progressRoot\)/);
+  assert.match(services, /localStatus\.textContent='Local preparation · '\+status/);
   assert.doesNotMatch(services, /function chooseRoute\(id,focus=true\)\{if\(activateRoute\(id,focus\)\)markChanged\(\);\}/);
+});
+
+test('secondary preparation tools follow the active route and suggested actions do not duplicate PDF selection', () => {
+  assert.match(services, /function visibleToolIds\(\)/);
+  assert.match(services, /if\(route==='brief'\)return \['cost','application'\]/);
+  assert.match(services, /if\(route==='review'\)return \['experts','email'\]/);
+  assert.match(services, /if\(route==='drawings'\)return \[\]/);
+  assert.match(services, /tabs\[item\.id\]\.hidden=!visible/);
+  assert.match(services, /secondaryTools\.hidden=!hasContext\|\|!active\|\|visibleToolIds\(\)\.length===0/);
+  assert.match(services, /Recommended next steps · local only/);
+  assert.doesNotMatch(services, /Choose a drawing PDF and extract its pages/);
+  assert.match(services, /activateRoute\(targetRoute,false\)/);
 });
 
 test('brief-to-specialist transition targets the Experts panel and carries edited local content', () => {

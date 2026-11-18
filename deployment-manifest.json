@@ -237,12 +237,12 @@
       "sha256": "0c3f1a8805ff32b91f11824346732d5685fea858115550da2faf24a9a102c3a7"
     },
     "advanced-services.js": {
-      "bytes": 55942,
-      "sha256": "06daf1e34c356043a5d79cf9a0d2b62f2e6e0fdf6050de2f689e5031f9ee73bc"
+      "bytes": 56114,
+      "sha256": "7fc9742a201e6da58a9f6cc4a3b4c8136218b08dabe119e1d99f65d415da0c49"
     },
     "advanced-services.css": {
-      "bytes": 21233,
-      "sha256": "cf9fa50616292e41f3a6b4ac46410a6b33dae5c9e937b65b44d7a524a63f39ce"
+      "bytes": 19619,
+      "sha256": "628876eb50ac3166d9df6051ae78500fea2d5d7f940a20efdb323ca0f15d4c61"
     },
     "address-search.js": {
       "bytes": 18640,
