@@ -11,9 +11,9 @@ const expertContact = fs.readFileSync(path.join(root, 'expert-contact.js'), 'utf
 test('service workspace exposes direct entry actions alongside optional route cards', () => {
   assert.match(services, /Project Workspace/);
   assert.match(services, /Choose a drawing PDF/);
-  assert.match(services, /Choose a drawing PDF/);
-  assert.match(services, /Start without drawings/);
-  assert.match(services, /Plan specialist support/);
+  assert.match(services, /Review drawings/);
+  assert.match(services, /Prepare project brief/);
+  assert.match(services, /Prepare specialist support/);
   assert.match(services, /el\('div',null,'fps-direct-actions'\)/);
   assert.match(services, /el\('details',null,'fps-route-options'\)/);
   assert.match(services, /function chooseRoute/);
@@ -29,6 +29,8 @@ test('direct entry actions activate routes without resetting local PDF state', (
   assert.match(handlers, /activateRoute\('review',false\)/);
   assert.match(handlers, /syncProject\(\)/);
   assert.match(handlers, /focusSpecialistPanel\(\)/);
+  const drawingStart = handlers.slice(0, handlers.indexOf('function startWithoutDrawings'));
+  assert.doesNotMatch(drawingStart, /pdfApi\?\.selectFile\(\)/);
   assert.doesNotMatch(handlers, /pdfApi\?\.setContext/);
   assert.doesNotMatch(handlers, /pdfState\s*=/);
   assert.doesNotMatch(handlers, /briefPrepared\s*=\s*false/);
@@ -48,10 +50,25 @@ test('workspace presents one primary drawing intake before roadmap and suggested
   assert.match(services, /drawingIntake\.append\([^;]*drawingIntakeTitle/);
   assert.match(services, /pdfRoot\.className='fps-primary-pdf-intake';drawingIntake\.append\(pdfRoot\)/);
   assert.match(services, /fps-primary-pdf-intake/);
-  assert.match(services, /toolsArea\.append\(tabList,\.\.\.TOOLS\.map\(item=>panels\[item\.id\]\),routeTasks,briefSection,scopeSection\)/);
+  assert.match(services, /const briefTaskContent=el\('section',null,'fps-task-content fps-task-brief'\)/);
+  assert.match(services, /const specialistTaskContent=el\('section',null,'fps-task-content fps-task-specialist'\)/);
+  assert.match(services, /const secondaryTools=el\('details',null,'fps-secondary-tools'\)/);
+  assert.match(services, /toolsArea\.append\(briefTaskContent,specialistTaskContent,secondaryTools,routeTasks\)/);
   assert.match(services, /choice\.track==='drawings'\)focusDrawingReview\(\)/);
   assert.match(services, /if\(target==='drawings'\|\|target==='documents'\)\{openDrawingReview\(\);return;\}/);
   assert.doesNotMatch(services, /drawingIntake\.append\(pdfRoot\)[\s\S]*fileInput\.click\(\)/);
+});
+
+test('workspace exposes one active task at a time and keeps roadmap secondary', () => {
+  assert.match(services, /function renderTaskView\(\)/);
+  assert.match(services, /drawingIntake\.hidden=active!=='drawings'/);
+  assert.match(services, /briefTaskContent\.hidden=active!=='brief'/);
+  assert.match(services, /specialistTaskContent\.hidden=active!=='review'/);
+  assert.match(services, /roadmapDetails\.hidden=!hasContext/);
+  assert.match(services, /Object\.entries\(taskActions\)/);
+  assert.match(services, /const roadmapDetails=el\('details',null,'fps-workspace-roadmap'\)/);
+  assert.match(services, /roadmapDetails\.append\(el\('summary','View project roadmap'\),progressRoot\)/);
+  assert.doesNotMatch(services, /function chooseRoute\(id,focus=true\)\{if\(activateRoute\(id,focus\)\)markChanged\(\);\}/);
 });
 
 test('brief-to-specialist transition targets the Experts panel and carries edited local content', () => {
@@ -70,6 +87,17 @@ test('brief-to-specialist transition targets the Experts panel and carries edite
   assert.match(expertContact, /reviewedBriefText: project\.reviewedBriefText/);
   assert.match(services, /No specialist contact or service has started/);
   assert.doesNotMatch(transition, /emailApi|fetch\(|URL\.createObjectURL|expertContacted\s*=\s*true/);
+});
+
+test('specialist task exposes the current prepared brief and a route-aware return action', () => {
+  assert.match(services, /const specialistBrief=el\('section',null,'fps-specialist-brief'\)/);
+  assert.match(services, /const specialistBriefText=el\('pre',null,'fps-specialist-brief-text'\)/);
+  assert.match(services, /specialistBriefText\.textContent=reviewed\|\|'The prepared brief has no text yet\.'/);
+  assert.match(services, /This is the current user-reviewed text used for local handover preparation/);
+  assert.match(services, /const returnToBrief=button\('Return to project brief',returnToBriefPreparation/);
+  assert.match(services, /function returnToBriefPreparation\(\)/);
+  assert.match(services, /activateRoute\('brief',false\);syncProject\(\);briefSection\.scrollIntoView/);
+  assert.match(services, /\(briefPrepared\?briefEditor:aimInput\)\.focus\(\)/);
 });
 
 test('dashboard continuation targets expose local drawing and specialist entries without external actions', () => {

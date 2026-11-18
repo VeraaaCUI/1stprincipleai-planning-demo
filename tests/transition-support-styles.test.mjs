@@ -18,3 +18,10 @@ test('specialist support cards expose a visible keyboard focus state', () => {
   assert.match(servicesCss, /\.fps-agent-card\{overflow-wrap:anywhere\}/);
   assert.match(servicesCss, /@media\(max-width:700px\)[^}]*\.fps-route-cards\{grid-template-columns:1fr/);
 });
+
+test('task navigation and secondary roadmap controls remain visible and keyboard usable', () => {
+  assert.match(servicesCss, /\.fps-direct-action\[aria-pressed=true\]\{[^}]*background:var\(--fps-green\)/);
+  assert.match(servicesCss, /\.fps-secondary-tools>summary,\.fps-workspace \.fps-workspace-roadmap>summary\{[^}]*cursor:pointer/);
+  assert.match(servicesCss, /\.fps-task-content\{scroll-margin-top:72px\}/);
+  assert.doesNotMatch(servicesCss, /\.fps-primary-pdf-intake \.fpi-file-select\{display:none/);
+});

@@ -121,15 +121,16 @@
     missing.append(el('h4', 'Evidence to resolve'), missingList);
     contextPanel.append(contextTop, questionText, reportDetails, missing);
     const routeSection=el('section',null,'fps-routing');routeSection.setAttribute('aria-labelledby',prefix+'route-title');
-    const routeTitle=el('h3','Choose how to begin');routeTitle.id=prefix+'route-title';
+    const routeTitle=el('h3','What would you like to work on?');routeTitle.id=prefix+'route-title';
     const directActions=el('div',null,'fps-direct-actions');
+    const taskActions={};
     let drawingEntryAction=null;
-    const directAction=(id,label,copyText,primary=false)=>{const option=el('div',null,'fps-direct-option');const action=button(label,id==='drawings'?startWithDrawingPDF:id==='brief'?startWithoutDrawings:startSpecialistSupport,'fps-button'+(primary?' fps-primary':'')+' fps-direct-action');action.dataset.directRoute=id;if(id==='drawings')drawingEntryAction=action;option.append(action,el('p',copyText,'fps-route-direct-copy'));directActions.append(option);};
-    directAction('drawings','Choose a drawing PDF','Read and review its pages in this browser.',true);
-    directAction('brief','Start without drawings','Describe the proposal and build a working project brief.');
-    directAction('review','Plan specialist support','Prepare questions for professional review.');
+    const directAction=(id,label,copyText,primary=false)=>{const option=el('div',null,'fps-direct-option');const action=button(label,id==='drawings'?startWithDrawingPDF:id==='brief'?startWithoutDrawings:startSpecialistSupport,'fps-button'+(primary?' fps-primary':'')+' fps-direct-action');action.dataset.directRoute=id;action.setAttribute('aria-pressed','false');action.setAttribute('aria-controls',prefix+'task-'+id);taskActions[id]=action;if(id==='drawings')drawingEntryAction=action;option.append(action,el('p',copyText,'fps-route-direct-copy'));directActions.append(option);};
+    directAction('drawings','Review drawings','Read and review PDF pages in this browser.',true);
+    directAction('brief','Prepare project brief','Describe the proposal and build a working project brief.');
+    directAction('review','Prepare specialist support','Prepare questions for professional review.');
     const routeCards=el('div',null,'fps-route-cards'),routeButtons={};
-    ROUTES.forEach(item=>{const action=button(null,()=>chooseRoute(item.id),'fps-route-card');action.dataset.route=item.id;action.setAttribute('aria-pressed','false');action.append(el('span',item.id==='drawings'?'Drawings':item.id==='brief'?'Project brief':'Specialist support','fps-route-type'),el('strong',item.title),el('p',item.copy),el('span',item.action,'fps-route-action'));routeButtons[item.id]=action;routeCards.append(action);});
+    ROUTES.forEach(item=>{const action=button(null,()=>chooseRoute(item.id),'fps-route-card');action.dataset.route=item.id;action.setAttribute('aria-pressed','false');action.append(el('span',item.id==='drawings'?'Drawings':item.id==='brief'?'Project brief':'Specialist support','fps-route-type'),el('strong',item.id==='drawings'?'Review drawings':item.id==='brief'?'Prepare project brief':'Prepare specialist support'),el('p',item.copy),el('span',item.action,'fps-route-action'));routeButtons[item.id]=action;routeCards.append(action);});
     const routeOptions=el('details',null,'fps-route-options');routeOptions.append(el('summary','More ways to organize the workspace'),routeCards);
     const routeStatus=el('p','Your drawing, brief and specialist preparation stay available as you work.','fps-route-status');routeStatus.setAttribute('role','status');
     const drawingSummary=el('section',null,'fps-existing-drawing');drawingSummary.hidden=true;drawingSummary.setAttribute('aria-label','Drawing already in this workspace');
@@ -139,7 +140,7 @@
     drawingActions.append(button('Continue reviewing',openDrawingReview,'fps-button'),button('Replace PDF',replaceDrawingPDF,'fps-button'));
     drawingSummary.append(el('h4','Drawing in this workspace'),drawingName,drawingStatus,drawingActions);
     routeSection.append(routeTitle,directActions,drawingSummary,routeOptions,routeStatus);
-    const drawingIntake=el('section',null,'fps-primary-drawing-intake');drawingIntake.setAttribute('aria-labelledby',prefix+'drawing-intake-title');
+    const drawingIntake=el('section',null,'fps-primary-drawing-intake');drawingIntake.id=prefix+'task-drawings';drawingIntake.hidden=true;drawingIntake.setAttribute('aria-labelledby',prefix+'drawing-intake-title');
     const drawingIntakeTitle=el('h3','Drawing intake');drawingIntakeTitle.id=prefix+'drawing-intake-title';
     drawingIntake.append(el('p','START WITH YOUR DRAWINGS','fps-eyebrow'),drawingIntakeTitle,el('p','Choose a PDF to read its text layer and review page-cited notes in this browser. The file is not uploaded, interpreted by AI or treated as professional evidence.','fps-muted'));
     const progressRoot=el('div');progressRoot.id=prefix+'progress';
@@ -244,16 +245,28 @@
     const briefPreview = el('div', null, 'fps-brief-preview'); briefPreview.hidden = true;
     const previewLabel = el('label', 'Review and revise your brief'); previewLabel.htmlFor = prefix + 'brief-text'; const briefEditor = el('textarea'); briefEditor.id = previewLabel.htmlFor; briefEditor.rows = 18; briefEditor.maxLength = 30000; briefEditor.spellcheck = true;
     briefEditor.addEventListener('input', () => { if (!briefPrepared) return; briefStatus.textContent = 'Your edited brief is current for local handover preparation. Review it before continuing.'; syncProject(); });
+    const specialistBrief=el('section',null,'fps-specialist-brief');specialistBrief.setAttribute('aria-labelledby',prefix+'specialist-brief-title');
+    const specialistBriefTitle=el('h4','Prepared project brief');specialistBriefTitle.id=prefix+'specialist-brief-title';
+    const specialistBriefStatus=el('p','Prepare a brief to make the local handover context available here.','fps-muted');specialistBriefStatus.setAttribute('role','status');
+    const specialistBriefText=el('pre',null,'fps-specialist-brief-text');specialistBriefText.hidden=true;
+    const returnToBrief=button('Return to project brief',returnToBriefPreparation,'fps-button');
+    specialistBrief.append(specialistBriefTitle,specialistBriefStatus,specialistBriefText,returnToBrief);
+    panels.experts.insertBefore(specialistBrief,agentCard);
     const downloadText = button('Download brief (.txt)', () => download('txt'), 'fps-button fps-primary');
     const downloadJson = button('Download project data (.json)', () => download('json'));
     const specialistSupport = button('Continue to specialist support', continueToSpecialistSupport, 'fps-button'); specialistSupport.hidden = true; specialistSupport.setAttribute('aria-controls', prefix + 'panel-experts');
     const downloadActions = el('div', null, 'fps-download-actions'); downloadActions.append(downloadText, downloadJson, specialistSupport);
     briefPreview.append(previewLabel, briefEditor, downloadActions, el('p', 'The downloads stay on your device. Nothing is sent to an expert, booked, paid or lodged by this demo.', 'fps-small-note'));
     briefSection.append(briefHeader, briefForm, briefActions, briefPreview);
+    briefSection.id=prefix+'task-brief';
+    const briefTaskContent=el('section',null,'fps-task-content fps-task-brief');briefTaskContent.setAttribute('aria-label','Project brief task');briefTaskContent.hidden=true;briefTaskContent.append(briefSection,scopeSection);
+    const specialistTaskContent=el('section',null,'fps-task-content fps-task-specialist');specialistTaskContent.id=prefix+'task-review';specialistTaskContent.setAttribute('aria-label','Specialist support task');specialistTaskContent.hidden=true;specialistTaskContent.append(panels.experts);
+    const secondaryTools=el('details',null,'fps-secondary-tools');secondaryTools.append(el('summary','More preparation tools'),tabList,panels.drawings,panels.cost,panels.application,panels.email);
     const finalNote = el('p', 'Your entries stay in this page until you leave or reload it. Professional scope, fees, availability and responsibility must be agreed before a real service starts.', 'fps-final-note');
     const contextDetails=el('details',null,'fps-context-details');contextDetails.append(el('summary','Project address, preliminary report and evidence gaps'),contextPanel);
-    toolsArea.append(tabList,...TOOLS.map(item=>panels[item.id]),routeTasks,briefSection,scopeSection);
-    shell.append(top, hero, routeSection, drawingIntake, contextDetails, toolsArea, progressRoot, finalNote); root.append(shell);
+    const roadmapDetails=el('details',null,'fps-workspace-roadmap');roadmapDetails.append(el('summary','View project roadmap'),progressRoot);
+    toolsArea.append(briefTaskContent,specialistTaskContent,secondaryTools,routeTasks);
+    shell.append(top, hero, routeSection, drawingIntake, toolsArea, contextDetails, roadmapDetails, finalNote); root.append(shell);
     if(scope.FirstPrincipleProjectProgress)progressApi=scope.FirstPrincipleProjectProgress.mount(progressRoot,{onStep:openTask});
     if(scope.FirstPrinciplePDFIntake)pdfApi=scope.FirstPrinciplePDFIntake.mount(pdfRoot,{onChange:snapshot=>{pdfState=snapshot;updateDrawingSummary();markChanged();if(pdfState.status==='ready'){pdfRoot.scrollIntoView({block:'start',behavior:'instant'});pdfApi?.focusReview();}},onContinueToBrief:()=>{if(activateRoute('brief',false)){syncProject();briefSection.scrollIntoView({block:'start',behavior:'instant'});aimInput.focus();}}});
     else pdfRoot.append(el('p','The drawing reader could not load. Refresh to try again.','fps-muted'));
@@ -263,23 +276,33 @@
       activeTrack = TOOLS.some(item => item.id === track) ? track : 'cost';
       TOOLS.forEach(item => { const active = item.id === activeTrack; tabs[item.id].setAttribute('aria-selected', String(active)); tabs[item.id].tabIndex = active ? 0 : -1; panels[item.id].hidden = !active; });
     }
+    function renderTaskView(){
+      const active=route||'';
+      drawingIntake.hidden=active!=='drawings';
+      briefTaskContent.hidden=active!=='brief';
+      specialistTaskContent.hidden=active!=='review';
+      toolsArea.hidden=!hasContext||!active||active==='drawings';
+      routeTasks.hidden=!active||active==='drawings';
+      roadmapDetails.hidden=!hasContext;
+      Object.entries(taskActions).forEach(([key,action])=>action.setAttribute('aria-pressed',String(key===active)));
+    }
     function activateRoute(id,focus=true){
       if(!hasContext){routeStatus.textContent='Return to your address report before starting a project workspace.';return false;}
       const choice=ROUTES.find(item=>item.id===id);if(!choice)return false;
-      route=id;toolsArea.hidden=false;
+      route=id;
       Object.entries(routeButtons).forEach(([key,action])=>action.setAttribute('aria-pressed',String(key===route)));
       routeStatus.textContent=choice.title+'. Your drawings and preparation work remain available when you switch starting points.';
+      secondaryTools.open=false;
       setTrack(choice.track);
+      renderTaskView();
       if(focus){if(choice.track==='experts')focusSpecialistPanel();else if(choice.track==='drawings')focusDrawingReview();else toolsArea.scrollIntoView({block:'start',behavior:'instant'});}
       return true;
     }
     function startWithDrawingPDF(){
       if(!activateRoute('drawings',false))return;
       syncProject();
-      if(pdfState.document){openDrawingReview();return;}
-      routeStatus.textContent='Choose a PDF to review it locally. No upload or AI interpretation occurs.';
-      pdfApi?.selectFile();
-      if(!pdfApi)toolsArea.scrollIntoView({block:'start',behavior:'instant'});
+      routeStatus.textContent=pdfState.document?'Review the selected PDF locally, or replace it below.':'Review drawings locally. Choose a PDF below when you are ready; no upload or AI interpretation occurs.';
+      focusDrawingReview();
     }
     function startWithoutDrawings(){
       if(!activateRoute('brief',false))return;
@@ -295,26 +318,42 @@
     }
     function focusDrawingReview(){pdfRoot.scrollIntoView({block:'start',behavior:'instant'});pdfApi?.focusReview();}
     function focusSpecialistPanel(){panels.experts.scrollIntoView({block:'start',behavior:'instant'});expertsHeading.focus({preventScroll:true});}
+    function returnToBriefPreparation(){
+      if(!hasContext)return;
+      activateRoute('brief',false);syncProject();briefSection.scrollIntoView({block:'start',behavior:'instant'});
+      (briefPrepared?briefEditor:aimInput).focus();
+    }
+    function renderSpecialistBrief(){
+      specialistBriefText.hidden=!briefPrepared;
+      if(briefPrepared){
+        const reviewed=clip(briefEditor.value,2400);
+        specialistBriefStatus.textContent='This is the current user-reviewed text used for local handover preparation. Edit it in Project Brief if anything needs changing.';
+        specialistBriefText.textContent=reviewed||'The prepared brief has no text yet.';
+      }else{
+        specialistBriefStatus.textContent='Prepare a brief to make the local handover context available here. You can return to Project Brief at any time.';
+        specialistBriefText.textContent='';
+      }
+    }
     function openDrawingReview(){if(!activateRoute('drawings',false))return;syncProject();focusDrawingReview();}
     function replaceDrawingPDF(){if(!activateRoute('drawings',false))return;syncProject();pdfApi?.selectFile();}
     function updateDrawingSummary(){
       const document=pdfState.document;
       drawingSummary.hidden=!document;
-      drawingEntryAction.textContent=document?'Continue reviewing drawing':'Choose a drawing PDF';
+      drawingEntryAction.textContent='Review drawings';
       if(!document)return;
       drawingName.textContent=document.name||'Selected drawing PDF';
       const confirmed=Number(pdfState.confirmedCount)||0,unresolved=Math.max(0,(pdfState.facts||[]).length-confirmed),unreadable=Number(pdfState.unreadablePageCount)||0;
       const status=pdfState.status==='ready'?'Selected; not yet read.':pdfState.status==='extracting'?'Reading pages locally…':pdfState.status==='needs_ocr'?`${unreadable} page(s) need OCR or manual review; no AI interpretation is connected.`:pdfState.status==='error'?(pdfState.warnings?.[0]||'This PDF could not be read. Choose another PDF or request manual review.'):pdfState.status==='review'?`${confirmed} confirmed transcription(s) · ${unresolved} unresolved note(s) · ${unreadable} unreadable page(s). Professional review is still required.`:'Review status: '+(pdfState.status||'not checked')+'.';
       drawingStatus.textContent=status;
     }
-    function chooseRoute(id,focus=true){if(activateRoute(id,focus))markChanged();}
+    function chooseRoute(id,focus=true){if(activateRoute(id,focus))syncProject();}
     function openTask(target){
       if(!hasContext)return;
       if(!route)chooseRoute(target==='drawings'?'drawings':target==='experts'||target==='email'?'review':'brief',false);
       if(target==='brief'){briefSection.scrollIntoView({block:'start',behavior:'instant'});aimInput.focus();return;}
       if(target==='drawings'||target==='documents'){openDrawingReview();return;}
       const track=target==='documents'?'drawings':target==='collaboration'?'email':target;
-      if(TOOLS.some(item=>item.id===track)){setTrack(track);if(track==='experts')focusSpecialistPanel();else{toolsArea.scrollIntoView({block:'start',behavior:'instant'});tabs[track].focus();}}
+      if(TOOLS.some(item=>item.id===track)){secondaryTools.open=true;setTrack(track);if(track==='experts')focusSpecialistPanel();else{toolsArea.scrollIntoView({block:'start',behavior:'instant'});tabs[track].focus();}}
     }
     function continueToSpecialistSupport(){
       if(!hasContext||!briefPrepared)return;
@@ -330,7 +369,7 @@
       if(syncing)return;syncing=true;
       try{
         const project={hasContext,route,pdf:pdfState,drawingSummary:pdfState,confirmedFacts:(pdfState.facts||[]).filter(fact=>fact.status==='confirmed'),materialStatus:{...materialStatus},budget:budgetResult(),briefPrepared,reviewedBriefText:clip(briefEditor.value,30000),specialists:[...expertSelection],supportedNSW:context.location.state==='NSW'&&context.location.coverage==='nsw',email:emailState};
-        emailApi?.updateProject(project);emailState=emailApi?.getState()||emailState;project.email=emailState;progressApi?.update(project);
+        emailApi?.updateProject(project);emailState=emailApi?.getState()||emailState;project.email=emailState;progressApi?.update(project);renderSpecialistBrief();
         renderNextTasks();
       }finally{syncing=false;}
     }
@@ -433,7 +472,7 @@
       }
       if (nextSignature !== signature) {
         context = next; signature = nextSignature;
-        route=null;toolsArea.hidden=true;routeStatus.textContent='Your drawing, brief and specialist preparation stay available as you work.';Object.values(routeButtons).forEach(action=>action.setAttribute('aria-pressed','false'));
+        route=null;toolsArea.hidden=true;routeStatus.textContent='Your drawing, brief and specialist preparation stay available as you work.';Object.values(routeButtons).forEach(action=>action.setAttribute('aria-pressed','false'));renderTaskView();
         budget = {}; contingency = ''; gstBasis = ''; materialStatus = {}; aim = ''; timing = ''; meeting = 'Online first';
         selected = new Set(); expertSelection = new Set(['planner']);
         const risks = (context.question + ' ' + context.report.summary + ' ' + context.report.missing.join(' ')).toLowerCase();
@@ -452,6 +491,7 @@
         try{pdfApi?.setContext(hasContext?context:null,{reset:true});pdfState=pdfApi?.getState()||{status:'empty',facts:[],confirmedCount:0};emailApi?.setContext(hasContext?context:null,{reset:true});emailState=emailApi?.getState()||{draftPrepared:false,emailSent:false,emailDeliveryConnected:false};progressApi?.reset();}finally{syncing=false;}
       }
       root.dataset.serviceContext = hasContext ? 'ready' : 'missing';
+      renderTaskView();
       renderBudget();syncProject();
       return api;
     }
