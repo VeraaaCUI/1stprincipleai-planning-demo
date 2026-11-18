@@ -39,6 +39,8 @@
     })).filter(item => item.label && item.value);
     return {
       route: line(project.route, 80),
+      reviewedBriefText: clip(project.reviewedBriefText, 6000),
+      reviewedBriefTruncated: typeof project.reviewedBriefText === 'string' && project.reviewedBriefText.length > 6000,
       drawing: {
         name: line(document.name || drawing.name, 180),
         pages: Number.isInteger(document.pages || drawing.pages) ? document.pages || drawing.pages : null,
@@ -68,6 +70,9 @@
       '', 'The preliminary planning preview has ' + context.confidence.toUpperCase() + ' confidence. It is not professional approval.',
       context.missing.length ? 'Items to scope: ' + context.missing.slice(0, 3).join(' ') : 'Please identify the site evidence and applicable controls that need checking.',
       '',
+      project.reviewedBriefText ? 'CURRENT USER-REVIEWED BRIEF (local copy for discussion):' : '',
+      project.reviewedBriefText || '',
+      project.reviewedBriefTruncated ? '[The local Brief is longer than this email draft limit; review the full Brief separately.]' : '',
       includeDrawingNotes && project.drawing.name ? 'Drawing reference: ' + project.drawing.name + (project.drawing.pages ? ' (' + project.drawing.pages + ' pages)' : '') + '. No PDF is attached automatically.' : '',
       includeDrawingNotes && project.drawing.illustrative ? 'ILLUSTRATIVE DEMO DOCUMENT: these drawing notes are not actual project records or verified site measurements.' : '',
       includeDrawingNotes && project.confirmedFacts.length ? 'User-confirmed drawing notes for discussion (not professional verification):' : '',
@@ -143,9 +148,9 @@
     let context = normalizeContext(null), project = normalizeProject(null), contextSignature = '', projectSignature = '';
     let draftPrepared = false, includeDrawingNotes = false, revision = 0;
     const contacts = { clientName: '', clientEmail: '', expertName: '', expertEmail: '', role: ROLES[0] }, fields = {};
-    const shell = el('section', null, 'fpc-workspace'); shell.setAttribute('aria-label', 'Client and expert email preparation');
+    const shell = el('section', null, 'fpc-workspace'); shell.setAttribute('aria-label', 'Expert Handover Draft preparation');
     const heading = el('div', null, 'fpc-heading'); const headingCopy = el('div');
-    headingCopy.append(el('p', 'Specialist collaboration', 'fpc-kicker'), el('h3', 'Prepare a focused introduction.'), el('p', 'Keep your project context together and draft a message to the specialist you choose.', 'fpc-lead'));
+    headingCopy.append(el('p', 'EXPERT HANDOVER DRAFT', 'fpc-kicker'), el('h3', 'Prepare an expert handover draft.'), el('p', 'Review your project context and current Brief before preparing a message to the specialist you choose.', 'fpc-lead'));
     heading.append(headingCopy, el('span', 'Email draft · delivery not connected', 'fpc-status-pill'));
     const projectLine = el('p', 'Return to a planning report to bring its location and question here.', 'fpc-project-line');
     const form = el('form', null, 'fpc-form'); form.noValidate = true;
@@ -167,7 +172,7 @@
     shareInput.addEventListener('change', () => { includeDrawingNotes = shareInput.checked; invalidate('Drawing-note sharing changed. Prepare an updated draft.'); });
     share.append(shareInput, shareCopy);
     const drawingHint = el('p', 'No confirmed drawing notes are available yet.', 'fpc-drawing-hint');
-    const prepare = el('button', 'Prepare email draft', 'fpc-button fpc-primary'); prepare.type = 'button'; prepare.dataset.contactAction = 'prepare-draft';
+    const prepare = el('button', 'Prepare expert handover draft', 'fpc-button fpc-primary'); prepare.type = 'button'; prepare.dataset.contactAction = 'prepare-draft';
     const status = el('p', 'Add the addresses of the client and their chosen expert. No message will be sent.', 'fpc-feedback'); status.setAttribute('role', 'status');
     const prepareRow = el('div', null, 'fpc-prepare-row'); prepareRow.append(prepare, status);
     form.append(grid, share, drawingHint, prepareRow);
@@ -223,7 +228,7 @@
       const errors = validateContacts(contacts); let first;
       Object.entries(fields).forEach(([key, field]) => { field.error.textContent = errors[key] || ''; if (errors[key]) { field.input.setAttribute('aria-invalid', 'true'); first ||= field.input; } else field.input.removeAttribute('aria-invalid'); });
       if (Object.keys(errors).length) { status.textContent = 'Check the email addresses before preparing the draft.'; first?.focus(); return; }
-      const next = buildDraft({ location: { name: context.address, councilNames: context.councilNames }, question: context.question, report: { confidence: context.confidence, missing: context.missing, caseId: context.caseId } }, { route: project.route, drawingSummary: { document: project.drawing, illustrative: project.drawing.illustrative }, confirmedFacts: project.confirmedFacts, specialists: project.specialists }, contacts, includeDrawingNotes);
+      const next = buildDraft({ location: { name: context.address, councilNames: context.councilNames }, question: context.question, report: { confidence: context.confidence, missing: context.missing, caseId: context.caseId } }, { route: project.route, reviewedBriefText: project.reviewedBriefText, drawingSummary: { document: project.drawing, illustrative: project.drawing.illustrative }, confirmedFacts: project.confirmedFacts, specialists: project.specialists }, contacts, includeDrawingNotes);
       subject.value = next.subject; message.value = next.body; draftPrepared = true; preview.hidden = false; revision += 1;
       status.textContent = 'Draft prepared locally. Review it below; nothing has been sent.'; updateExports(); emit(); subject.focus();
     }

@@ -66,7 +66,7 @@
   const unresolved = new Set(['unknown', 'not_checked', 'source_unavailable', 'conflict']);
   const allFeatureKeys = [...new Set(stages.flatMap(stage => [...data.stages[stage].facts.map(fact => fact.feature_key), ...data.stages[stage].deferred_features.map(fact => fact.feature_key)]))];
   const ui = { view: 'map', stage: 'enquiry', workflowStep: '1', fact: 'sd.form', tree: 'A', node: 'A0', evidence: data.evidence[0]?.evidence_id || '', tour: null };
-  let mapApi = null, servicesApi = null, serviceContext = null, navigationApi = null, pagesApi = null, projectsApi = null, serviceStale = false;
+  let mapApi = null, servicesApi = null, serviceContext = null, navigationApi = null, pagesApi = null, projectsApi = null, dashboardApi = null, dashboardLoadedId = null, dashboardLoadingId = null, dashboardOwnerId = null, serviceStale = false;
   let authApi = null;
   ui.route = 'home'; ui.view = 'content';
   const nameOf = key => featureNames[key] || vocabulary.get(key)?.label || key;
@@ -105,8 +105,27 @@
     // Old council-library URLs are geographic entry points now. They must not
     // reopen regulation categories or imply a selected property.
     if(/^councils\/LGA-\d+\/categories\/[a-z-]+$/.test(route))route='property';
-    const valid=['home','explore','how-it-works','property','project','enquiry','my-projects'].includes(route)||/^property\/(overview|development|assessment)$/.test(route)||/^explore\/goals\/(build-new-home|add-another-dwelling|develop-my-land|renovate-or-extend|explore-my-options)$/.test(route)||/^explore\/types\/(apartments|multi-dwelling|manor-houses|dual-occupancy|secondary-dwellings)$/.test(route)||/^example\/(workflow|facts|tree|evidence|results)$/.test(route);
+    if(route==='owner-test')route='property';
+    const valid=['home','explore','how-it-works','property','project','enquiry','my-projects'].includes(route)||/^my-projects\/[A-Za-z0-9_-]+$/.test(route)||/^property\/(overview|development|assessment)$/.test(route)||/^explore\/goals\/(build-new-home|add-another-dwelling|develop-my-land|renovate-or-extend|explore-my-options)$/.test(route)||/^explore\/types\/(apartments|multi-dwelling|manor-houses|dual-occupancy|secondary-dwellings)$/.test(route)||/^example\/(workflow|facts|tree|evidence|results)$/.test(route);
     return valid?route:'home';
+  }
+  function dashboardProjectId(route){const match=String(route||'').match(/^my-projects\/([A-Za-z0-9_-]+)$/);return match?.[1]||null;}
+  function dashboardTargetAvailable(project){
+    if(serviceStale||!serviceContext?.location||!serviceContext?.report||!mapApi?.getReport)return false;
+    const saved=project?.workflowContext?.selection, current=mapApi?.exportProjectContext?.()?.selection;
+    if(!saved?.name||!current?.name||saved.name!==current.name)return false;
+    const savedId=String(saved.propertyId||project?.propertyReference?.propertyId||''), currentId=String(current.propertyId||'');
+    if(savedId!==currentId&&(savedId||currentId))return false;
+    const reportLocation=serviceContext.location;
+    if(reportLocation.name&&reportLocation.name!==saved.name)return false;
+    const report=mapApi.getReport();
+    return Boolean(report&&(report===serviceContext.report||report.caseId&&report.caseId===serviceContext.report.caseId));
+  }
+  function dashboardTargetLabel(project,target){
+    if(target!=='drawings'&&target!=='specialists')return '';
+    return dashboardTargetAvailable(project)
+      ? target==='drawings'?'Continue to drawing preparation':'Continue to specialist preparation'
+      : 'Return to property assessment';
   }
   function navigate(raw,{replace=false,focus=true}={}){
     const oldCouncil=String(raw||'').replace(/^#\/?/,'').match(/^councils\/(LGA-\d+)\/categories\/[a-z-]+\/?$/);
@@ -122,13 +141,21 @@
     const hash='#/'+route;
     if(location.hash!==hash)history[replace?'replaceState':'pushState'](null,'',hash);
     ui.route=route;ui.tour=null;
-    ui.view=propertyStage(route)?'map':route==='project'?'services':route==='my-projects'?'projects':route.startsWith('example/')?route.split('/')[1]:'content';
+    const dashboardId=dashboardProjectId(route);
+    ui.view=dashboardId?'dashboard':propertyStage(route)?'map':route==='project'?'services':route==='my-projects'?'projects':route.startsWith('example/')?route.split('/')[1]:'content';
     if(ui.view==='services'&&serviceContext)servicesApi?.show(serviceContext,{preserveProject:true});
     render();
     if(route==='my-projects')projectsApi?.refresh();
     navigationApi?.setRoute(ui.view==='map'?'map':ui.view==='services'?'services':route.replace(/^explore\//,''));
-    if(focus){const target=(ui.view==='projects'?document.querySelector('#my-projects-root h1'):document.querySelector('#residential-content:not([hidden]) h1'))||document.getElementById('page-title');target.tabIndex=-1;target.focus({preventScroll:true});document.getElementById('main-content').scrollIntoView({block:'start',behavior:'instant'});}
-    document.title=(ui.view==='projects'?'My Projects':ui.view==='content'?document.querySelector('#residential-content h1')?.textContent:propertyPages[propertyStage(route)]?.title||viewLabels[ui.view])+' · 1stprincipleai';
+    if(ui.view==='dashboard'&&dashboardId&&dashboardLoadedId!==dashboardId&&dashboardLoadingId!==dashboardId){dashboardApi?.showLoading?.();if(authApi?.getState?.().status==='authenticated'){
+      dashboardOwnerId=authApi?.getState?.().user?.id||null;
+      dashboardLoadingId=dashboardId;
+      Promise.resolve().then(()=>projectsApi?.open(dashboardId)).catch(error=>{
+        if(ui.view==='dashboard'&&ui.route===`my-projects/${dashboardId}`&&dashboardLoadedId!==dashboardId)dashboardApi?.showError?.(error?.message);
+      }).finally(()=>{if(dashboardLoadingId===dashboardId)dashboardLoadingId=null;});
+    }else if(authApi?.getState?.().status==='anonymous')navigate('my-projects',{replace:true});}
+    if(focus){const target=(ui.view==='dashboard'?document.querySelector('#project-dashboard-root h1'):(ui.view==='projects'?document.querySelector('#my-projects-root h1'):document.querySelector('#residential-content:not([hidden]) h1')))||document.getElementById('page-title');if(target){target.tabIndex=-1;target.focus({preventScroll:true});}document.getElementById('main-content').scrollIntoView({block:'start',behavior:'instant'});}
+    document.title=(ui.view==='dashboard'?'Project Dashboard':ui.view==='projects'?'My Projects':ui.view==='content'?document.querySelector('#residential-content h1')?.textContent:propertyPages[propertyStage(route)]?.title||viewLabels[ui.view])+' · 1stprincipleai';
   }
   function safeValue(fact) {
     if (fact.customer_value_review_required) return 'Measurement basis needs review';
@@ -337,11 +364,13 @@
     const isServices = ui.view === 'services';
     const isContent = ui.view === 'content';
     const isProjects = ui.view === 'projects';
-    const isCase = !isMap && !isServices && !isContent && !isProjects;
+    const isDashboard = ui.view === 'dashboard';
+    const isCase = !isMap && !isServices && !isContent && !isProjects && !isDashboard;
     document.getElementById('residential-content').hidden = !isContent;
     document.getElementById('case-navigation').hidden = !isCase;
-    document.querySelector('.page-intro').hidden = isContent||isProjects;
+    document.querySelector('.page-intro').hidden = isContent||isProjects||isDashboard;
     const projectsRoot=document.getElementById('my-projects-root');if(projectsRoot)projectsRoot.hidden=!isProjects;
+    const dashboardRoot=document.getElementById('project-dashboard-root');if(dashboardRoot){dashboardRoot.hidden=!isDashboard;dashboardApi?.showPage(isDashboard);}
     if(isContent)pagesApi?.show(ui.route.replace(/^explore\/(goals|types)\//,'$1/'));
     document.getElementById('project-stale-notice').hidden = !serviceStale;
     document.body.dataset.view=ui.view;
@@ -353,8 +382,8 @@
     outlet.hidden = !isCase;
     const propertyPage=propertyPages[propertyStage(ui.route)]||propertyPages.discovery;
     document.getElementById('start-tour').hidden=!isMap||propertyStage(ui.route)!=='discovery';
-    document.getElementById('page-title').textContent = isMap ? propertyPage.title : isServices ? 'Your project, from drawings to delivery.' : 'The evidence behind the example project.';
-    document.getElementById('page-description').textContent = isMap ? propertyPage.description : isServices ? 'Review your information, track the next steps and prepare a conversation with the right expert.' : 'Inspect the historical records, decision questions and evidence behind CASE-0001. This audit trail supports the customer journey.';
+    document.getElementById('page-title').textContent = isMap ? propertyPage.title : isServices ? 'Your project, from drawings to delivery.' : isDashboard ? 'Project Dashboard' : 'The evidence behind the example project.';
+    document.getElementById('page-description').textContent = isMap ? propertyPage.description : isServices ? 'Review your information, track the next steps and prepare a conversation with the right expert.' : isDashboard ? 'Review saved project information and continue working when you are ready.' : 'Inspect the historical records, decision questions and evidence behind CASE-0001. This audit trail supports the customer journey.';
     document.querySelectorAll('[data-view]').forEach(control => {
       if (control.dataset.view === ui.view) control.setAttribute('aria-current', 'page'); else control.removeAttribute('aria-current');
     });
@@ -419,10 +448,40 @@
   authApi=window.FirstPrincipleAuth?.create();
   const cloudRepository=authApi?.client&&window.FirstPrincipleCloudProjectStorage?.createRepository({client:authApi.client,auth:authApi});
   navigationApi=window.FirstPrincipleSiteNavigation?.init(document.getElementById('site-navigation-root'),{onNavigate:navigate,auth:authApi,onAuthenticated:()=>projectsApi?.resumePendingSave?.(),onCancelSaveIntent:()=>projectsApi?.cancelPendingSave?.()});
-    const projectsRoot=element('section');projectsRoot.id='my-projects-root';projectsRoot.hidden=true;
+  dashboardApi=window.FirstPrincipleProjectDashboard?.init(document.getElementById('project-dashboard-root'),{
+    onBack:()=>{dashboardLoadedId=null;dashboardLoadingId=null;dashboardOwnerId=null;navigate('my-projects');},
+    getContinuationLabel:(project,target)=>dashboardTargetLabel(project,target),
+    onContinueWorking:(id,target)=>{
+      const active=projectsApi?.getState?.().activeProject;
+      if(!active||active.id!==id){dashboardApi?.showError?.('This saved project is no longer available in the current account.');return;}
+      if(target&&dashboardTargetAvailable(active)){
+        servicesApi?.show?.(serviceContext,{preserveProject:true});
+        navigate('project',{focus:false});
+        const targetOpened=servicesApi?.openTarget?.(target);
+        if(targetOpened){dashboardLoadedId=null;dashboardLoadingId=null;dashboardApi?.clear?.();return;}
+      }
+      try{
+        projectsApi?.continueWorking?.(active);
+        if(target)navigate('property/assessment');
+        dashboardLoadedId=null;dashboardLoadingId=null;dashboardApi?.clear?.();
+      }catch(error){dashboardApi?.showError?.(error?.message||'This saved project could not be restored.');}
+    }
+  });
+  const projectsRoot=element('section');projectsRoot.id='my-projects-root';projectsRoot.hidden=true;
   document.getElementById('residential-content').after(projectsRoot);
-  if(window.FirstPrincipleMyProjects)projectsApi=window.FirstPrincipleMyProjects.init({root:projectsRoot,mapApi,navigate,toolbarHost:mapRoot,auth:authApi,cloudRepository,onAccountRequired:()=>navigationApi?.openAccount({intent:'save'})});
+  if(window.FirstPrincipleMyProjects)projectsApi=window.FirstPrincipleMyProjects.init({root:projectsRoot,mapApi,navigate,toolbarHost:mapRoot,auth:authApi,cloudRepository,onAccountRequired:()=>navigationApi?.openAccount({intent:'save'}),onDashboardOpen(project){
+    const account=authApi?.getState?.().user?.id||null;
+    if(!account||!project?.id)return;
+    dashboardLoadedId=project.id;dashboardLoadingId=null;dashboardOwnerId=account;dashboardApi?.show?.(project);navigate('my-projects/'+project.id,{focus:false});
+  }});
   else projectsRoot.append(element('h1','My Projects'),element('p','Account project services could not load. Refresh to retry.'));
+  authApi?.subscribe?.(state=>{
+    const account=state?.status==='authenticated'?state.user?.id||null:null;
+    if(dashboardOwnerId&&account!==dashboardOwnerId){dashboardLoadedId=null;dashboardLoadingId=null;dashboardOwnerId=null;dashboardApi?.clear?.();if(ui.view==='dashboard')navigate('my-projects',{replace:true});}
+    else if(state?.status==='authenticated'&&ui.view==='dashboard'&&dashboardProjectId(ui.route)&&dashboardLoadedId!==dashboardProjectId(ui.route)&&dashboardLoadingId!==dashboardProjectId(ui.route)){navigate(ui.route,{focus:false,replace:true});}
+    else if(state?.status==='anonymous'&&ui.view==='dashboard')navigate('my-projects',{replace:true});
+  });
+  mapApi?.configureSyntheticJourney?.({auth: authApi});
   window.addEventListener('hashchange',()=>navigate(location.hash,{replace:true}));
   document.querySelector('.skip-link[href="#main-content"]')?.addEventListener('click',event=>{
     if(event.metaKey||event.ctrlKey||event.shiftKey||event.altKey)return;
@@ -432,12 +491,21 @@
   window.addEventListener('firstprinciple:location-selected',()=>{if(ui.route==='home')navigate('property',{focus:false});navigationApi?.refreshProject();});
   navigate(location.hash||'home',{replace:true,focus:false});
   authApi?.ready.then(async state=>{
-    if(!authApi.callbackPending)return;
-    if(state.recovery||state.error)navigationApi?.openAccount({intent:state.recovery?'recovery':'login'});
-    else if(state.status==='authenticated'){
+    if(state.status==='authenticated'){
       await projectsApi?.ready;
-      await projectsApi?.resumePendingSave?.();
-      navigate('my-projects');
+      if(state.recovery||state.recoveryError||state.error)navigationApi?.openAccount({intent:state.recovery||state.recoveryError?'recovery':'login'});
+      else if(authApi.callbackPending){
+        await projectsApi?.resumePendingSave?.();
+        navigate('my-projects');
+      }else if(dashboardProjectId(ui.route)&&dashboardLoadingId!==dashboardProjectId(ui.route)){
+        // Auth may settle after the initial route render. Re-run the guarded
+        // route so the project is fetched under the verified owner identity.
+        navigate(ui.route,{replace:true,focus:false});
+      }
+    }else{
+      if(dashboardProjectId(ui.route))navigate('my-projects',{replace:true,focus:false});
+      if(!authApi.callbackPending)return;
+      if(state.recovery||state.recoveryError||state.error)navigationApi?.openAccount({intent:state.recovery||state.recoveryError?'recovery':'login'});
     }
   }).catch(()=>navigationApi?.openAccount());
   window.FirstPrincipleApplication={navigate,projects:projectsApi,auth:authApi,getState:()=>({route:ui.route,view:ui.view,propertyPage:propertyStage(ui.route),hasReport:Boolean(serviceContext),serviceStale})};

@@ -25,6 +25,27 @@
   function normaliseRoute(route) {
     return String(route || 'home').replace(/^#?\/?/, '').replace(/^explore\/(goals|types)\//, '$1/').replace(/^property(?:\/(?:overview|development|assessment))?$/, 'map').replace(/^project$/, 'services').split('?')[0];
   }
+  function accountPresentation({authState, authMode, authBusy = false, authError = '', authNotice = '', available = true}) {
+    const authenticated = authState.status === 'authenticated';
+    const resetting = authenticated && (authState.recovery || authMode === 'reset');
+    const mode = resetting ? 'reset' : authMode;
+    const failedRecovery = mode === 'recovery-error' && authState.recoveryError;
+    const accountTitle = resetting ? 'Set a new password' : authenticated ? 'Your account' : mode === 'signup' ? 'Create your account' : mode === 'forgot' ? 'Reset your password' : failedRecovery ? 'Reset link needs attention' : 'Log in';
+    const accountMessage = authenticated ? authNotice || authState.user?.email || 'You are logged in.' : authState.status === 'loading' ? 'Checking your session…' : !available ? authState.error || 'Account services are not configured. Property exploration remains available.' : failedRecovery ? 'This link could not be verified. It may be expired, already used, or opened in another browser. Request a fresh link here, then open it in the browser where you requested it.' : mode === 'signup' ? 'Create an account to save and manage planning projects.' : mode === 'forgot' ? 'Request a reset link for your account email.' : 'Continue with your existing account.';
+    return {
+      mode, authenticated, resetting, accountTitle, accountMessage,
+      formHidden: !available || (authenticated && !resetting),
+      emailHidden: resetting,
+      passwordHidden: ['forgot','recovery-error'].includes(mode),
+      confirmHidden: !['signup','reset'].includes(mode),
+      submitLabel: authBusy ? 'Please wait…' : mode === 'signup' ? 'Sign up' : ['forgot','recovery-error'].includes(mode) ? (mode === 'recovery-error' ? 'Send a new reset link' : 'Send reset link') : resetting ? 'Update password' : 'Log in',
+      signupHidden: mode !== 'login', forgotHidden: mode !== 'login',
+      backHidden: !['signup','forgot','recovery-error'].includes(mode),
+      message: authError || authNotice || authState.error || (['signup','reset'].includes(mode) ? 'Use at least 8 characters for your new password.' : ''),
+      messageIsError: Boolean(authError || authState.error || authState.recoveryError),
+      logoutHidden: !authenticated
+    };
+  }
   /** @param {HTMLElement} root @param {{onNavigate?:Function,onLogin?:Function,auth?:object}} options */
   function init(root, options = {}) {
     if (!root) return null;
@@ -151,28 +172,27 @@
     let accountReturnFocus = null, accountReturnRoute = null;
     function resetFields() { passwordField.input.value = ''; confirmField.input.value = ''; }
     function renderAccount() {
-      const authenticated = authState.status === 'authenticated';
-      const available = authState.status === 'anonymous' || authenticated;
-      const resetting = authenticated && (authState.recovery || authMode === 'reset');
-      if (resetting) authMode = 'reset';
-      accountTitle.textContent = resetting ? 'Set a new password' : authenticated ? 'Your account' : authMode === 'signup' ? 'Create your account' : authMode === 'forgot' ? 'Reset your password' : 'Log in';
-      accountMessage.textContent = authenticated ? authState.user?.email || 'You are logged in.' : authState.status === 'loading' ? 'Checking your session…' : !available ? authState.error || 'Account services are not configured. Property exploration remains available.' : authMode === 'signup' ? 'Create an account to save and manage planning projects.' : authMode === 'forgot' ? 'Request a reset link for your account email.' : 'Continue with your existing account.';
-      accountForm.hidden = !available || (authenticated && !resetting);
+      const available = authState.status === 'anonymous' || authState.status === 'authenticated';
+      const view = accountPresentation({authState, authMode, authBusy, authError, authNotice, available});
+      authMode = view.mode;
+      accountTitle.textContent = view.accountTitle;
+      accountMessage.textContent = view.accountMessage;
+      accountForm.hidden = view.formHidden;
       accountForm.dataset.authForm = authMode;
-      emailField.label.hidden = resetting; emailField.input.required = !resetting;
-      passwordField.label.hidden = authMode === 'forgot'; passwordField.input.required = authMode !== 'forgot';
-      passwordField.label.firstChild.textContent = resetting ? 'New password' : 'Password';
+      emailField.label.hidden = view.emailHidden; emailField.input.required = !view.emailHidden;
+      passwordField.label.hidden = view.passwordHidden; passwordField.input.required = !view.passwordHidden;
+      passwordField.label.firstChild.textContent = view.resetting ? 'New password' : 'Password';
       passwordField.input.autocomplete = authMode === 'login' ? 'current-password' : 'new-password';
-      passwordField.input.minLength = authMode === 'login' ? 1 : 8;
-      confirmField.label.hidden = !['signup','reset'].includes(authMode); confirmField.input.required = !confirmField.label.hidden; confirmField.input.minLength = 8;
-      submitAuth.textContent = authBusy ? 'Please wait…' : authMode === 'signup' ? 'Sign up' : authMode === 'forgot' ? 'Send reset link' : resetting ? 'Update password' : 'Log in';
-      signupAction.hidden = authMode !== 'login'; forgotAction.hidden = authMode !== 'login'; backAction.hidden = !['signup','forgot'].includes(authMode);
-      formMessage.textContent = authError || authNotice || authState.error || (['signup','reset'].includes(authMode) ? 'Use at least 8 characters for your new password.' : '');
-      formMessage.classList.toggle('fp-auth-error', Boolean(authError || authState.error));
-      formMessage.setAttribute('role', authError ? 'alert' : 'status');
+      passwordField.input.minLength = authMode === 'login' ? 1 : ['signup','reset'].includes(authMode) ? 8 : 0;
+      confirmField.label.hidden = view.confirmHidden; confirmField.input.required = !view.confirmHidden; confirmField.input.minLength = 8;
+      submitAuth.textContent = view.submitLabel;
+      signupAction.hidden = view.signupHidden; forgotAction.hidden = view.forgotHidden; backAction.hidden = view.backHidden;
+      formMessage.textContent = view.message;
+      formMessage.classList.toggle('fp-auth-error', view.messageIsError);
+      formMessage.setAttribute('role', view.messageIsError ? 'alert' : 'status');
       accountForm.setAttribute('aria-busy', String(authBusy));
       accountForm.querySelectorAll('input,button').forEach(control => { control.disabled = authBusy; });
-      logoutAction.hidden = !authenticated; logoutAction.disabled = authBusy;
+      logoutAction.hidden = view.logoutHidden; logoutAction.disabled = authBusy;
     }
     function setAuthMode(mode) {
       authMode = mode; authNotice = ''; authError = ''; resetFields(); renderAccount();
@@ -183,7 +203,7 @@
       closeAll();
       if (!auth && typeof options.onLogin === 'function') { options.onLogin({intent}); return; }
       saveIntentUnsubmitted = intent === 'save';
-      authMode = authState.recovery || intent === 'recovery' ? 'reset' : 'login';
+      authMode = authState.recovery ? 'reset' : authState.recoveryError && intent === 'recovery' ? 'recovery-error' : 'login';
       authNotice = intent === 'save' ? 'Sign in to save this enquiry to your account. The enquiry will remain temporary until the save succeeds.' : '';
       authError = ''; resetFields(); renderAccount();
       if (!accountDialog.open) accountDialog.showModal();
@@ -214,9 +234,10 @@
           const result = await auth.signUp(input);
           if (result.authenticated) { await options.onAuthenticated?.(); accountDialog.close(); options.onNavigate?.('my-projects'); }
           else { authMode = 'login'; authNotice = 'If your address is eligible, check your email to confirm your account, then log in. Open the link in this browser.'; }
-        } else if (mode === 'forgot') {
+        } else if (['forgot','recovery-error'].includes(mode)) {
           await auth.requestPasswordReset(input);
           authNotice = 'If an account exists for this email, check for a reset link. Open it in this browser.';
+          authMode = 'forgot';
         } else {
           await auth.updatePassword(input); authMode = 'login'; authNotice = 'Your password has been updated.';
         }
@@ -283,7 +304,7 @@
     });
     const unsubscribeAuth = auth?.subscribe?.(next => {
       authState = next; refreshProject();
-      if (authState.recovery && !authBusy && !accountDialog.open) openAccount({intent:'recovery'});
+      if ((authState.recovery || authState.recoveryError) && !authBusy && !accountDialog.open) openAccount({intent:'recovery'});
     });
     setMobile(false); refreshProject(); renderAccount();
     return Object.freeze({
@@ -291,5 +312,7 @@
       destroy() { unsubscribeAuth?.(); if (accountDialog.open) { accountReturnRoute = null; accountDialog.close(); } lifecycle.abort(); root.replaceChildren(); }
     });
   }
-  scope.FirstPrincipleSiteNavigation = Object.freeze({ init, TYPES, GOALS });
+  const api = Object.freeze({ init, TYPES, GOALS, accountPresentation });
+  scope.FirstPrincipleSiteNavigation = api;
+  if (typeof module !== 'undefined' && module.exports) module.exports = api;
 })(typeof window !== 'undefined' ? window : globalThis);
