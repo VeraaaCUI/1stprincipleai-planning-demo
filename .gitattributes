@@ -1,0 +1,15 @@
+# Keep public text resources byte-stable across Windows and Linux checkouts.
+* text=auto eol=lf
+
+# These resources are binary and must never receive line-ending conversion.
+*.gif -text
+*.ico -text
+*.jpeg -text
+*.jpg -text
+*.pdf -text -diff
+*.png -text
+*.ttf -text
+*.wasm -text
+*.webp -text
+*.woff -text
+*.woff2 -text

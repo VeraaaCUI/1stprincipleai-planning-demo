@@ -294,6 +294,8 @@ body[data-view="map"] .page-intro #start-tour { padding-block: 8px; min-height: 
 #council-map-root .cm-assessment-followup .cm-report-next { flex-wrap: wrap; align-items: start; gap: 16px; }
 #council-map-root .cm-assessment-followup .cm-report-next > div { flex: 1 1 24rem; min-width: 0; }
 #council-map-root .cm-assessment-followup .cm-report-next .cm-button { flex: 0 1 auto; min-width: 0; max-width: 100%; white-space: normal; }
+/* Keep the preview's onward action available when the visible assessment has no Workspace entry. */
+#council-map-root .pf-assessment-content:has(> :is(.cm-assessment-root,.cm-synthetic-assessment):not([hidden]) [data-assessment-control="continue"]) .cm-report-next { display: none; }
 #council-map-root .cm-assessment-followup .cm-guidance-columns { grid-template-columns: repeat(auto-fit,minmax(min(100%,20rem),1fr)); gap: 24px; }
 #council-map-root .cm-assessment-followup .cm-risk-grid { grid-template-columns: repeat(auto-fit,minmax(min(100%,16rem),1fr)); }
 #council-map-root .pf-page-assessment :is(.fpa-copy,.fpa-fine,.cm-report-summary,.cm-guidance-reason,.cm-guidance-footnote) { max-width: 80ch; }

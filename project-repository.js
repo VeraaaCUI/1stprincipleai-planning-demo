@@ -13,6 +13,28 @@
   const CONTEXT_FIELDS = ['version', 'selection', 'chosenCandidateId', 'confirmedKey', 'confirmedPropertyId', 'overviewVisited', 'assessmentVisited', 'projectId', 'projectChosen', 'question', 'search', 'browsingCouncilId', 'map', 'visibleLayers', 'locationExpanded'];
   const LOCATION_FIELDS = ['kind', 'name', 'center', 'state', 'precision', 'coverage', 'source', 'sourceUrl', 'origin', 'provider', 'propertyId', 'sourceCenter', 'sourceWkid', 'mapCoordinateStatus', 'mapCRS', 'unitNumber', 'exact', 'council_ids', 'methods'];
   const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+  const INVALID_PERCENT_ESCAPE = /%(?![0-9a-f]{2})/i;
+  const AMBIGUOUS_URL_ESCAPE = /%(?:25|26|3d|3f|23|3b)/i;
+  function sensitiveUrlParameter(name) {
+    const lower = name.toLowerCase();
+    const compact = lower.replace(/[^a-z0-9]/g, '');
+    return /(?:token|secret|password|passwd|credential|authorization|signature)/.test(compact) || compact.includes('apikey') || compact.includes('accesskey') || /^(?:api|client|private|signing|encryption|access)?key$/.test(compact) || compact === 'sig' || /(^|[^a-z0-9])auth([^a-z0-9]|$)/.test(lower);
+  }
+  function checkUrlParameters(component, label, fragment = false) {
+    if (AMBIGUOUS_URL_ESCAPE.test(component) || INVALID_PERCENT_ESCAPE.test(component)) invalid(label + ' contains ambiguous URL encoding.');
+    for (const part of component.split(fragment ? /[?&;]/ : /[&;]/)) {
+      const rawName = part.split('=', 1)[0];
+      if (!fragment && rawName.includes('%')) invalid(label + ' has an encoded parameter name.');
+      if (fragment && rawName.includes('%') && part.includes('=')) invalid(label + ' has an encoded fragment parameter.');
+      let name = rawName.replace(/\+/g, ' ');
+      if (name !== name.trim()) invalid(label + ' has whitespace in a parameter name.');
+      if (fragment && rawName.includes('%')) {
+        try { name = decodeURIComponent(rawName.replace(/\+/g, ' ')); }
+        catch (_) { invalid(label + ' has malformed fragment encoding.'); }
+      }
+      if (sensitiveUrlParameter(name)) invalid(label + ' must not contain credentials.');
+    }
+  }
   const own = (object, key) => Object.prototype.hasOwnProperty.call(object, key);
   function invalid(message) { throw new Error('Invalid project data: ' + message); }
   function plain(value, label) {
@@ -41,7 +63,7 @@
     walk(value, 0);
   }
   function string(value, label, max, empty = true) {
-    if (typeof value !== 'string' || value.length > max || (!empty && !value.trim())) invalid(label + ' must be ' + (empty ? 'text' : 'non-empty text') + ' of at most ' + max + ' characters.');
+    if (typeof value !== 'string' || Array.from(value).length > max || (!empty && !value.trim())) invalid(label + ' must be ' + (empty ? 'text' : 'non-empty text') + ' of at most ' + max + ' characters.');
     if (/[\u0000-\u0008\u000b\u000c\u000e-\u001f]/.test(value)) invalid(label + ' contains unsupported control characters.');
     return value;
   }
@@ -52,7 +74,7 @@
     return string(value, label, 100, false);
   }
   function date(value, label) {
-    if (typeof value !== 'string' || !Number.isFinite(Date.parse(value)) || new Date(value).toISOString() !== value) invalid(label + ' must be a UTC ISO timestamp.');
+    if (typeof value !== 'string' || value.startsWith('0000-') || !Number.isFinite(Date.parse(value)) || new Date(value).toISOString() !== value) invalid(label + ' must be a UTC ISO timestamp.');
     return value;
   }
   function bool(value, label) { if (typeof value !== 'boolean') invalid(label + ' must be true or false.'); return value; }
@@ -65,7 +87,21 @@
     const text = string(value, label, 2000, false); let parsed;
     try { parsed = new URL(text); } catch (_) { invalid(label + ' must be a valid HTTPS URL.'); }
     if (parsed.protocol !== 'https:' || parsed.username || parsed.password) invalid(label + ' must be a public HTTPS reference.');
-    for (const key of parsed.searchParams.keys()) if (/^(access[_-]?token|api[_-]?key|secret|password|token|key)$/i.test(key)) invalid(label + ' must not contain credentials.');
+    if (/[\s\u0000-\u001f\u007f-\u009f\\]/u.test(text)) invalid(label + ' contains unsupported URL whitespace or separators.');
+    const authority = text.match(/^https:\/\/([^/?#]+)/i)?.[1];
+    if (!authority || /[@%\\\s\u0000-\u001f]/.test(authority)) invalid(label + ' has unsupported authority syntax.');
+    const labelPattern = '[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?';
+    const hostAuthority = new RegExp(`^(?:${labelPattern}(?:\\.${labelPattern})*\\.?)(?::[0-9]{1,5})?$`);
+    const ipv6Authority = /^\[[0-9a-f:.]+\](?::[0-9]{1,5})?$/i;
+    if (!hostAuthority.test(authority) && !ipv6Authority.test(authority)) invalid(label + ' has unsupported authority syntax.');
+    const rawHost = authority.startsWith('[') ? authority.slice(0, authority.indexOf(']') + 1) : authority.replace(/:[0-9]{1,5}$/, '');
+    if (parsed.hostname.toLowerCase() !== rawHost.toLowerCase()) invalid(label + ' has a non-canonical host.');
+    const port = authority.startsWith('[') ? authority.match(/^\[[^\]]+\](?::([0-9]{1,5}))?$/)?.[1] : authority.match(/:([0-9]{1,5})$/)?.[1];
+    if (port !== undefined && Number(port) > 65535) invalid(label + ' has an invalid port.');
+    if (INVALID_PERCENT_ESCAPE.test(text)) invalid(label + ' has malformed URL encoding.');
+    checkUrlParameters(parsed.search.slice(1), label);
+    if (parsed.hash.includes('%')) invalid(label + ' has a percent-encoded fragment.');
+    checkUrlParameters(parsed.hash.slice(1), label, true);
     return text;
   }
   function point(value, label) {
@@ -133,7 +169,7 @@
   function sanitizeProject(value) {
     inspect(value); keys(value, FIELDS, 'Project');
     if (FIELDS.some(key => !own(value, key))) invalid('The project record is incomplete.');
-    if (typeof value.id !== 'string' || !UUID.test(value.id)) invalid('Project ID must be a UUID v4.');
+    if (typeof value.id !== 'string' || value.id.length !== 36 || !UUID.test(value.id)) invalid('Project ID must be a UUID v4.');
     if (value.schemaVersion !== SCHEMA_VERSION) invalid('Project schema version is unsupported.');
     let propertyReference = null;
     if (value.propertyReference !== null) {

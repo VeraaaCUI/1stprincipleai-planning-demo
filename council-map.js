@@ -60,7 +60,7 @@
     const spatialClient=S?.createClient();
     let spatialPanel=null,spatialContainer=null,spatialState=S?.initial()||null,spatialRequest=null,spatialEpoch=0;
     let propertyLayer=null,lotLayer=null,zoningLayer=null,spatialGeometryKeys={};
-    let assessmentView=null,assessmentModel=null,assessmentSelection={mode:'property',projectId:'other',sampleId:'A',optionId:''};
+    let assessmentView=null,assessmentModel=null,syntheticJourney=null,syntheticConfig=null,syntheticRoot=null,assessmentSelection={mode:'property',projectId:'other',sampleId:'A',optionId:''};
     let propertyProjectId='other',exampleProjectId='granny',projectChosen=false,overviewVisited=false,assessmentVisited=false;
     let flowView=null,flowPage='discovery',confirmedKey=null,chosenCandidateId=null,confirmedPropertyId=null,restoring=true,pendingCouncilFit=false,lastMapView=null;
     const previewMedia=scope.matchMedia?.('(max-width:1000px)');
@@ -192,6 +192,7 @@
     const previewBody=node('div',null,'cm-preview-body');previewBody.id='cm-preview-body';
     side.append(previewToggle,previewBody);
     side.addEventListener('keydown',event=>{if(event.key==='Escape'&&previewMedia?.matches&&previewExpanded){event.preventDefault();setPreviewExpanded(false,true);}});
+    const followUp = node('details', null, 'cm-assessment-followup');
     const questionForm = node('form', null, 'cm-question-form');
     const questionLabel = node('label', "What would you like to do here?"); questionLabel.htmlFor = 'cm-question';
     const question = node('textarea'); question.id = 'cm-question'; question.rows = 3; question.maxLength = 600;
@@ -250,13 +251,16 @@
       });
       previewBody.append(flowView.slots.discoveryPreview);
       flowView.slots.overviewControls.append(documentPanel);
-      const followUp=node('details',null,'cm-assessment-followup');followUp.dataset.assessmentAssistance='true';
+      followUp.dataset.assessmentAssistance='true';
       const followUpToggle=node('summary');followUpToggle.dataset.assistanceToggle='true';
       followUpToggle.append(node('span','Ask a follow-up question','cm-assistance-title'),node('span','Optional assistance','cm-assistance-hint'));
       const followUpBody=node('div',null,'cm-assistance-body');followUpBody.id='cm-assistance-body';
       followUpBody.append(questionForm,guidancePanel);followUp.append(followUpToggle,followUpBody);
       followUp.addEventListener('toggle',()=>{if(!followUp.open&&followUpBody.contains(document.activeElement))followUpToggle.focus({preventScroll:true});});
-      flowView.slots.assessmentContent.append(assessmentRoot,followUp);
+      syntheticRoot=node('section',null,'cm-synthetic-assessment');
+      syntheticRoot.hidden=true;
+      syntheticRoot.setAttribute('aria-label','Synthetic Granny Flat assessment');
+      flowView.slots.assessmentContent.append(assessmentRoot,syntheticRoot,followUp);
     }else{
       previewBody.append(node('p','Property navigation could not load. Refresh to retry. The map and address search remain available.','cm-error'));
     }
@@ -277,7 +281,6 @@
         },
         onContinue(){
           if(assessmentSelection.mode!=='property'||!selection)return;
-          if(!question.value.trim())question.value=assessmentModel.project.question;
           continueToServices();
         },
         onQueryGIS(){if(selection)querySpatial();},
@@ -352,10 +355,37 @@
       categories=classification;categoryById=Object.fromEntries(categories.categories.map(c=>[c.id,c]));renderLegend();updateMapContext();
     },'Council type colours');
 
+    function syntheticOwnerEnabled(){
+      const auth=syntheticConfig?.auth?.getState?.();
+      return Boolean(auth?.status==='authenticated'&&auth.user?.ownerTest===true);
+    }
+    function syntheticAssessmentActive(){
+      return flowPage==='assessment'&&propertyProjectId==='granny'&&projectChosen&&isConfirmed()&&syntheticOwnerEnabled();
+    }
+    function syncSyntheticJourney(){
+      if(!syntheticRoot)return;
+      const active=syntheticAssessmentActive();
+      assessmentRoot.hidden=active;
+      syntheticRoot.hidden=!active;
+      if(active&&!syntheticJourney&&scope.FirstPrincipleOwnerTest?.init){
+        syntheticJourney=scope.FirstPrincipleOwnerTest.init(syntheticRoot,{
+          auth:syntheticConfig.auth,embedded:true,onLogin:syntheticConfig.onLogin,
+          onContinueToPlanning(){if(syntheticAssessmentActive())continueToServices();},
+          onAskFollowUp(){
+            if(!syntheticAssessmentActive())return;
+            followUp.open=true;
+            question.focus();
+          }
+        });
+      }
+      syntheticJourney?.render?.();
+      root.dataset.syntheticAssessment=active?'owner':'standard';
+    }
     function refreshAssessment(){
       if(!assessmentView||!isConfirmed()||!projectChosen){assessmentModel=null;return;}
       assessmentModel=scope.FirstPrincipleAssessmentModel.build({...assessmentSelection,location:selection,spatial:spatialState},scope.FirstPrinciplePrototypeExamples);
       assessmentSelection={...assessmentModel.selection};assessmentView.update(assessmentModel);
+      syncSyntheticJourney();
     }
     function selectionKey(value=selection){
       return value?.kind==='address'?[value.name,value.propertyId||chosenCandidateId||'',...(value.center||[])].join('|'):null;
@@ -914,14 +944,16 @@
     }
     function categoryFor(feature){return categoryById[categories?.councils?.[feature.properties.id]?.category_id];}
     function continueToServices(){
-      if(!isConfirmed()||!projectChosen||!question.value.trim())return;
-      renderGuidance();
+      if(!isConfirmed()||!projectChosen)return;
+      const planningQuestion=question.value.trim()||scope.FirstPrincipleAssessmentModel?.PROJECTS.find(project=>project.id===propertyProjectId)?.question;
+      if(!planningQuestion)return;
+      renderGuidance(planningQuestion);
       if(lastReport)scope.dispatchEvent(new CustomEvent('firstprinciple:advanced-services',{detail:{location:lastReport.location,question:lastReport.question,report:lastReport}}));
     }
-    function renderGuidance() {
+    function renderGuidance(previewQuestion=question.value) {
       if(!isConfirmed()||!projectChosen)return;
       if (!R) { searchStatus.textContent = 'The preview component could not load. Refresh to try again.'; return; }
-      const result = R.buildReport(question.value, selection, byId);
+      const result = R.buildReport(previewQuestion, selection, byId, spatialState);
       const project=scope.FirstPrincipleAssessmentModel?.PROJECTS.find(p=>p.id===propertyProjectId);
       if(project)result.projectIntent={id:project.id,label:project.label,status:'user_selected_intent',legalApplicabilityAssessed:false};
       const assessment=scope.FirstPrincipleAssessmentModel?.build({...assessmentSelection,mode:'property',projectId:propertyProjectId,location:selection,spatial:spatialState},scope.FirstPrinciplePrototypeExamples);
@@ -930,8 +962,18 @@
       guidancePanel.hidden = false; guidancePanel.replaceChildren();
       const titleRow = node('div', null, 'cm-guidance-title');
       titleRow.append(node('div'), node('span', result.confidenceLabel, 'cm-confidence cm-confidence-low'));
-      titleRow.firstChild.append(node('p', result.mode + ' · Prepared ' + result.preparedOn, 'cm-kicker'), node('h3', 'Your preliminary planning report'));
+      titleRow.firstChild.append(node('p', result.mode + ' · ' + (result.preparedLabel || ('Prepared ' + result.preparedOn)), 'cm-kicker'), node('h3', 'Your preliminary planning report'));
       guidancePanel.append(titleRow, node('p', result.location.name + ' · ' + (result.location.councilNames.join(', ') || 'Council not confirmed'), 'cm-report-location'), node('p', result.summary, 'cm-report-summary'), node('p', result.confidenceReason, 'cm-guidance-reason'));
+      const propertyContext = result.propertyContext || {status:'not_checked'};
+      const provenance = node('p', null, 'cm-report-provenance');
+      if (propertyContext.status === 'mapped_attributes_available') {
+        provenance.textContent = 'Current property context · NSW Property ID ' + propertyContext.propertyId + (propertyContext.lotLabels.length ? ' · ' + propertyContext.lotLabels.join(' · ') : '') + (propertyContext.zones.length ? ' · mapped zone ' + propertyContext.zones.join(' / ') : ' · zoning unresolved') + (propertyContext.queriedAt ? ' · queried ' + propertyContext.queriedAt : '') + '. Mapped attributes supplement the guidance; they do not establish permission.';
+      } else if (propertyContext.status === 'unresolved') {
+        provenance.textContent = 'Current property context · address selected, but associated mapped property data is unresolved. No property-specific planning conclusion is provided.';
+      } else {
+        provenance.textContent = 'Current property context · address selection only. Mapped property attributes have not been checked.';
+      }
+      guidancePanel.append(provenance);
       if(spatialState?.property&&spatialState.address===selection.name){
         const zones=[...new Set((spatialState.layers.zoning?.features||[]).map(f=>f.properties.SYM_CODE).filter(Boolean))];
         result.spatialEvidence={propertyId:spatialState.property.id,lotLabels:[...spatialState.property.lotLabels],zones,retrievedAt:spatialState.retrievedAt,status:spatialState.status,sourceUrl:spatialState.layers.zoning?.sourceUrl||spatialState.property.sourceUrl,legalApplicabilityAssessed:false};
@@ -941,8 +983,8 @@
         guidancePanel.append(context);
       }
       const next = node('div', null, 'cm-report-next');
-      const nextCopy = node('div'); nextCopy.append(node('h4', 'Need a clearer scope, budget or application plan?'), node('p', 'Continue with this location, question and evidence gaps. Plan the work an AI Agent and human specialists would review.'));
-      const continueButton = button('Continue to advanced services →', continueToServices, 'cm-button cm-primary');
+      const nextCopy = node('div'); nextCopy.append(node('h4', 'Prepare your project'), node('p', 'Take this property, your question and the evidence gaps into the Project Workspace.'));
+      const continueButton = button('Continue to project planning', continueToServices, 'cm-button cm-primary');
       continueButton.id = 'cm-advanced-services'; next.append(nextCopy,continueButton); guidancePanel.append(next);
       const details = node('details', null, 'cm-report-evidence');
       details.append(node('summary', 'Why this confidence? View risks, missing evidence and sources'));
@@ -972,7 +1014,12 @@
       mapCanvas.addEventListener('wheel',event=>{if(!event.ctrlKey){event.stopImmediatePropagation();}},{capture:true,passive:true});
       mapCanvas.addEventListener('keydown',event=>{if(event.key==='Escape'&&previewMedia?.matches&&mapGesturesEnabled){event.preventDefault();mapGesturesEnabled=false;syncMapGestures();mapGestureToggle.focus({preventScroll:true});}});
       map = L.map(mapCanvas, { trackResize:false,scrollWheelZoom: true,wheelPxPerZoomLevel:120,wheelDebounceTime:80, minZoom: 3, maxZoom: 19, zoomSnap: 0.25, zoomDelta: 0.5, zoomControl: true, preferCanvas: false,maxBounds:[[-57,100],[-3,170]],maxBoundsViscosity:0.8 });
-      const tiles = L.tileLayer(BASEMAP, { maxZoom: 19,attribution:'© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap contributors</a>' });
+      // OSM requires a Referer. Tile images send only the site origin, even when the page uses no-referrer.
+      const tiles = L.tileLayer(BASEMAP, {
+        maxZoom: 19,
+        referrerPolicy: 'strict-origin',
+        attribution: '© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap contributors</a>'
+      });
       let tileFailed = false;
       tiles.on('tileerror', () => { if (!tileFailed) { tileFailed = true; mapStatus.textContent = "Some base map tiles could not load. Council boundaries and the list remain available."; } });
       tiles.addTo(map);
@@ -1054,8 +1101,22 @@
       },
       resetProject:startNewSearch,
       showPage,confirmProperty,chooseProject,
+      configureSyntheticJourney(config={}){
+        syntheticConfig=config;
+        syntheticConfig.auth?.subscribe?.(()=>syncSyntheticJourney());
+        syncSyntheticJourney();
+        return syntheticJourney;
+      },
       getReport(){return lastReport;},
-      focusReport(){if(flowPage==='assessment'){const assistance=question.closest('details[data-assessment-assistance]');if(assistance)assistance.open=true;if(!guidancePanel.hidden)guidancePanel.scrollIntoView({behavior:'instant',block:'start'});else question.focus({preventScroll:true});}else navigatePage(isConfirmed()?'overview':'discovery');},
+      focusReport(){
+        if(flowPage!=='assessment'){navigatePage(isConfirmed()?'overview':'discovery');return;}
+        const assessment=syntheticAssessmentActive()?syntheticRoot:assessmentRoot;
+        const action=assessment?.querySelector('[data-assessment-control="continue"]');
+        if(action){action.focus();return;}
+        const assistance=question.closest('details[data-assessment-assistance]');
+        if(assistance)assistance.open=true;
+        if(!guidancePanel.hidden)guidancePanel.scrollIntoView({behavior:'instant',block:'start'});else question.focus({preventScroll:true});
+      },
       searchAddress(query){pendingCase=false;cancelRequest();closeSuggestions();search.value=String(query||'').slice(0,180);performSearch(true);search.focus();},
       setIntent(intent){
         const id=({'secondary-dwellings':'granny','dual-occupancy':'dual','manor-houses':'manor-house','renovate-or-extend':'storey','build-new-home':'new-home','add-another-dwelling':'other','develop-my-land':'other','explore-my-options':'other'})[intent?.typeId||intent?.goalId]||intent?.typeId;

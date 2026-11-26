@@ -198,6 +198,11 @@
       }
       if(array(gaps.missing).length)limitations.append(paragraph(array(gaps.missing).length+' evidence gaps remain unresolved. Expand “What we couldn’t check” for sources to obtain and recovery actions.','fpa-fine'));
       assessment.append(limitations);
+      const next=el('div',null,'fpa-next');next.append(el('h3','Next action'));
+      if(selection.mode==='example')next.append(paragraph('Return to your selected property to prepare a real project handover. This illustrative lot is not connected to that address.'),action('Return to my property','return-property',()=>change({mode:'property'})));
+      else if(model.canContinue===true&&typeof callbacks.onContinue==='function')next.append(paragraph('Open the Project Workspace with this property and its unresolved questions.'),action('Continue to project planning','continue',()=>callbacks.onContinue(),true));
+      else next.append(paragraph('Choose a property and prepare its preliminary report before continuing to project services.','fpa-fine'));
+      assessment.append(next);
       const jumps=el('nav',null,'fpa-section-nav');jumps.setAttribute('aria-label','Assessment sections');
       ['Permission','Approval reviews','Site constraints','Costs and timing','Evidence gaps'].forEach((label,index)=>jumps.append(action(String(index+1)+'. '+label,'section:'+index,()=>{const target=document.getElementById(prefix+'section-'+index);const detail=target?.closest('details[data-assessment-section]');if(detail)detail.open=true;target?.scrollIntoView({block:'start',behavior:'instant'});target?.focus({preventScroll:true});})));
       assessment.append(jumps);
@@ -209,11 +214,7 @@
         const body=el('div',null,'fpa-section-body');body.append(paragraph(section.summary||'This part is not available yet. The answer remains unresolved.'));
         renderOfficial(section.official,body);if(index!==0)renderItems(section.items,body);renderPathways(section.pathways,body);renderSketch(section.sketch,body,index);renderCosts(section.costs,body);renderTiming(section.timing,body);renderComparables(section.comparables,body);renderMissing(section.missing,body);block.append(body);assessment.append(block);
       });
-      const next=el('div',null,'fpa-next');next.append(el('h3','Take the next step with the right evidence.'));
-      if(selection.mode==='example')next.append(paragraph('Return to your selected property to prepare a real project handover. This illustrative lot is not connected to that address.'),action('Return to my property','return-property',()=>change({mode:'property'})));
-      else if(model.canContinue===true&&typeof callbacks.onContinue==='function')next.append(paragraph('Carry this property and its unresolved questions into the AI Agent and expert preparation workspace.'),action('Continue with AI Agent + experts','continue',()=>callbacks.onContinue(),true));
-      else next.append(paragraph('Choose a property and prepare its preliminary report before continuing to project services.','fpa-fine'));
-      assessment.append(next);content.append(assessment);
+      content.append(assessment);
     }
     function update(next={}){
       if(!next||typeof next!=='object')next={};

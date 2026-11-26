@@ -27,7 +27,6 @@
   <link rel="stylesheet" href="./map-responsive.css">
   <link rel="stylesheet" href="./selected-design.css">
   <link rel="stylesheet" href="./selected-functional.css">
-  <link rel="stylesheet" href="./local-projects.css">
   <script src="./vendor/leaflet.js" defer></script>
   <script src="./council-map-guidance.js" defer></script>
   <script src="./planning-report.js" defer></script>
@@ -52,9 +51,6 @@
   <script src="./runtime-config.js" defer></script>
   <script src="./vendor/supabase.js" defer></script>
   <script src="./auth-client.js" defer></script>
-  <script src="./cloud-project-repository.js" defer></script>
-  <script src="./local-projects-view.js" defer></script>
-  <script src="./local-projects.js" defer></script>
   <script src="./app.js" defer></script>
 </head>
 <body>
@@ -65,6 +61,7 @@
       <header class="topbar"><div class="breadcrumb">1stprincipleai / Planning workspace <span>/ <b id="breadcrumb-view">Places &amp; questions</b></span></div><div class="version"><span class="tiny-dot"></span>Early access · Demo</div></header>
       <main id="main-content" tabindex="-1">
         <section id="residential-content" hidden></section>
+        <section id="project-dashboard-root" aria-label="Project Dashboard" hidden></section>
         <section id="case-navigation" hidden><p class="eyebrow">Historical example · evidence explorer</p>
       <nav id="main-nav" class="main-nav case-nav" aria-label="Example case evidence views">
         <button type="button" data-view="map" aria-current="page">Places &amp; questions<span class="nav-arrow" aria-hidden="true">↗</span></button>
